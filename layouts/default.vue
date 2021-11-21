@@ -1,6 +1,13 @@
 <template>
   <v-app>
-    <v-app-bar app elevation="1" color="#FFF" max-height="72px" class="pr-5">
+    <v-app-bar
+      app
+      elevation="1"
+      color="#FFF"
+      max-height="72px"
+      class="pr-5 main-app-bar"
+      clipped-left
+    >
       <v-row>
         
       <v-col cols="4" class="d-flex align-center justify-start">
@@ -35,7 +42,18 @@
       </v-col>
 
       <v-col cols="4" class="d-flex align-center justify-end">
+        <v-spacer />
+        
+        <v-btn to="home" icon color="#000" depressed plain>
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+
+        <v-btn class="mr-2" icon color="#000" depressed plain>
+          <v-icon>mdi-bell</v-icon>
+        </v-btn>
+        
         <PopoverMenu />
+
       </v-col>
 
       </v-row>
@@ -44,6 +62,7 @@
     <v-main>
       <Nuxt />
     </v-main>
+    
   </v-app>
 </template>
 
@@ -69,6 +88,10 @@ export default Vue.extend({
     height: 40px !important;
 
     align-items: center !important;
+  }
 }
+
+.main-app-bar {
+  z-index: 10;
 }
 </style>
