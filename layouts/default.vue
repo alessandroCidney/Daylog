@@ -1,10 +1,12 @@
 <template>
   <v-app>
     <v-app-bar app elevation="1" color="#FFF" max-height="72px" class="pr-5">
-      <v-img
-        max-width="147px"
-        :src="require('@/assets/svg/logo_dark.svg')"
-      />
+      <nuxt-link to="home">
+        <v-img
+          max-width="147px"
+          :src="require('@/assets/svg/logo_dark.svg')"
+        />
+      </nuxt-link>
 
       <v-spacer />
 
