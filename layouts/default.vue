@@ -13,6 +13,7 @@
         outlined
         dense
         color="#000"
+        placeholder="Search"
         hide-details
       >
         <template slot="prepend-inner">
@@ -29,13 +30,7 @@
 
       <v-spacer />
 
-      <v-avatar>
-        <v-img
-          :src="require('@/assets/images/profile-mock/man.jpg')"
-          alt="Profile photo"
-          width="46px"
-        />
-      </v-avatar>
+      <PopoverMenu />
     </v-app-bar>
 
     <v-main>
@@ -43,6 +38,18 @@
     </v-main>
   </v-app>
 </template>
+
+<script lang="ts">
+import Vue from 'vue';
+
+import PopoverMenu from '@/components/layouts/PopoverMenu.vue';
+
+export default Vue.extend({
+  components: {
+    PopoverMenu
+  },
+});
+</script>
 
 <style lang="scss">
 .app-bar-search {
