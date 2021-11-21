@@ -1,6 +1,6 @@
 <template>
   <v-container class="login-container d-flex align-center">
-    <v-row cols="12" align="center" justify="center">
+    <v-row align="center" justify="center">
       <v-col lg="6" md="6" sm="8">
         
         <v-card class="pa-0" :loading="formLoading">
@@ -107,7 +107,7 @@
                     ></v-file-input>
                   </v-card-text>
                   
-                  <v-row cols="12">
+                  <v-row>
                     <v-col cols="6">
                       <v-btn
                         color="#000"
@@ -152,7 +152,7 @@
                     />
                   </v-card-text>
                   
-                  <v-row cols="12">
+                  <v-row>
                     <v-col cols="6">
                       <v-btn
                         color="#000"

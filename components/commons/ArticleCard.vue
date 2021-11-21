@@ -14,6 +14,47 @@
     <v-card-text>
       {{ description }}
     </v-card-text>
+
+    <v-card-actions>
+      <v-btn
+        icon
+        color="#000"
+        @click.prevent="() => {}"
+      >
+        <v-icon>
+          mdi-heart
+        </v-icon>
+      </v-btn>
+
+      <v-btn
+        icon
+        color="#000"
+        @click.prevent="() => {}"
+      >
+        <v-icon>
+          mdi-comment-multiple
+        </v-icon>
+      </v-btn>
+
+      <v-btn
+        icon
+        color="#000"
+        @click.prevent="() => {}"
+      >
+        <v-icon>
+          mdi-bookmark-multiple
+        </v-icon>
+      </v-btn>
+
+      <v-spacer />
+
+      <v-avatar>
+        <v-img
+          width="39px"
+          :src="require('@/assets/images/profile-mock/man.jpg')"
+        />
+      </v-avatar>
+    </v-card-actions>
   </v-card>
 </template>
 
