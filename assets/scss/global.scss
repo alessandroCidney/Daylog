@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Passero+One&display=swap');
+
 * {
   box-sizing: border-box;
 
@@ -11,4 +13,9 @@
 
 .google-red-text {
   color: #f54263 !important;
+}
+
+.master-title {
+  font-family: 'Passero One', sans-serif !important;
+  font-size: 1.6rem;
 }
