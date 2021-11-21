@@ -1,11 +1,10 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-img
+    <v-parallax
       :src="require('@/assets/images/profile-mock/background.jpg')"
       alt="Profile background photo"
-      width="100%"
-      height="243px"
-    />
+      class="profile-background-photo"
+    ></v-parallax>
 
     <v-row cols="12">
       <v-col cols="4" class="d-flex flex-column align-center justify-center" align-self="start">
@@ -60,5 +59,10 @@ export default Vue.extend({
 
 .translated {
   transform: translateY(-82.5px); 
+}
+
+.profile-background-photo {
+  height: 250px !important;
+  
 }
 </style>
