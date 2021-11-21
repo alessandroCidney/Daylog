@@ -1,38 +1,44 @@
 <template>
   <v-app>
     <v-app-bar app elevation="1" color="#FFF" max-height="72px" class="pr-5">
-      <nuxt-link to="home">
-        <v-img
-          max-width="147px"
-          :src="require('@/assets/svg/logo_dark.svg')"
-        />
-      </nuxt-link>
+      <v-row>
+        
+      <v-col cols="4" class="d-flex align-center justify-start">
+        <nuxt-link to="home">
+          <v-img
+            max-width="147px"
+            :src="require('@/assets/svg/logo_dark.svg')"
+          />
+        </nuxt-link>
+      </v-col>
 
-      <v-spacer />
+      <v-col cols="4" class="d-flex align-center justify-center">
+        <v-text-field
+          class="app-bar-search"
+          outlined
+          dense
+          color="#000"
+          placeholder="Search"
+          hide-details
+        >
+          <template slot="prepend-inner">
+            <v-btn
+              icon
+              small
+            >
+              <v-icon>
+                mdi-magnify
+              </v-icon>
+            </v-btn>
+          </template>
+        </v-text-field>
+      </v-col>
 
-      <v-text-field
-        class="app-bar-search"
-        outlined
-        dense
-        color="#000"
-        placeholder="Search"
-        hide-details
-      >
-        <template slot="prepend-inner">
-          <v-btn
-            icon
-            small
-          >
-            <v-icon>
-              mdi-magnify
-            </v-icon>
-          </v-btn>
-        </template>
-      </v-text-field>
+      <v-col cols="4" class="d-flex align-center justify-end">
+        <PopoverMenu />
+      </v-col>
 
-      <v-spacer />
-
-      <PopoverMenu />
+      </v-row>
     </v-app-bar>
 
     <v-main>
