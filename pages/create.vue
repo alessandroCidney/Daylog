@@ -1,7 +1,18 @@
 <template>
-  <v-container>
-    <Editor />
+  <v-container class="mt-10">
+    <v-textarea
+      solo
+      flat
+      placeholder="Digite o título do seu novo artigo!"
+      class="font-weight-bold article-creation-title-textarea"
+      height="80px"
+      no-resize
+      color="#000"
+    />
 
+    <v-card min-height="500px">
+      <Editor />
+    </v-card>
   </v-container>
 </template>
 
@@ -20,3 +31,9 @@ export default Vue.extend({
   })
 });
 </script>
+
+<style lang="scss">
+.article-creation-title-textarea {
+  font-size: 2em !important;
+}
+</style>

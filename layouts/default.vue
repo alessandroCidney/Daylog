@@ -22,7 +22,7 @@
       <v-col cols="4" class="d-flex align-center justify-center">
         <v-text-field
           class="app-bar-search"
-          outlined
+          solo
           dense
           color="#000"
           placeholder="Search"
