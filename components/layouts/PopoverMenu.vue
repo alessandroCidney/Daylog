@@ -45,7 +45,7 @@
 
       <v-list flat>
         <v-list-item-group>
-          <v-list-item to="home">
+          <v-list-item to="/home">
             <v-list-item-icon>
               <v-icon>mdi-home</v-icon>
             </v-list-item-icon>
@@ -55,7 +55,7 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item to="profile">
+          <v-list-item to="/profile">
             <v-list-item-icon>
               <v-icon>mdi-account-circle</v-icon>
             </v-list-item-icon>

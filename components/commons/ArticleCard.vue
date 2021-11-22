@@ -1,5 +1,5 @@
 <template>
-  <v-card :width="width" elevation="1" :to="to">
+  <v-card :width="width" elevation="1" :to="`posts/${id}`">
     <v-img
       v-if="imageURL"
       :src="imageURL"
@@ -66,7 +66,7 @@ export default Vue.extend({
     title: { type: String, required: true } as PropOptions<string>,
     description: { type: String, required: false, default: "" } as PropOptions<string>,
     imageURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
-    to: { type: String, required: false, default: "#" },
+    id: { type: String, required: false, default:"21212" },
   }, 
 })
 </script>

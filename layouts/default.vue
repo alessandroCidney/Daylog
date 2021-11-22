@@ -11,7 +11,7 @@
       <v-row>
         
       <v-col cols="4" class="d-flex align-center justify-start">
-        <nuxt-link to="home">
+        <nuxt-link to="/home">
           <v-img
             max-width="147px"
             :src="require('@/assets/svg/logo_dark.svg')"
@@ -44,7 +44,7 @@
       <v-col cols="4" class="d-flex align-center justify-end">
         <v-spacer />
         
-        <v-btn to="home" icon color="#000" depressed plain>
+        <v-btn to="/home" icon color="#000" depressed plain>
           <v-icon>mdi-home</v-icon>
         </v-btn>
 
