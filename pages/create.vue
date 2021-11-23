@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-10">
+  <v-container class="mt-10 create-post-container">
     <v-textarea
       solo
       flat
@@ -10,7 +10,7 @@
       color="#000"
     />
 
-    <v-card min-height="500px">
+    <v-card min-height="500px" flat>
       <Editor />
     </v-card>
   </v-container>
@@ -35,5 +35,9 @@ export default Vue.extend({
 <style lang="scss">
 .article-creation-title-textarea {
   font-size: 2em !important;
+}
+
+.create-post-container {
+  width: 70%;
 }
 </style>
