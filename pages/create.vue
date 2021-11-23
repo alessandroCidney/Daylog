@@ -11,7 +11,7 @@
     />
 
     <v-card min-height="500px" flat>
-      <Editor />
+      <Editor :save="save" />
     </v-card>
   </v-container>
 </template>
@@ -21,14 +21,31 @@ import Vue from 'vue';
 
 import Editor from '@/components/commons/Editor.vue';
 
-export default Vue.extend({
+interface Data {
+  content: string;
+};
+
+interface Methods {
+  save: (content: string) => void;
+};
+
+interface Props {};
+interface Computed {};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
     Editor
   },
 
   data: () => ({
     content: '',
-  })
+  }),
+
+  methods: {
+    save (content: string): void {
+      console.log(content);
+    },
+  },
 });
 </script>
 
