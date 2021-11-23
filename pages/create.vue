@@ -10,7 +10,7 @@
       color="#000"
     />
 
-    <v-card min-height="500px" flat>
+    <v-card min-height="500px" flat class="create-post-editor pa-2">
       <Editor :save="save" />
     </v-card>
   </v-container>
@@ -56,5 +56,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .create-post-container {
   width: 70%;
+}
+
+.create-post-editor {
+  border: 1px solid #f0f0f0 !important;
 }
 </style>
