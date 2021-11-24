@@ -20,6 +20,7 @@
 import Vue from 'vue';
 
 import Editor from '@/components/commons/Editor.vue';
+import DropPhotoZone from '@/components/utils/DropPhotoZone.vue';
 
 interface Data {
   content: string;
@@ -34,7 +35,8 @@ interface Computed {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
-    Editor
+    Editor,
+    DropPhotoZone
   },
 
   data: () => ({

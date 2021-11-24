@@ -8,7 +8,16 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export default Vue.extend({
+interface Data {};
+interface Props {};
+interface Computed {};
+
+interface Methods {
+  showImage: (file: File) => void;
+  getFile: () => void;
+};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     showImage (file: File): void {
@@ -49,18 +58,10 @@ export default Vue.extend({
 
 <style lang="scss" scoped>
 .drop-photo-zone {
-  width: 150px;
-  min-width: 150px;
-  height: 150px;
-  min-height: 150px;
+  width: 100%;
+  height: 100%;
 
-  border-radius: 50%;
-
-  border: 1px solid #DDD;
-
-  cursor: pointer;
-
-  background-size: cover;
-  background-position: center;
+  border: 1px dashed #DDD;
+  border-radius: 4px;
 }
 </style>
