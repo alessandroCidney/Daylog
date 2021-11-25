@@ -1,26 +1,65 @@
 <template>
-  <div ref="photoDiv" class="drop-photo-zone" @click="getFile">
+  <div
+    ref="photoDiv"
+    :class="{
+      'drop-photo-zone': true,
+      'd-flex': true,
+      'align-center': true,
+      'justify-center': true,
+      'cursor-pointer': true,
+      'bordered': !file
+    }"
+    @click="getFile"
+  >
 
-    <input ref="photoInput" type="file" class="dont-show" @change="(e) => showImage(e.target.files[0])" />
+    <v-icon v-if="!file">mdi-image-plus</v-icon>
+
+    <input
+      ref="photoInput"
+      type="file"
+      class="dont-show"
+      @change="(e) => updatedFiles(e.target.files)"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 
-interface Data {};
+interface Data {
+  file: File | undefined;
+};
+
 interface Props {};
 interface Computed {};
 
 interface Methods {
-  showImage: (file: File) => void;
+  updateImage: (file: File) => void;
   getFile: () => void;
+  updatedFiles: (files: FileList) => void;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
 
+  data: () => ({
+    file: undefined,
+  }),
+
+  watch: {
+    file (f: File | undefined) {
+      if (!!f) {
+        this.updateImage(f);
+      }
+    }
+  },
+
   methods: {
-    showImage (file: File): void {
+    updatedFiles (files: FileList) {
+      this.file = files[0];
+      this.$emit('change', this.file);
+    },
+
+    updateImage (file: File): void {
       this.$emit('loading', true);
       
       const reader = new FileReader();
@@ -31,26 +70,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       reader.onload = () => {
         if (divRef) (divRef as HTMLDivElement).style.backgroundImage = `url('${reader.result}')`;
       };
-
-      reader.onloadend = () => {
-        this.$emit('loading', false);
-      };
-
-      reader.onerror = () => {
-        this.$emit('loading', false);
-      };
     },
 
     getFile (): void {
-      this.$emit('loading', true);
-
       const inputRef = this.$refs.photoInput;
       
       if (inputRef) (inputRef as HTMLInputElement).click();
-
-      setTimeout(() => {
-        this.$emit('loading', false);
-      }, 10000);
     }
   }  
 });
@@ -60,8 +85,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 .drop-photo-zone {
   width: 100%;
   height: 100%;
+  min-height: 100px;
 
-  border: 1px dashed #DDD;
   border-radius: 4px;
+
+  background-position: center;
+  background-size: cover;
+
+  &.bordered {
+    border: 3px dashed #DDD;
+  }
 }
 </style>

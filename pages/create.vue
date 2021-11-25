@@ -1,14 +1,22 @@
 <template>
   <v-container class="mt-10 create-post-container">
-    <v-textarea
-      solo
-      flat
-      placeholder="Digite o título do seu novo artigo!"
-      class="font-weight-bold article-creation-title-textarea"
-      height="80px"
-      no-resize
-      color="#000"
-    />
+    <v-row class="create-post-header mb-5">
+      <v-col cols="6">
+        <DropPhotoZone />
+      </v-col>
+
+      <v-col cols="6" align-self="center" >
+        <v-textarea
+          flat
+          solo
+          placeholder="Digite o título do seu novo artigo!"
+          class="font-weight-bold article-creation-title-textarea"
+          height="150px"
+          no-resize
+          color="#000"
+        />
+      </v-col>
+    </v-row>
 
     <v-card min-height="500px" flat class="create-post-editor pa-2">
       <Editor :save="save" />
@@ -53,7 +61,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 <style lang="scss">
 .article-creation-title-textarea {
-  font-size: 2em !important;
+  font-size: 2.5rem !important;
+  
+  textarea {
+    line-height: 2.8rem !important;
+  }
 }
 
 .create-post-container {
@@ -61,6 +73,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 }
 
 .create-post-editor {
-  border: 1px solid #f0f0f0 !important;
+  border: 3px solid #f0f0f0 !important;
+}
+
+.create-post-header {
+  height: 280px;
 }
 </style>
