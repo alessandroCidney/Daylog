@@ -6,6 +6,15 @@ export default {
 
   ssr: false,
 
+  env: {
+    ...process.env
+  },
+
+  loading: {
+    color: '#000',
+    height: '5px',
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - nuxt-app',
