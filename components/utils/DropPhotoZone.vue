@@ -56,12 +56,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   methods: {
     updatedFiles (files: FileList) {
       this.file = files[0];
-      this.$emit('change', this.file);
+      this.$emit('input', this.file);
     },
 
     updateImage (file: File): void {
-      this.$emit('loading', true);
-      
       const reader = new FileReader();
       const divRef = this.$refs.photoDiv;
 

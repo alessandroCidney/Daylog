@@ -77,7 +77,6 @@ interface Data {
 
 interface Methods {
   handleAuthenticateWithGoogle: () => void;
-  handleGetGoogleAuth: () => void;
 };
 
 interface Props {};
@@ -96,19 +95,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     this.authenticationService = new GoogleAuthentication();
   },
 
-  mounted () {
-    this.handleGetGoogleAuth();
-  },
-
   methods: {
     async handleAuthenticateWithGoogle () {
       await this.authenticationService?.authWithGoogleRedirect();
     },
-
-    async handleGetGoogleAuth () {
-      const authData = await this.authenticationService?.getGoogleAuthResults();
-      console.log('AUTH', authData)
-    }
   }
 });
 </script>

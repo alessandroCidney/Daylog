@@ -5,26 +5,6 @@
     width="100%"
     height="100%"
   >
-    <v-card-text class="d-flex py-0 my-0">
-      <v-spacer />
-
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-on="on"
-            v-bind="attrs"
-            icon
-            @click="save(editorHTML)"
-          >
-            <v-icon size="24">
-              mdi-content-save
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Save post</span>
-      </v-tooltip>
-      
-    </v-card-text>
     <bubble-menu
       class="bubble-menu"
       :tippy-options="{ duration: 100 }"
@@ -82,10 +62,7 @@ interface Data {
   editor: Editor | null;
 };
 
-interface Props {
-  save: (content: string) => void;
-};
-
+interface Props {};
 interface Methods {};
 
 interface Computed {
@@ -102,10 +79,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     editor: null as Editor | null,
   }),
 
-  props: {
-    save: { type: Function, required: true }
-  },
-
   computed: {
     editorHTML () {
       if (this.editor) {
@@ -113,6 +86,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       } else {
         return '';
       }
+    }
+  },
+
+  watch: {
+    editorHTML (str: string) {
+      this.$emit('input', str);
     }
   },
 
@@ -138,7 +117,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   
   > div {
     > div {
-
       padding: 20px;
     }
 

@@ -1,22 +1,26 @@
 import { 
   GoogleAuthProvider, 
   getAuth , 
-  signInWithRedirect, 
-  getRedirectResult,
-  UserCredential
+  signInWithRedirect,
+  UserCredential,
+  onAuthStateChanged
 } from 'firebase/auth';
 
 export interface IGoogleAuthentication {
   provider: GoogleAuthProvider;
   authWithGoogleRedirect: () => void;
-  getGoogleAuthResults: () => Promise<UserCredential | null>;
 };
 
 class GoogleAuthentication implements IGoogleAuthentication {
   provider;
 
   constructor () {
+    const auth = getAuth();
     this.provider = new GoogleAuthProvider();
+
+    onAuthStateChanged(auth, (user) => {
+      console.log('STAATEEE CHANGEED', user)
+    });
   };
 
   async authWithGoogleRedirect () {
@@ -25,13 +29,6 @@ class GoogleAuthentication implements IGoogleAuthentication {
 
     await signInWithRedirect(auth, this.provider);
   };
-
-  async getGoogleAuthResults () {
-    const auth = getAuth();
-    const results = await getRedirectResult(auth);
-
-    return results;
-  }
 };
 
 export {

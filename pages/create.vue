@@ -1,12 +1,13 @@
 <template>
   <v-container class="mt-10 create-post-container">
     <v-row class="create-post-header mb-5">
-      <v-col cols="6">
-        <DropPhotoZone />
+      <v-col cols="6" lg="6" md="6" sm="12">
+        <DropPhotoZone v-model="thumb" />
       </v-col>
 
-      <v-col cols="6" align-self="center" >
+      <v-col cols="6" align-self="center" lg="6" md="6" sm="12">
         <v-textarea
+          v-model="title"
           flat
           solo
           placeholder="Digite o título do seu novo artigo!"
@@ -18,8 +19,24 @@
       </v-col>
     </v-row>
 
+    <v-tooltip bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            v-on="on"
+            v-bind="attrs"
+            icon
+            @click="save"
+          >
+            <v-icon size="24">
+              mdi-content-save
+            </v-icon>
+          </v-btn>
+        </template>
+        <span>Save post</span>
+      </v-tooltip>
+
     <v-card min-height="500px" flat class="create-post-editor pa-2">
-      <Editor :save="save" />
+      <Editor v-model="content" />
     </v-card>
   </v-container>
 </template>
@@ -31,11 +48,13 @@ import Editor from '@/components/commons/Editor.vue';
 import DropPhotoZone from '@/components/utils/DropPhotoZone.vue';
 
 interface Data {
+  title: string;
   content: string;
+  thumb: File | undefined;
 };
 
 interface Methods {
-  save: (content: string) => void;
+  save: () => void;
 };
 
 interface Props {};
@@ -48,12 +67,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   data: () => ({
+    title: '',
     content: '',
+    thumb: undefined,
   }),
 
   methods: {
-    save (content: string): void {
-      console.log(content);
+    save () {
+      console.log('TITLE', this.title, '\n', 'CONTENT', this.content, '\n' , 'THUMB', this.thumb)
     },
   },
 });
