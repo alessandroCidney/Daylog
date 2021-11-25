@@ -2,9 +2,10 @@ import {
   GoogleAuthProvider, 
   getAuth , 
   signInWithRedirect,
-  UserCredential,
   onAuthStateChanged
 } from 'firebase/auth';
+
+import store from '@/store/index';
 
 export interface IGoogleAuthentication {
   provider: GoogleAuthProvider;
@@ -20,6 +21,7 @@ class GoogleAuthentication implements IGoogleAuthentication {
 
     onAuthStateChanged(auth, (user) => {
       console.log('STAATEEE CHANGEED', user)
+      store().dispatch('setUser', user);
     });
   };
 

@@ -61,6 +61,8 @@ interface Props {};
 interface Computed {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
+  middleware: 'authentication',
+
   components: {
     Editor,
     DropPhotoZone
