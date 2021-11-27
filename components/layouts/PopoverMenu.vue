@@ -11,7 +11,7 @@
         v-on="on"
       >
         <v-img
-          :src="require('@/assets/images/profile-mock/man.jpg')"
+          :src="profilePhoto"
           alt="Profile photo"
           width="46px"
         />
@@ -23,7 +23,7 @@
         <v-list-item>
           <v-list-item-avatar>
             <v-img
-              :src="require('@/assets/images/profile-mock/man.jpg')"
+              :src="profilePhoto"
               alt="Profile photo"
             />
           </v-list-item-avatar>
@@ -82,6 +82,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
+
+import { User } from 'firebase/auth';
 import Authentication, { IAuthentication } from '@/services/authentication/index';
 
 interface Data {
@@ -93,7 +96,11 @@ interface Methods {
   handleSignOut: () => Promise<void>;
 };
 
-interface Computed {};
+interface Computed {
+  user: User | null;
+  profilePhoto: string;
+};
+
 interface Props {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -106,15 +113,21 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     this.authenticationService = new Authentication();
   },
 
+  computed: {
+    ...mapGetters(['user']),
+
+    profilePhoto () {
+      if (this.user && this.user.photoURL) {
+        return this.user.photoURL;
+      };
+
+      return '';
+    }
+  },
+
   methods: {
     async handleSignOut () {
-      const stillLogged = !(await this.authenticationService?.signOut());
-      
-      if (stillLogged) {
-        alert('Sign out error');
-      } else {
-        alert('Sign out success');
-      }
+      await this.authenticationService?.signOut();
     }
   }
 });

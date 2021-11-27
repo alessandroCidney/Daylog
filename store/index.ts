@@ -18,7 +18,7 @@ const createStore = () => new Vuex.Store({
 
     isAuthenticated (state): boolean {
       return !!state.user;
-    }    
+    },
   },
 
   mutations: {

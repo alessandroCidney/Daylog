@@ -10,7 +10,7 @@
       <v-col lg="5" md="5" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
         <v-avatar width="165px" height="165px" class="profile-avatar-photo translated">
           <v-img
-            :src="require('@/assets/images/profile-mock/man.jpg')"
+            :src="profilePhoto"
             alt="Avatar photo"
           />
         </v-avatar>
@@ -42,12 +42,36 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
+
+import { User } from 'firebase/auth';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
-export default Vue.extend({
+interface Data {};
+interface Methods {};
+interface Props {};
+
+interface Computed {
+  user: User | null;
+  profilePhoto: string;
+};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
     ArticleCard
+  },
+
+  computed: {
+    ...mapGetters(['user']),
+
+    profilePhoto () {
+      if (this.user && this.user.photoURL) {
+        return this.user.photoURL.replace('s96-c', 's400-c');
+      };
+
+      return '';
+    }
   },
 });
 </script>
