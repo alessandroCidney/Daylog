@@ -1,11 +1,16 @@
 import { Middleware } from '@nuxt/types';
 
-const authentication: Middleware = ({ store }) => {
-  if (store.getters.isAuthenticated) {
-    alert('Está autenticado!');
-  } else {
-    alert('Não está autenticado');
+const authentication: Middleware = ({ store, redirect, route }) => {
+  const authenticated = store.getters.isAuthenticated;
+  const loginOrSignUp = route.name === 'signIn' || route.name === 'signUp'
+  
+  if (loginOrSignUp && authenticated) {
+    return redirect('/home')
   }
+
+  if (!authenticated && !loginOrSignUp) {
+    return redirect('/signIn');
+  };
 };
 
 export default authentication;
