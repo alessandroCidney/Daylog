@@ -1,5 +1,5 @@
-import { initializeApp } from "firebase/app";
-import { GoogleAuthentication } from './authentication';
+import * as firebase from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -11,10 +11,7 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
-export default app;
-
-export {
-  GoogleAuthentication
-};
+export const auth = getAuth();
+export default firebase;

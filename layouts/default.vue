@@ -72,6 +72,8 @@ import Vue from 'vue';
 import PopoverMenu from '@/components/layouts/PopoverMenu.vue';
 
 export default Vue.extend({
+  middleware: 'authentication',
+
   components: {
     PopoverMenu
   },

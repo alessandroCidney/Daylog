@@ -65,7 +65,7 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item>
+          <v-list-item @click="handleSignOut">
             <v-list-item-icon>
               <v-icon>mdi-arrow-left</v-icon>
             </v-list-item-icon>
@@ -82,9 +82,40 @@
 
 <script lang="ts">
 import Vue from 'vue';
-export default Vue.extend({
+import Authentication, { IAuthentication } from '@/services/authentication/index';
+
+interface Data {
+  showMenu: boolean;
+  authenticationService: IAuthentication | null;
+};
+
+interface Methods {
+  handleSignOut: () => Promise<void>;
+};
+
+interface Computed {};
+interface Props {};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   data: () => ({
     showMenu: false,
+    authenticationService: null,
   }),
+
+  created () {
+    this.authenticationService = new Authentication();
+  },
+
+  methods: {
+    async handleSignOut () {
+      const stillLogged = !(await this.authenticationService?.signOut());
+      
+      if (stillLogged) {
+        alert('Sign out error');
+      } else {
+        alert('Sign out success');
+      }
+    }
+  }
 });
 </script>

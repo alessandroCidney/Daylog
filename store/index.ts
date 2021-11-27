@@ -1,26 +1,31 @@
 import { User } from 'firebase/auth';
+import { auth } from '@/plugins/firebase';
 
 import Vue from 'vue';
 import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-const store = () => new Vuex.Store({
+const createStore = () => new Vuex.Store({
   state: () => ({
     user: null as User | null,
   }),
 
-  mutations: {
-    SET_USER: (state, user: User | null) => {
-      state.user = user;
-    }
+  getters: {
+    user (state): User | null {
+      return state.user;
+    },
+
+    isAuthenticated (state): boolean {
+      return !!state.user;
+    }    
   },
 
-  actions: {
-    setUser ({ commit }, user) {
-      commit('SET_USER', user);
+  mutations: {
+    setUser (state, payload: User | null) {
+      Vue.set(state, 'user', payload);
     }
   },
 });
 
-export default store;
+export default createStore;

@@ -20,7 +20,7 @@
                 color="#FFF"
                 class="google-red-text"
                 block
-                @click="handleAuthenticateWithGoogle"
+                @click="handleSignInWithGoogle"
               >
                 <v-icon class="mr-3" size="20px">
                   mdi-google
@@ -66,17 +66,16 @@
 <script lang="ts">
 import Vue from 'vue';
 
-import { IGoogleAuthentication } from '@/services/firebase/authentication';
-import { GoogleAuthentication } from '@/services/firebase';
+import Authentication, { IAuthentication } from '@/services/authentication/index';
 
 interface Data {
   formLoading: boolean;
   showPassword: boolean;
-  authenticationService: IGoogleAuthentication | undefined;
+  authenticationService: IAuthentication | null;
 };
 
 interface Methods {
-  handleAuthenticateWithGoogle: () => void;
+  handleSignInWithGoogle: () => void;
 };
 
 interface Props {};
@@ -88,17 +87,17 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   data: () => ({
     formLoading: false,
     showPassword: false,
-    authenticationService: undefined,
+    authenticationService: null,
   }),
 
   created () {
-    this.authenticationService = new GoogleAuthentication();
+    this.authenticationService = new Authentication();
   },
 
   methods: {
-    async handleAuthenticateWithGoogle () {
-      await this.authenticationService?.authWithGoogleRedirect();
-    },
+    handleSignInWithGoogle () {
+      this.authenticationService?.signInWithGoogle();
+    }
   }
 });
 </script>
