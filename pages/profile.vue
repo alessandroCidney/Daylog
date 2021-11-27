@@ -6,8 +6,8 @@
       class="profile-background-photo"
     ></v-parallax>
 
-    <v-row justify-lg="start" justify-md="center" justify-sm="center">
-      <v-col lg="5" md="5" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
+    <v-row justify-md="end" justify-sm="center">
+      <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
         <v-avatar width="165px" height="165px" class="profile-avatar-photo translated">
           <v-img
             :src="profilePhoto"
@@ -18,7 +18,7 @@
         <p class="master-title translated mt-3">@fernandosilva</p>
       </v-col>
 
-      <v-col lg="7" md="7" sm="12" class="py-16">
+      <v-col md="8" sm="12" class="py-16">
         <v-row align="center" justify="center">
           <v-col cols="11">          
             <ArticleCard
