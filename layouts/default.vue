@@ -10,7 +10,7 @@
     >
       <v-row>
         
-      <v-col cols="4" class="d-flex align-center justify-start">
+      <v-col cols="4" class=" d-none d-md-flex align-center justify-start">
         <nuxt-link to="/home">
           <v-img
             max-width="147px"
@@ -19,7 +19,7 @@
         </nuxt-link>
       </v-col>
 
-      <v-col cols="4" class="d-flex align-center justify-center">
+      <v-col md="4" sm="6" class="d-flex align-center justify-center">
         <v-text-field
           class="app-bar-search"
           solo
@@ -41,7 +41,7 @@
         </v-text-field>
       </v-col>
 
-      <v-col cols="4" class="d-flex align-center justify-end">
+      <v-col md="4" sm="6" class="d-flex align-center justify-end">
         <v-spacer />
         
         <v-btn to="/home" icon color="#000" depressed plain>

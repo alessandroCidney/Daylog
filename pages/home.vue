@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row align="center" justify="center" class="mt-10">
-      <v-col cols="8">
+      <v-col md="8" sm="10">
         <ArticleCard
           title="Como criar seu primeiro bot com Node.js"
           description="Aprenda como criar um bot desenvolvido apenas com Node.js, uma tecnologia que permite a utilização de JavaScript sem a necessidade de um navegador."
@@ -9,7 +9,7 @@
         />
       </v-col>
 
-      <v-col cols="8">
+      <v-col  md="8" sm="10">
         <ArticleCard
           title="A arte do trabalho em equipe"
           description="Descubra as vantagens do trabalho em equipe para o desenvolvimento de projetos."
