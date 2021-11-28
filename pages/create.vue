@@ -25,6 +25,7 @@
             v-on="on"
             v-bind="attrs"
             icon
+            color="space"
             @click="save"
           >
             <v-icon size="24">

@@ -11,7 +11,7 @@ export default {
   },
 
   loading: {
-    color: '#000',
+    color: '#172b4d',
     height: '5px',
   },
 

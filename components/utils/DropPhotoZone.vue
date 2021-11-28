@@ -12,7 +12,13 @@
     @click="getFile"
   >
 
-    <v-icon v-if="!file">mdi-image-plus</v-icon>
+    <v-icon
+      v-if="!file"
+      color="space"
+      size="50"
+    >
+      mdi-image-plus
+    </v-icon>
 
     <input
       ref="photoInput"

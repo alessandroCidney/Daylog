@@ -20,7 +20,7 @@
 
 
     <v-btn color="#FFF" fab fixed right bottom to="/create">
-      <v-icon>mdi-plus</v-icon>
+      <v-icon color="space">mdi-plus</v-icon>
     </v-btn>
     
   </v-container>

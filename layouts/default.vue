@@ -32,6 +32,7 @@
             <v-btn
               icon
               small
+              color="space"
             >
               <v-icon>
                 mdi-magnify

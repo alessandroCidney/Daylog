@@ -35,7 +35,7 @@
 
           <v-list-item-action>
             <v-btn icon>
-              <v-icon>mdi-cog</v-icon>
+              <v-icon color="space">mdi-cog</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -47,7 +47,7 @@
         <v-list-item-group>
           <v-list-item to="/home">
             <v-list-item-icon>
-              <v-icon>mdi-home</v-icon>
+              <v-icon color="space">mdi-home</v-icon>
             </v-list-item-icon>
 
             <v-list-item-title>
@@ -57,7 +57,7 @@
 
           <v-list-item to="/profile">
             <v-list-item-icon>
-              <v-icon>mdi-account-circle</v-icon>
+              <v-icon color="space">mdi-account-circle</v-icon>
             </v-list-item-icon>
 
             <v-list-item-title>
@@ -67,7 +67,7 @@
 
           <v-list-item @click="handleSignOut">
             <v-list-item-icon>
-              <v-icon>mdi-arrow-left</v-icon>
+              <v-icon color="space">mdi-arrow-left</v-icon>
             </v-list-item-icon>
 
             <v-list-item-title>
@@ -128,6 +128,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   methods: {
     async handleSignOut () {
       await this.authenticationService?.signOut();
+      this.$router.push('/signIn');
     }
   }
 });

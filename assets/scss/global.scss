@@ -9,6 +9,10 @@
   margin: 0;
 }
 
+.v-tooltip__content {
+  background-color: var(--v-space-base) !important;
+}
+
 .dont-show {
   display: none !important;
 }
