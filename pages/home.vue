@@ -28,12 +28,34 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
+import Database, { IDatabase } from '@/services/database';
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
-export default Vue.extend({
+interface Data {
+  postsService: IDatabase | null;
+};
+
+interface Props {};
+interface Computed {};
+interface Methods {};
+
+export default Vue.extend<Data, Props, Computed, Methods>({
   components: {
     ArticleCard
   },
+  
+  data: () => ({
+    postsService: null
+  }),
+
+  created () {
+    this.postsService = new Database('posts');
+  },
+
+  mounted () {
+    this.postsService?.get().then((data) => {
+      console.log(data?.val());
+    })
+  }
 });
 </script>

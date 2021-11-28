@@ -8,10 +8,10 @@ import {
   DataSnapshot
 } from 'firebase/database';
 
-interface IDatabase {
+export interface IDatabase {
   database: FirebaseDatabase;
   reference: DatabaseReference;
-  get: (childPath: string | undefined) => Promise<DataSnapshot | null>;
+  get: (childPath?: string) => Promise<DataSnapshot | null>;
 };
 
 class Database implements IDatabase {
@@ -23,9 +23,15 @@ class Database implements IDatabase {
     this.reference = DatabaseRef(this.database, path);
   };
 
-  async get (childPath: string = '') {
+  async get (childPath?: string) {
     try {
-      const snapshot = await DatabaseGet(DatabaseChild(this.reference, childPath));
+      let snapshot;
+
+      if (!!childPath) {
+        snapshot = await DatabaseGet(DatabaseChild(this.reference, childPath));
+      } else {
+        snapshot = await DatabaseGet(this.reference);
+      }
 
       if (snapshot.exists()) {
         return snapshot;
@@ -34,7 +40,6 @@ class Database implements IDatabase {
       return null;
     } catch (err) {
       console.log('Error on database service', err);
-
       return null;
     };
   };
