@@ -34,7 +34,7 @@
           </v-list-item-content>
 
           <v-list-item-action>
-            <v-btn icon>
+            <v-btn icon to="/settings">
               <v-icon color="space">mdi-cog</v-icon>
             </v-btn>
           </v-list-item-action>
