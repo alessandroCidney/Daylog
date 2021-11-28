@@ -1,8 +1,15 @@
+import Vue from 'vue';
+import Vuetify from 'vuetify/lib';
+
 import colors from 'vuetify/lib/util/colors';
 
-export default () => ({
-  
+Vue.use(Vuetify);
+
+const vuetify = new Vuetify({
   theme: {
+    options: {
+      customProperties: true
+    },
     dark: false,
     themes: {
       dark: {
@@ -14,10 +21,11 @@ export default () => ({
         error: colors.deepOrange.accent4,
         success: colors.green.accent3
       },
-      space: '#172b4d'
-    },
-    options: {
-      customProperties: true
+      light: {
+        space: '#172b4d'
+      }
     }
   }
 });
+
+export default vuetify;

@@ -42,7 +42,8 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '@/plugins/firebase.ts',
-    '@/plugins/fireauth.ts'
+    '@/plugins/fireauth.ts',
+    '@/plugins/vuetify.ts'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -67,7 +68,7 @@ export default {
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
-    optionsPath: '@/vuetify.options.ts'
+    optionsPath: '@/plugins/vuetify.ts'
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

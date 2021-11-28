@@ -14,7 +14,7 @@
           class="font-weight-bold article-creation-title-textarea"
           height="150px"
           no-resize
-          color="#000"
+          color="space"
         />
       </v-col>
     </v-row>

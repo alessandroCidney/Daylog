@@ -24,7 +24,7 @@
           class="app-bar-search"
           solo
           dense
-          color="#000"
+          color="space"
           placeholder="Search"
           hide-details
         >
@@ -44,11 +44,11 @@
       <v-col md="4" sm="6" class="d-flex align-center justify-end">
         <v-spacer />
         
-        <v-btn to="/home" icon color="#000" depressed plain>
+        <v-btn to="/home" icon color="space" depressed plain>
           <v-icon>mdi-home</v-icon>
         </v-btn>
 
-        <v-btn class="mr-2" icon color="#000" depressed plain>
+        <v-btn class="mr-2" icon color="space" depressed plain>
           <v-icon>mdi-bell</v-icon>
         </v-btn>
         

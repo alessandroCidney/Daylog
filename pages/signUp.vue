@@ -4,7 +4,7 @@
       <v-col lg="6" md="6" sm="8">
         
         <v-card class="pa-0" :loading="formLoading">
-          <v-progress-linear slot="progress" indeterminate color="#000" />
+          <v-progress-linear slot="progress" indeterminate color="space" />
 
           <v-card-title class="d-flex align-center justify-center pa-0 flex-column">
             <v-img
@@ -19,7 +19,7 @@
               <v-stepper-header>
                 <v-stepper-step
                   step="1"
-                  color="#000"
+                  color="space"
                 >
                   Personal information
                 </v-stepper-step>
@@ -28,7 +28,7 @@
 
                 <v-stepper-step
                   step="2"
-                  color="#000"
+                  color="space"
                 >
                   Profile photo
                 </v-stepper-step>
@@ -37,7 +37,7 @@
 
                 <v-stepper-step
                   step="3"
-                  color="#000"
+                  color="space"
                 >
                   Ready?
                 </v-stepper-step>
@@ -51,7 +51,7 @@
                     <v-text-field
                       label="E-mail"
                       placeholder="Type your e-mail"
-                      color="#000"
+                      color="space"
                     ></v-text-field>
 
                     <v-text-field
@@ -61,7 +61,7 @@
                       @click:append="showPassword = !showPassword"
                       label="Password"
                       placeholder="Type your password"
-                      color="#000"
+                      color="space"
                       class="mb-2"
                     />
 
@@ -79,7 +79,7 @@
                     </v-btn>
 
                     <v-btn
-                      color="#000"
+                      color="space"
                       class="white--text mt-5"
                       block
                       @click="step = 2"
@@ -111,7 +111,7 @@
                   <v-row>
                     <v-col cols="6">
                       <v-btn
-                        color="#000"
+                        color="space"
                         text
                         block
                         @click="step = 1"
@@ -122,7 +122,7 @@
 
                     <v-col cols="6">
                       <v-btn
-                        color="#000"
+                        color="space"
                         class="white--text"
                         @click="step = 3"
                         block
@@ -143,20 +143,20 @@
                     <v-checkbox
                       label="I agree with the use terms and with the cookies use policy"
                       value="terms_and_privacy_agree"
-                      color="#000"
+                      color="space"
                     />
 
                     <v-checkbox
                       label="I agree with the privacy policy"
                       value="terms_and_privacy_agree"
-                      color="#000"
+                      color="space"
                     />
                   </v-card-text>
                   
                   <v-row>
                     <v-col cols="6">
                       <v-btn
-                        color="#000"
+                        color="space"
                         text
                         block
                         @click="step = 2"
@@ -167,7 +167,7 @@
 
                     <v-col cols="6">
                       <v-btn
-                        color="#000"
+                        color="space"
                         class="white--text"
                         block
                       >

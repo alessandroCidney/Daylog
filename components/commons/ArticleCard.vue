@@ -18,7 +18,7 @@
     <v-card-actions>
       <v-btn
         icon
-        color="#000"
+        color="space"
         @click.prevent="() => {}"
       >
         <v-icon>
@@ -28,7 +28,7 @@
 
       <v-btn
         icon
-        color="#000"
+        color="space"
         @click.prevent="() => {}"
       >
         <v-icon>
@@ -38,7 +38,7 @@
 
       <v-btn
         icon
-        color="#000"
+        color="space"
         @click.prevent="() => {}"
       >
         <v-icon>

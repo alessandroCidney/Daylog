@@ -4,7 +4,7 @@
       <v-col lg="5" md="6" sm="8">
         
         <v-card :loading="formLoading" height="70vh">
-          <v-progress-linear slot="progress" indeterminate color="#000" />
+          <v-progress-linear slot="progress" indeterminate color="space" />
 
           <v-card-title class="d-flex align-center justify-center pa-0 flex-column">
             <v-img
@@ -33,7 +33,7 @@
               <v-text-field
                 label="E-mail"
                 placeholder="Type your e-mail"
-                color="#000"
+                color="space"
               ></v-text-field>
 
               <v-text-field
@@ -42,12 +42,12 @@
                 @click:append="showPassword = !showPassword"
                 label="Password"
                 placeholder="Type your password"
-                color="#000"
+                color="space"
                 class="mb-2"
               />
 
               <v-btn
-                color="#000"
+                color="space"
                 class="white--text mt-5"
                 block
               >
