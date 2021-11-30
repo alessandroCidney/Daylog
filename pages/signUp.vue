@@ -6,17 +6,10 @@
         <v-card class="pa-0" :loading="formLoading">
           <v-progress-linear slot="progress" indeterminate color="space" />
 
-          <v-card-title class="d-flex align-center justify-center pa-0 flex-column">
-            <v-img
-              max-width="150px"
-              :src="require('@/assets/svg/logo_dark.svg')"
-            />
-          </v-card-title>
-
           <v-form>
           
-            <v-stepper tile flat v-model="step">
-              <v-stepper-header>
+            <v-stepper tile flat v-model="step" color="space">
+              <v-stepper-header class="px-10">
                 <v-stepper-step
                   step="1"
                   color="space"
@@ -32,15 +25,6 @@
                 >
                   Profile photo
                 </v-stepper-step>
-
-                <v-divider></v-divider>
-
-                <v-stepper-step
-                  step="3"
-                  color="space"
-                >
-                  Ready?
-                </v-stepper-step>
               </v-stepper-header>
 
               <v-stepper-items>
@@ -49,9 +33,17 @@
                     <p>Please, type your email and password in the fields below</p>
 
                     <v-text-field
+                      label="Username"
+                      placeholder="Type a username"
+                      color="space"
+                      class="pb-0"
+                    ></v-text-field>
+
+                    <v-text-field
                       label="E-mail"
                       placeholder="Type your e-mail"
                       color="space"
+                      class="py-0"
                     ></v-text-field>
 
                     <v-text-field
@@ -62,10 +54,24 @@
                       label="Password"
                       placeholder="Type your password"
                       color="space"
-                      class="mb-2"
+                      class="py-0 mb-2"
                     />
 
-                    <p>But if you prefer, you can</p>
+                    <v-checkbox
+                      label="I agree with the use terms and with the cookies use policy"
+                      value="terms_and_privacy_agree"
+                      color="space"
+                      class="py-0"
+                      dense
+                    />
+
+                    <v-checkbox
+                      label="I agree with the privacy policy"
+                      value="terms_and_privacy_agree"
+                      color="space"
+                      class="py-0"
+                      dense
+                    />
 
                     <v-btn
                       color="#FFF"
@@ -128,50 +134,6 @@
                         block
                       >
                         Next
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-stepper-content>
-
-                <v-stepper-content step="3">
-
-                  <v-card-text>
-                    <p>
-                      To sign up, please, accept all terms and policies by checking the following checkboxes.
-                    </p>
-
-                    <v-checkbox
-                      label="I agree with the use terms and with the cookies use policy"
-                      value="terms_and_privacy_agree"
-                      color="space"
-                    />
-
-                    <v-checkbox
-                      label="I agree with the privacy policy"
-                      value="terms_and_privacy_agree"
-                      color="space"
-                    />
-                  </v-card-text>
-                  
-                  <v-row>
-                    <v-col cols="6">
-                      <v-btn
-                        color="space"
-                        text
-                        block
-                        @click="step = 2"
-                      >
-                        Previous
-                      </v-btn>
-                    </v-col>
-
-                    <v-col cols="6">
-                      <v-btn
-                        color="space"
-                        class="white--text"
-                        block
-                      >
-                        Register
                       </v-btn>
                     </v-col>
                   </v-row>
