@@ -5,7 +5,8 @@ import {
   signOut,
   getRedirectResult,
   Auth,
-  createUserWithEmailAndPassword
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 import Database, { IDatabase }  from '../database';
 
@@ -16,7 +17,8 @@ export interface IAuthentication {
   auth: Auth;
   signInWithGoogle: () => void;
   signOut: () => Promise<boolean>;
-  signUpWithEmailAndPassword: (email: string, password: string) => Promise<boolean>;
+  signUpWithEmail: (email: string, password: string) => Promise<boolean>;
+  signInWithEmail: (email: string, password: string) => Promise<boolean>;
 };
 
 class Authentication implements IAuthentication {
@@ -32,7 +34,7 @@ class Authentication implements IAuthentication {
     signInWithRedirect(auth, googleAuthProvider);
   }
 
-  async signUpWithEmailAndPassword (email: string, password: string) {
+  async signUpWithEmail (email: string, password: string) {
     try {
       const userCredentials = await createUserWithEmailAndPassword(
         this.auth,
@@ -43,10 +45,31 @@ class Authentication implements IAuthentication {
       if (!!userCredentials) {
         await this.database.setIfNotExists({
           name: userCredentials.user.displayName
-        }, 'teste_email');
+        }, userCredentials.user.email || undefined);
+
+        return true;
       };
 
-      return true;
+      return false;
+    } catch (err) {
+      console.log('Error on authentication service', err);
+      return false;
+    };
+  };
+
+  async signInWithEmail (email: string, password: string) {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      if (!!userCredentials) {
+        return true;
+      };
+
+      return false;
     } catch (err) {
       console.log('Error on authentication service', err);
       return false;
@@ -59,7 +82,7 @@ class Authentication implements IAuthentication {
     if (!!results) {
       await this.database.setIfNotExists({
         name: results.user.displayName,
-      }, 'teste_google')
+      }, results.user.email || undefined);
     };
   };
 
