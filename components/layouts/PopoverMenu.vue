@@ -1,7 +1,7 @@
 <template>
   <v-menu
     v-model="showMenu"
-    :close-on-content-click="true"
+    :close-on-content-click="false"
     :nudge-width="300"
     offset-x
   >
@@ -34,7 +34,7 @@
           </v-list-item-content>
 
           <v-list-item-action>
-            <v-btn icon to="/settings">
+            <v-btn icon to="/settings" @click="showMenu = false">
               <v-icon color="space">mdi-cog</v-icon>
             </v-btn>
           </v-list-item-action>
@@ -45,7 +45,8 @@
 
       <v-list flat>
         <v-list-item-group>
-          <v-list-item to="/home">
+
+          <v-list-item to="/home" @click="showMenu = false">
             <v-list-item-icon>
               <v-icon color="space">mdi-home</v-icon>
             </v-list-item-icon>
@@ -55,7 +56,7 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item to="/profile">
+          <v-list-item to="/profile" @click="showMenu = false">
             <v-list-item-icon>
               <v-icon color="space">mdi-account-circle</v-icon>
             </v-list-item-icon>
@@ -127,6 +128,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     async handleSignOut () {
+      this.showMenu = false;
       await this.authenticationService?.signOut();
       this.$router.push('/signIn');
     }

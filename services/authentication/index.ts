@@ -4,7 +4,8 @@ import {
   signInWithRedirect,
   signOut,
   getRedirectResult,
-  Auth
+  Auth,
+  createUserWithEmailAndPassword
 } from 'firebase/auth';
 import Database, { IDatabase }  from '../database';
 
@@ -15,6 +16,7 @@ export interface IAuthentication {
   auth: Auth;
   signInWithGoogle: () => void;
   signOut: () => Promise<boolean>;
+  signUpWithEmailAndPassword: (email: string, password: string) => Promise<boolean>;
 };
 
 class Authentication implements IAuthentication {
@@ -30,18 +32,35 @@ class Authentication implements IAuthentication {
     signInWithRedirect(auth, googleAuthProvider);
   }
 
+  async signUpWithEmailAndPassword (email: string, password: string) {
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
+
+      if (!!userCredentials) {
+        await this.database.setIfNotExists({
+          name: userCredentials.user.displayName
+        }, 'teste_email');
+      };
+
+      return true;
+    } catch (err) {
+      console.log('Error on authentication service', err);
+      return false;
+    };
+  };
+
   async checkGoogleAuthResults () {
     const results = await getRedirectResult(auth);
 
     if (!!results) {
-      console.log('FUIII CHAAMMAAADOOO')
-      
       await this.database.setIfNotExists({
         name: results.user.displayName,
-      }, 'teste')
+      }, 'teste_google')
     };
-
-    console.log('REDIRECT_RESULT', results);
   };
 
   async signOut () {
