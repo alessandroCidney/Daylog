@@ -65,7 +65,11 @@ class Database implements IDatabase {
 
       snapshot = await DatabaseGet(query);
 
-      return snapshot.val();
+      if (snapshot.exists()) {
+        return snapshot.val();
+      };
+
+      return null;
     } catch (err) {
       console.log('Error on database service (GET)', err);
       return null;
