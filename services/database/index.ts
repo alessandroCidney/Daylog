@@ -6,14 +6,21 @@ import {
   get as DatabaseGet,
   set as DatabaseSet,
   child as DatabaseChild,
-  DataSnapshot
+  DataSnapshot,
+  push as DatabasePush,
+  query as DatabaseQuery,
+  Query,
+  orderByChild,
+  equalTo
 } from 'firebase/database';
 
 export interface IDatabase {
   database: FirebaseDatabase;
   reference: DatabaseReference;
   get: (childPath?: string) => Promise<DataSnapshot | null>;
+  getWhere: (key: string, value: any, childPath?: string) => Promise<Query | DataSnapshot | null>;
   set: (content: any, childPath?: string) => Promise<boolean>;
+  push: (content: any, childPath?: string) => Promise<boolean>;
 };
 
 class Database implements IDatabase {
@@ -40,6 +47,25 @@ class Database implements IDatabase {
       }
 
       return null;
+    } catch (err) {
+      console.log('Error on database service (GET)', err);
+      return null;
+    };
+  };
+
+  async getWhere (key: string, value: any) {
+    try {
+      let snapshot;
+
+      const query = DatabaseQuery(
+        this.reference,
+        orderByChild(key),
+        equalTo(value)
+      );
+
+      snapshot = await DatabaseGet(query);
+
+      return snapshot.val();
     } catch (err) {
       console.log('Error on database service (GET)', err);
       return null;
@@ -80,6 +106,19 @@ class Database implements IDatabase {
 
         await DatabaseSet(this.reference, content);
       };
+
+      return true;
+    } catch (err) {
+      console.log('Error on database service (SET)', err);
+      return false;
+    }
+  };
+
+  async push (content: any) {
+    try {
+      const newRef = DatabasePush(this.reference);
+
+      await DatabaseSet(newRef, content);
 
       return true;
     } catch (err) {

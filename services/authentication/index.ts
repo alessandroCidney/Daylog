@@ -43,9 +43,9 @@ class Authentication implements IAuthentication {
       );
 
       if (!!userCredentials) {
-        await this.database.setIfNotExists({
+        await this.database.push({
           name: userCredentials.user.displayName
-        }, userCredentials.user.email || undefined);
+        });
 
         return true;
       };
@@ -79,10 +79,15 @@ class Authentication implements IAuthentication {
   async checkGoogleAuthResults () {
     const results = await getRedirectResult(auth);
 
+    const test = await this.database.getWhere('email', results?.user.email);
+
+    console.log('TESSSSTEEEE', test)
+
     if (!!results) {
-      await this.database.setIfNotExists({
+      await this.database.push({
         name: results.user.displayName,
-      }, results.user.email || undefined);
+        email: results.user.email
+      });
     };
   };
 
