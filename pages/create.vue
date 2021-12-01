@@ -1,11 +1,11 @@
 <template>
   <v-container class="mt-10 create-post-container">
     <v-row class="create-post-header mb-5">
-      <v-col cols="6" lg="6" md="6" sm="12">
+      <v-col md="6" sm="12">
         <DropPhotoZone v-model="thumb" />
       </v-col>
 
-      <v-col cols="6" align-self="center" lg="6" md="6" sm="12">
+      <v-col align-self="center" md="6" sm="12">
         <v-textarea
           v-model="title"
           flat
