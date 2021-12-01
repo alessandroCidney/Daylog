@@ -32,7 +32,7 @@ class Authentication implements IAuthentication {
 
   signInWithGoogle () {
     signInWithRedirect(auth, googleAuthProvider);
-  }
+  };
 
   async signUpWithEmail (email: string, password: string) {
     try {
@@ -44,7 +44,8 @@ class Authentication implements IAuthentication {
 
       if (!!userCredentials) {
         await this.database.push({
-          name: userCredentials.user.displayName
+          name: userCredentials.user.displayName,
+          email: userCredentials.user.email
         });
 
         return true;

@@ -84,8 +84,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
+import { StoreUser } from '@/types/users';
 
-import { User } from 'firebase/auth';
 import Authentication, { IAuthentication } from '@/services/authentication/index';
 
 interface Data {
@@ -98,7 +98,7 @@ interface Methods {
 };
 
 interface Computed {
-  user: User | null;
+  user: StoreUser | null;
   profilePhoto: string;
 };
 
@@ -118,8 +118,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapGetters(['user']),
 
     profilePhoto () {
-      if (this.user && this.user.photoURL) {
-        return this.user.photoURL;
+      if (this.user && this.user.authUser.photoURL) {
+        return this.user.authUser.photoURL;
       };
 
       return '';
