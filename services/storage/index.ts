@@ -7,10 +7,10 @@ import {
   getDownloadURL
 } from 'firebase/storage';
 
-interface ICloudStorage {
+export interface ICloudStorage {
   storage: FirebaseStorage;
   reference: StorageReference;
-  uploadFile: (file: File) => Promise<string | null>; 
+  uploadFile: (file: File, childPath?: string) => Promise<string | null>; 
 };
 
 class CloudStorage implements ICloudStorage {
@@ -27,10 +27,10 @@ class CloudStorage implements ICloudStorage {
     };
   };
 
-  async uploadFile (file: File) {
+  async uploadFile (file: File, childPath?: string) {
     const fileReference = StorageRef(
       this.storage,
-      `${this.reference.name}/${file.name}`
+      `${this.reference.name}/${!!childPath ? `${childPath}/`: ''}${file.name}`
     );
 
     try {

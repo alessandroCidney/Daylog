@@ -44,7 +44,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
-
+import { mapGetters } from 'vuex';
+import { StoreUser } from '@/types/users';
+import PostsService, { IPostService } from '@/services/posts';
 import Editor from '@/components/commons/Editor.vue';
 import DropPhotoZone from '@/components/utils/DropPhotoZone.vue';
 
@@ -52,14 +54,18 @@ interface Data {
   title: string;
   content: string;
   thumb: File | undefined;
+  postsService: IPostService | null;
 };
 
 interface Methods {
-  save: () => void;
+  save: () => Promise<void>;
 };
 
 interface Props {};
-interface Computed {};
+
+interface Computed {
+  user: StoreUser | null;
+};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
@@ -71,11 +77,36 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     title: '',
     content: '',
     thumb: undefined,
+    postsService: null
   }),
 
+  created () {
+    this.postsService = new PostsService();
+  },
+
+  computed: {
+    ...mapGetters(['user'])
+  },
+
   methods: {
-    save () {
+    async save () {
       console.log('TITLE', this.title, '\n', 'CONTENT', this.content, '\n' , 'THUMB', this.thumb)
+    
+      if (
+        this.title &&
+        this.content &&
+        this.thumb &&
+        this.user?.authUser.displayName &&
+        this.user?.authUser.email
+      ) {
+        await this.postsService?.savePost(
+          this.title,
+          this.content,
+          this.user?.authUser.displayName,
+          this.user?.authUser.email,
+          this.thumb
+        );
+      };
     },
   },
 });

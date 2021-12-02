@@ -1,4 +1,4 @@
-import { User } from 'firebase/auth';
+import { StoreUser } from '@/types/users';
 import { auth } from '@/plugins/firebase';
 
 import Vue from 'vue';
@@ -8,11 +8,11 @@ Vue.use(Vuex);
 
 const createStore = () => new Vuex.Store({
   state: () => ({
-    user: null as User | null,
+    user: null as StoreUser | null,
   }),
 
   getters: {
-    user (state): User | null {
+    user (state): StoreUser | null {
       return state.user;
     },
 
@@ -22,7 +22,7 @@ const createStore = () => new Vuex.Store({
   },
 
   mutations: {
-    setUser (state, payload: User | null) {
+    setUser (state, payload: StoreUser | null) {
       Vue.set(state, 'user', payload);
     }
   },

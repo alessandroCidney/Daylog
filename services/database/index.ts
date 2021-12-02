@@ -9,6 +9,7 @@ import {
   DataSnapshot,
   push as DatabasePush,
   query as DatabaseQuery,
+  update as DatabaseUpdate,
   Query,
   orderByChild,
   equalTo
@@ -20,7 +21,8 @@ export interface IDatabase {
   get: (childPath?: string) => Promise<DataSnapshot | null>;
   getWhere: (key: string, value: any, childPath?: string) => Promise<Query | DataSnapshot | null>;
   set: (content: any, childPath?: string) => Promise<boolean>;
-  push: (content: any, childPath?: string) => Promise<boolean>;
+  push: (content: any, childPath?: string) => Promise<string | boolean | null>;
+  update: (content: any, childPath?: string) => Promise<boolean>;
 };
 
 class Database implements IDatabase {
@@ -91,6 +93,21 @@ class Database implements IDatabase {
     }
   };
 
+  async update (content: any, childPath?: string) {
+    try {
+      if (!!childPath) {
+        await DatabaseUpdate(DatabaseChild(this.reference, childPath), content);
+      } else {
+        await DatabaseUpdate(this.reference, content);
+      };
+
+      return true;
+    } catch (err) {
+      console.log('Error on database service (SET)', err);
+      return false;
+    }
+  };
+
   async setIfNotExists (content: any, childPath?: string) {
     try {
       if (!!childPath) {
@@ -124,7 +141,7 @@ class Database implements IDatabase {
 
       await DatabaseSet(newRef, content);
 
-      return true;
+      return newRef.key;
     } catch (err) {
       console.log('Error on database service (SET)', err);
       return false;
