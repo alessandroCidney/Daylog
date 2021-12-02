@@ -1,10 +1,11 @@
 import CloudStorage, { ICloudStorage } from "../storage";
 import Database, { IDatabase } from "../database";
-import { auth } from '@/plugins/firebase';
+import { TPost } from '@/types/posts';
 
 export interface IPostService {
   storage: ICloudStorage;
   database: IDatabase;
+  fetchPosts: () => Promise<TPost[]>
   savePost: (
     title: string,
     content: string,
@@ -21,6 +22,12 @@ class PostsService {
   constructor () {
     this.storage = new CloudStorage('posts');
     this.database = new Database('posts');
+  };
+
+  async fetchPosts () {
+    const posts: TPost[] | null = await this.database.get();
+
+    return !!posts ? posts : [] as TPost[];
   };
 
   async savePost (

@@ -45,7 +45,7 @@ class Database implements IDatabase {
       }
 
       if (snapshot.exists()) {
-        return snapshot;
+        return snapshot.val();
       }
 
       return null;

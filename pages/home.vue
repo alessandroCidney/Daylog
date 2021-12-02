@@ -1,21 +1,19 @@
 <template>
   <v-container>
     <v-row align="center" justify="center" class="mt-10">
-      <v-col md="8" sm="10">
+      <v-col
+        v-for="(post, index) in posts"
+        :key="`home-post-${index}`"
+        md="8"
+        sm="10"
+      >
         <ArticleCard
-          title="Como criar seu primeiro bot com Node.js"
-          description="Aprenda como criar um bot desenvolvido apenas com Node.js, uma tecnologia que permite a utilização de JavaScript sem a necessidade de um navegador."
-          imageURL="https://cdn.pixabay.com/photo/2016/03/27/18/54/technology-1283624_960_720.jpg"
+          :title="post.title"
+          :description="post.content.slice(0, 100)"
+          :imageURL="post.thumbnail"
         />
       </v-col>
 
-      <v-col  md="8" sm="10">
-        <ArticleCard
-          title="A arte do trabalho em equipe"
-          description="Descubra as vantagens do trabalho em equipe para o desenvolvimento de projetos."
-          imageURL="https://cdn.pixabay.com/photo/2014/07/08/10/47/team-386673_960_720.jpg"
-        />
-      </v-col>
     </v-row>
 
 
@@ -28,11 +26,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Database, { IDatabase } from '@/services/database';
+import PostsService, { IPostService } from '@/services/posts';
+import { TPost } from '@/types/posts';
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
 interface Data {
-  postsService: IDatabase | null;
+  postsService: IPostService | null;
+  posts: TPost[];
 };
 
 interface Props {};
@@ -45,17 +45,18 @@ export default Vue.extend<Data, Props, Computed, Methods>({
   },
   
   data: () => ({
-    postsService: null
+    postsService: null,
+    posts: []
   }),
 
   created () {
-    this.postsService = new Database('posts');
+    this.postsService = new PostsService();
   },
 
   mounted () {
-    this.postsService?.get().then((data) => {
-      console.log(data?.val());
-    })
+    this.postsService?.fetchPosts().then((posts) => {
+      this.posts = posts;
+    });
   }
 });
 </script>
