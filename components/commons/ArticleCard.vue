@@ -51,7 +51,7 @@
       <v-avatar>
         <v-img
           width="39px"
-          :src="require('@/assets/images/profile-mock/man.jpg')"
+          :src="authorPhotoURL"
         />
       </v-avatar>
     </v-card-actions>
@@ -66,6 +66,7 @@ export default Vue.extend({
     title: { type: String, required: true } as PropOptions<string>,
     description: { type: String, required: false, default: "" } as PropOptions<string>,
     imageURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
+    authorPhotoURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
     id: { type: String, required: false, default:"21212" },
   }, 
 })

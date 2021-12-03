@@ -11,6 +11,7 @@
           :title="post.title"
           :description="post.content.slice(0, 100)"
           :imageURL="post.thumbnail"
+          :authorPhotoURL="post.author_photo_url"
         />
       </v-col>
 
