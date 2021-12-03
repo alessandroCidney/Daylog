@@ -5,7 +5,8 @@ import { TPost } from '@/types/posts';
 export interface IPostService {
   storage: ICloudStorage;
   database: IDatabase;
-  fetchPosts: () => Promise<TPost[]>
+  fetchPosts: () => Promise<TPost[]>;
+  fetchPost: (id: string) => Promise<TPost>;
   savePost: (
     title: string,
     content: string,
@@ -29,6 +30,12 @@ class PostsService {
     const posts: TPost[] | null = await this.database.get();
 
     return !!posts ? posts : [] as TPost[];
+  };
+
+  async fetchPost (id: string) {
+    const post: Record<string, TPost> = await this.database.getWhere('id', id);
+
+    return post[id];
   };
 
   async savePost (

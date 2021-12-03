@@ -67,7 +67,7 @@ export default Vue.extend({
     description: { type: String, required: false, default: "" } as PropOptions<string>,
     imageURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
     authorPhotoURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
-    id: { type: String, required: false, default:"21212" },
+    id: { type: String, required: false, default: undefined },
   }, 
 })
 </script>

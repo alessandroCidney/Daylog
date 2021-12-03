@@ -5,35 +5,22 @@
         <v-img
           min-width="100%"
           min-height="400px"
-          src="https://cdn.pixabay.com/photo/2017/07/31/11/51/laptop-2557615_960_720.jpg"
+          :src="post? post.thumbnail : ''"
         />
       </v-col>
 
       <v-col cols="5" class="text-left">
-        <h1 class="post-title">Node.js - Execute JavaScript sem um browser</h1>
+        <h1 class="post-title">{{ post ? post.title : null }}</h1>
       </v-col>
     </v-row>
 
     <v-row align="center" justify="center" class="mt-10">
       <v-col cols="8" class="pa-0 mr-2">
         <v-card flat>
-          <v-card-text class="black--text post-content">
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dicta officia reiciendis omnis rerum alias vero suscipit harum dolor incidunt nobis minima ipsum inventore tenetur repellat commodi pariatur, reprehenderit vitae accusamus!
-            </p>
-
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto maiores numquam voluptatum minus a consectetur debitis dicta laborum aliquid molestias mollitia deserunt, aspernatur sint dolor in. Eveniet facilis magnam nostrum?
-              Maiores dolores quo ipsam ullam totam magnam est provident, alias autem dolore consequuntur doloremque enim maxime eveniet tenetur sunt asperiores eligendi aliquid quas odit labore voluptas reiciendis assumenda corporis. Odit?
-              Magni accusamus, quod odit deserunt vero deleniti aut corporis soluta ad molestiae fuga dolore nam id recusandae at excepturi modi dolores eaque magnam, impedit iure! Velit illo vero illum sint.
-              Ipsa suscipit eius nesciunt facilis voluptas consequatur praesentium reiciendis numquam, magnam temporibus sint, sunt quod velit assumenda perspiciatis earum eum cupiditate aperiam? Facilis dignissimos mollitia necessitatibus fuga officia eum placeat?
-              Unde suscipit, ex est ab corporis quae? Exercitationem, blanditiis maxime obcaecati earum beatae harum ullam aliquid explicabo consectetur repellendus nulla aperiam inventore? Ea doloribus quasi illum a omnis quibusdam rerum?
-            </p>
-
-            <p>
-              Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dicta officia reiciendis omnis rerum alias vero suscipit harum dolor incidunt nobis minima ipsum inventore tenetur repellat commodi pariatur, reprehenderit vitae accusamus!
-            </p>
-          </v-card-text>
+          <v-card-text
+            class="black--text post-content"
+            v-html="post ? post.content : ''"
+          />
         </v-card>
       </v-col>
     </v-row>
@@ -43,13 +30,45 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
+import Vue from 'vue';
+import { TPost } from '@/types/posts';
+import PostsService, { IPostService } from '@/services/posts';
+
+interface Data {
+  post: TPost | null;
+  postsService: IPostService | null;
+};
+
+interface Methods {};
+interface Props {};
+
+interface Computed {
+  id: string;
+};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   async asyncData({ params }) {
     const id = params.id
     return { id }
-  }
-})
+  },
+
+  data: () => ({
+    post: null,
+    postsService: null,
+  }),
+
+  async created () {
+    this.postsService = new PostsService();
+    const post = await this.postsService.fetchPost(this.id);
+
+    if (!post) {
+      this.$router.push('/home');
+      return;
+    };
+
+    this.post = post;
+  },
+});
 </script>
 
 <style lang="scss">

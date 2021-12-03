@@ -8,6 +8,7 @@
         sm="10"
       >
         <ArticleCard
+          :id="post.id"
           :title="post.title"
           :description="post.content.slice(0, 100)"
           :imageURL="post.thumbnail"
