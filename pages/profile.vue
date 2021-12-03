@@ -44,7 +44,7 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
-import { User } from 'firebase/auth';
+import { StoreUser } from '@/types/users';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
@@ -53,7 +53,7 @@ interface Methods {};
 interface Props {};
 
 interface Computed {
-  user: User | null;
+  user: StoreUser | null;
   profilePhoto: string;
 };
 
@@ -66,8 +66,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapGetters(['user']),
 
     profilePhoto () {
-      if (this.user && this.user.photoURL) {
-        return this.user.photoURL.replace('s96-c', 's400-c');
+      if (this.user && this.user.authUser.photoURL) {
+        return this.user.authUser.photoURL.replace('s96-c', 's400-c');
       };
 
       return '';
