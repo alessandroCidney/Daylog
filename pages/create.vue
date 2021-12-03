@@ -90,8 +90,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     async save () {
-      console.log('TITLE', this.title, '\n', 'CONTENT', this.content, '\n' , 'THUMB', this.thumb)
-    
       if (
         this.title &&
         this.content &&
@@ -104,7 +102,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
           this.content,
           this.user?.authUser.displayName,
           this.user?.authUser.email,
-          this.thumb
+          this.user.authUser.photoURL ? this.user.authUser.photoURL : '',
+          this.thumb || null
         );
       };
     },
