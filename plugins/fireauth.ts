@@ -10,6 +10,12 @@ const fireAuth: Plugin = (context) => {
   return new Promise((resolve, reject) => {
     auth.onAuthStateChanged((user) => {
       
+      if (!user) {
+        store.commit('setUser', null);
+        resolve();
+        return;
+      };
+
       database.getWhere('email', user?.email)
         .then((firestoreUser) => {
           
