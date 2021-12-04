@@ -14,7 +14,7 @@ export interface IPostService {
     authorEmail: string,
     authorPhotoURL: string,
     thumb: File | null
-  ) => Promise<void>;
+  ) => Promise<string | null | undefined>;
 };
 
 class PostsService {
@@ -46,37 +46,49 @@ class PostsService {
     authorPhotoURL: string,
     thumb: File | null,
   ) {
-    const postKey = await this.database.push({
-      title,
-      content,
-      author,
-      author_email: authorEmail,
-      thumbnail: null,
-    });
 
-    if (!postKey) {
-      return;
-    };
-
-    if (thumb) {
-      const thumbURL = await this.storage.uploadFile(thumb, postKey);
-      
-      if (!thumbURL) {
+    try {
+      const postKey = await this.database.push({
+        title,
+        content,
+        author,
+        author_email: authorEmail,
+        thumbnail: null,
+      });
+  
+      if (!postKey) {
         return;
       };
+  
+      if (thumb) {
+        const thumbURL = await this.storage.uploadFile(thumb, postKey);
+        
+        if (!thumbURL) {
+          return;
+        };
+  
+        await this.database.update({
+          thumbnail: thumbURL,
+          id: postKey,
+          author_photo_url: authorPhotoURL
+        }, postKey);
 
-      await this.database.update({
-        thumbnail: thumbURL,
-        id: postKey,
-        author_photo_url: authorPhotoURL
-      }, postKey);
-    } else {
-      await this.database.update({
-        thumbnail: '',
-        id: postKey,
-        author_photo_url: authorPhotoURL
-      }, postKey);
-    };
+      } else {
+
+        await this.database.update({
+          thumbnail: '',
+          id: postKey,
+          author_photo_url: authorPhotoURL
+        }, postKey);
+
+      };
+
+      return postKey;
+    } catch (err) {
+      console.log('Error on post service (SAVE POST)', err);
+      return null
+    }
+    
   };
 };
 

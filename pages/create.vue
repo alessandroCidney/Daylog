@@ -100,7 +100,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         this.user?.firestoreUser.username &&
         this.user?.firestoreUser.email
       ) {
-        await this.postsService?.savePost(
+        const postKey = await this.postsService?.savePost(
           this.title,
           this.content,
           this.user?.firestoreUser.username,
@@ -108,6 +108,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
           this.user.firestoreUser.profile_photo ? this.user.firestoreUser.profile_photo : '',
           this.thumb || null
         );
+
+        if (!!postKey) {
+          this.$router.push(`/posts/${postKey}`);
+        };
       };
     },
   },
