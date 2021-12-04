@@ -1,3 +1,9 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.overflow-200 {
+  width: 100px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}

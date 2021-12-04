@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
     <v-parallax
-      :src="require('@/assets/images/profile-mock/background.jpg')"
+      :src="backgroundPhoto"
       alt="Profile background photo"
       class="profile-background-photo"
     ></v-parallax>
@@ -15,7 +15,9 @@
           />
         </v-avatar>
 
-        <p class="master-title translated mt-3">@fernandosilva</p>
+        <p class="master-title translated mt-3">
+          @{{ firestoreUser ? firestoreUser.username : '' }}
+        </p>
       </v-col>
 
       <v-col md="8" sm="12" class="py-16">
@@ -44,7 +46,7 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
-import { StoreUser } from '@/types/users';
+import { StoreUser, FirestoreUser } from '@/types/users';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
@@ -54,7 +56,9 @@ interface Props {};
 
 interface Computed {
   user: StoreUser | null;
+  firestoreUser: FirestoreUser | undefined;
   profilePhoto: string;
+  backgroundPhoto: string;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -66,12 +70,24 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapGetters(['user']),
 
     profilePhoto () {
-      if (this.user && this.user.authUser.photoURL) {
-        return this.user.authUser.photoURL.replace('s96-c', 's400-c');
+      if (this.user && this.user.firestoreUser.profile_photo) {
+        return this.user.firestoreUser.profile_photo;
       };
 
       return '';
-    }
+    },
+
+    backgroundPhoto () {
+      if (this.user && this.user.firestoreUser.profile_background) {
+        return this.user.firestoreUser.profile_background;
+      };
+
+      return '';
+    },
+
+    firestoreUser () {
+      return this.user?.firestoreUser;
+    },
   },
 });
 </script>

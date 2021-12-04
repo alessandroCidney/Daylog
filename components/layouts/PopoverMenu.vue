@@ -29,8 +29,8 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title>Fernando Silva</v-list-item-title>
-            <v-list-item-subtitle>@fernandosilva</v-list-item-subtitle>
+            <v-list-item-title class="overflow-200">{{ user.firestoreUser.username }}</v-list-item-title>
+            <v-list-item-subtitle class="overflow-200">Iniciante</v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
@@ -118,8 +118,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapGetters(['user']),
 
     profilePhoto () {
-      if (this.user && this.user.authUser.photoURL) {
-        return this.user.authUser.photoURL;
+      if (this.user && this.user.firestoreUser.profile_photo) {
+        return this.user.firestoreUser.profile_photo;
       };
 
       return '';
