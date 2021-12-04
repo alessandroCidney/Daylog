@@ -53,7 +53,7 @@
                 color="space"
                 class="white--text mt-5"
                 block
-                @click="handleSignInWithEmail()"
+                @click="handleSignInWithEmail"
               >
                 Login with email
               </v-btn>

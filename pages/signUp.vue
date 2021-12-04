@@ -142,11 +142,11 @@
                       <v-btn
                         color="space"
                         class="white--text"
-                        @click="step = 3"
+                        @click="handleSignUpWithEmail"
                         block
                         :disabled="!signUpValid"
                       >
-                        Next
+                        Sign up
                       </v-btn>
                     </v-col>
                   </v-row>
@@ -162,16 +162,23 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import Authentication, { IAuthentication } from '@/services/authentication';
 
 interface ISignUpData {
+  username: string;
   email: string;
   password: string;
+  profilePhoto: File | undefined;
+  profileBackground: File | undefined;
+  privacyAgree: boolean;
+  termsAgree: boolean;
 };
 
 interface Data {
   signUpData : ISignUpData;
   loading: boolean;
   signUpValid: boolean;
+  authenticationService: IAuthentication | null;
 };
 
 interface Methods {};
@@ -188,11 +195,21 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     loading: false,
     showPassword: false,
     signUpData: {
+      username: '',
       email: '',
       password: '',
+      profilePhoto: undefined,
+      profileBackground: undefined,
+      privacyAgree: false,
+      termsAgree: false,
     },
     signUpValid: false,
+    authenticationService: null
   }),
+
+  created () {
+    this.authenticationService = new Authentication();
+  },
 
   computed: {
     formLoading: {
@@ -213,7 +230,19 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       }
 
       return true;
-    }
+    },
+
+    async handleSignUpWithEmail () {
+      await this.authenticationService?.signUpWithEmail(
+        this.signUpData.email,
+        this.signUpData.password,
+        this.signUpData.username,
+        this.signUpData.profilePhoto,
+        this.signUpData.profileBackground,
+        this.signUpData.termsAgree,
+        this.signUpData.privacyAgree
+      )
+    },
   }
 });
 </script>

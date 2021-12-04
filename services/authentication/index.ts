@@ -82,12 +82,10 @@ class Authentication implements IAuthentication {
           await this.database.update({
             profile_photo: profilePhotoURL,
             profile_background: profileBackgroundURL
-          });
-
-          return true;
+          }, userKey);
         };
 
-        return false;
+        return true;
       };
 
       return false;
