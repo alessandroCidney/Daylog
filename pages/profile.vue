@@ -1,10 +1,9 @@
 <template>
   <v-container fluid class="pa-0">
     <v-parallax
-      :src="backgroundPhoto"
+      :src="!!backgroundPhoto ? backgroundPhoto : require('@/assets/images/profile-mock/background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
-      :height="1000"
     ></v-parallax>
 
     <v-row justify-md="end" justify-sm="center">
