@@ -6,7 +6,8 @@ import {
   getRedirectResult,
   Auth,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  deleteUser
 } from 'firebase/auth';
 import Database, { IDatabase }  from '../database';
 import CloudStorage, { ICloudStorage } from '../storage';
@@ -29,6 +30,7 @@ export interface IAuthentication {
     aceptedPrivacy: boolean,
   ) => Promise<boolean>;
   signInWithEmail: (email: string, password: string) => Promise<boolean>;
+  deleteAccount: () => Promise<void>;
 };
 
 class Authentication implements IAuthentication {
@@ -122,7 +124,9 @@ class Authentication implements IAuthentication {
     if (!!results && !alreadyExists) {
       await this.database.push({
         name: results.user.displayName,
-        email: results.user.email
+        email: results.user.email,
+        profile_photo: results.user.photoURL,
+        profile_background: null,
       });
     };
   };
@@ -134,7 +138,34 @@ class Authentication implements IAuthentication {
     } catch {
       return false;
     };
-  }
+  };
+
+  async deleteAccount () {
+    async function deleteUserPosts (authorEmail: string) {
+      const postsDatabase = new Database('posts');
+
+      const postKeys = Object.keys(
+        await postsDatabase.getWhere('author_email', authorEmail)
+      );
+
+      await Promise.all(postKeys.map((key) => postsDatabase.remove(key)));
+    };
+
+    if (!auth.currentUser || !auth.currentUser.email) {
+      return;
+    }
+
+    const userKey = Object.keys(
+      await this.database.getWhere('email', auth.currentUser.email)
+    )[0];
+
+    const userEmail = auth.currentUser.email;
+
+    /*await this.database.remove(userKey);
+    await deleteUser(auth.currentUser);*/
+
+    deleteUserPosts(userEmail);
+  };
 };
 
 export default Authentication;

@@ -10,6 +10,7 @@ import {
   push as DatabasePush,
   query as DatabaseQuery,
   update as DatabaseUpdate,
+  remove as DatabaseRemove,
   Query,
   orderByChild,
   equalTo
@@ -147,6 +148,19 @@ class Database implements IDatabase {
       return false;
     }
   };
+
+  async remove (childPath?: string) {
+    try {
+      if (!!childPath) {
+        const child = DatabaseChild(this.reference, childPath);
+        await DatabaseRemove(child);
+      } else {
+        await DatabaseRemove(this.reference);
+      }
+    } catch (err) {
+      console.log('Error on database service (DELETE)', err);
+    }
+  }
 };
 
 export default Database;
