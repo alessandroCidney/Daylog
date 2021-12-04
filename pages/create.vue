@@ -39,7 +39,12 @@
       </v-tooltip>
     </div>
 
-    <v-card min-height="500px" flat class="create-post-editor pa-0">
+    <v-card min-height="500px" flat class="create-post-editor pa-0" :loading="loading">
+
+      <template v-slot:progress>
+        <v-progress-linear color="space" indeterminate />
+      </template>
+
       <Editor v-model="content" />
     </v-card>
   </v-container>
@@ -58,6 +63,7 @@ interface Data {
   content: string;
   thumb: File | undefined;
   postsService: IPostService | null;
+  loading: boolean;
 };
 
 interface Methods {
@@ -80,7 +86,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     title: '',
     content: '',
     thumb: undefined,
-    postsService: null
+    postsService: null,
+    loading: false,
   }),
 
   created () {
@@ -93,6 +100,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     async save () {
+      this.loading = true;
+
       if (
         this.title &&
         this.content &&
@@ -109,10 +118,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
           this.thumb || null
         );
 
+        this.loading = false;
+
         if (!!postKey) {
           this.$router.push(`/posts/${postKey}`);
         };
       };
+
+      this.loading = false;
     },
   },
 });

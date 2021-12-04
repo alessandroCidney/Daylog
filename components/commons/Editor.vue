@@ -5,6 +5,7 @@
     flat
     width="100%"
     height="100%"
+    tile
   >
     <div class="editorControls py-1 px-1">
       <v-btn
