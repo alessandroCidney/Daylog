@@ -5,8 +5,57 @@
     width="100%"
     height="100%"
   >
+    <div class="editorControls py-1 px-1">
+      <v-btn
+        color="space"
+        icon
+        @click="editor.chain().focus().toggleBold().run()"
+      >
+        <v-icon>mdi-format-bold</v-icon>
+      </v-btn>
+
+      <v-btn
+        color="space"
+        icon
+        @click="editor.chain().focus().toggleItalic().run()"
+      >
+        <v-icon>mdi-format-italic</v-icon>
+      </v-btn>
+
+      
+
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="space"
+            icon
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-format-size</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="editor.chain().focus().toggleHeading({ level: 1 }).run()">
+            <v-list-item-icon>
+              <v-icon>mdi-format-header-1</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Heading 1</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+
+      <v-btn
+        color="space"
+        icon
+        @click="editor.chain().focus().toggleCode().run()"
+      >
+        <v-icon>mdi-code-tags</v-icon>
+      </v-btn>
+    </div>
+
     <bubble-menu
-      class="bubble-menu"
+      class="bubbleMenu"
       :tippy-options="{ duration: 100 }"
       :editor="editor"
       v-if="editor"
@@ -18,7 +67,7 @@
           dark
           tile
           shaped
-          height="50px"
+          height="40px"
         >
           <v-icon>mdi-format-bold</v-icon>
         </v-btn>
@@ -30,7 +79,7 @@
           dark
           tile
           shaped
-          height="50px"
+          height="40px"
         >
           <v-icon>mdi-format-italic</v-icon>
         </v-btn>
@@ -42,7 +91,7 @@
           dark
           tile
           shaped
-          height="50px"
+          height="40px"
         >
           <v-icon>mdi-code-tags</v-icon>
         </v-btn>
@@ -114,6 +163,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 .editor {
   line-height: 30px;
   text-align: justify;
+
+  .editorControls {
+    border-bottom: 3px solid #f0f0f0 !important;
+  }
   
   > div {
     > div {
@@ -132,7 +185,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   }
 }
 
-.bubble-menu {
+.bubbleMenu {
   display: flex;
   border-radius: 4px;
   overflow: hidden;
@@ -143,7 +196,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     color: #FFF;
     font-size: 0.85rem;
     font-weight: 500;
-    padding: 0 0.2rem;
+    padding: 0 0.1rem;
     filter: brightness(.9);
 
     &:hover,

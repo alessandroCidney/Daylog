@@ -19,7 +19,9 @@
       </v-col>
     </v-row>
 
-    <v-tooltip bottom>
+    <div class="d-flex">
+      <v-spacer />
+      <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-on="on"
@@ -35,8 +37,9 @@
         </template>
         <span>Save post</span>
       </v-tooltip>
+    </div>
 
-    <v-card min-height="500px" flat class="create-post-editor pa-2">
+    <v-card min-height="500px" flat class="create-post-editor pa-0">
       <Editor v-model="content" />
     </v-card>
   </v-container>
