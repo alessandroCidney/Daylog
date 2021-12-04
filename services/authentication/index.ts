@@ -9,33 +9,57 @@ import {
   signInWithEmailAndPassword
 } from 'firebase/auth';
 import Database, { IDatabase }  from '../database';
+import CloudStorage, { ICloudStorage } from '../storage';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
 export interface IAuthentication {
   database: IDatabase;
+  storage: ICloudStorage;
   auth: Auth;
   signInWithGoogle: () => void;
   signOut: () => Promise<boolean>;
-  signUpWithEmail: (email: string, password: string) => Promise<boolean>;
+  signUpWithEmail: (
+    email: string,
+    password: string,
+    username: string,
+    profilePhoto: File | undefined,
+    profileBackground: File | undefined,
+    aceptedTerms: boolean,
+    aceptedPrivacy: boolean,
+  ) => Promise<boolean>;
   signInWithEmail: (email: string, password: string) => Promise<boolean>;
 };
 
 class Authentication implements IAuthentication {
   database;
   auth;
+  storage;
 
   constructor () {
     this.auth = auth;
     this.database = new Database('users');
+    this.storage = new CloudStorage('users');
   };
 
   signInWithGoogle () {
     signInWithRedirect(auth, googleAuthProvider);
   };
 
-  async signUpWithEmail (email: string, password: string) {
+  async signUpWithEmail (
+    email: string,
+    password: string,
+    username: string,
+    profilePhoto: File | undefined,
+    profileBackground: File | undefined,
+    aceptedTerms: boolean,
+    aceptedPrivacy: boolean,
+  ) {
     try {
+      if (!aceptedTerms || !aceptedPrivacy) {
+        return false;
+      };
+
       const userCredentials = await createUserWithEmailAndPassword(
         this.auth,
         email,
@@ -43,12 +67,27 @@ class Authentication implements IAuthentication {
       );
 
       if (!!userCredentials) {
-        await this.database.push({
+        const userKey = await this.database.push({
           name: userCredentials.user.displayName,
-          email: userCredentials.user.email
+          email: userCredentials.user.email,
+          username,
+          acepted_terms: aceptedTerms,
+          acepted_privacy: aceptedPrivacy
         });
 
-        return true;
+        if (userKey && profilePhoto && profileBackground) {
+          const profilePhotoURL = await this.storage.uploadFile(profilePhoto, userKey);
+          const profileBackgroundURL = await this.storage.uploadFile(profileBackground, userKey);
+
+          await this.database.update({
+            profile_photo: profilePhotoURL,
+            profile_background: profileBackgroundURL
+          });
+
+          return true;
+        };
+
+        return false;
       };
 
       return false;

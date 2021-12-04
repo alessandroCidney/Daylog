@@ -5,8 +5,6 @@
         
         <v-card class="pa-0" :loading="formLoading">
           <v-progress-linear slot="progress" indeterminate color="space" />
-
-          <v-form>
           
             <v-stepper tile flat v-model="step" color="space">
               <v-stepper-header class="px-10">
@@ -32,68 +30,78 @@
                   <v-card-text>
                     <p>Please, type your email and password in the fields below</p>
 
-                    <v-text-field
-                      v-model="signUpData.email"
-                      label="Username"
-                      placeholder="Type a username"
-                      color="space"
-                      class="pb-0"
-                    ></v-text-field>
+                    <v-form v-model="signUpValid">  
 
-                    <v-text-field
-                      v-model="signUpData.password"
-                      label="E-mail"
-                      placeholder="Type your e-mail"
-                      color="space"
-                      class="py-0"
-                    ></v-text-field>
+                      <v-text-field
+                        v-model="signUpData.username"
+                        label="Username"
+                        placeholder="Type a username"
+                        color="space"
+                        class="pb-0"
+                        :rules=[required]
+                      ></v-text-field>
 
-                    <v-text-field
-                      :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                      :type="showPassword ? 'text' : 'password'"
-                      hint="At least 8 characters"
-                      @click:append="showPassword = !showPassword"
-                      label="Password"
-                      placeholder="Type your password"
-                      color="space"
-                      class="py-0 mb-2"
-                    />
+                      <v-text-field
+                        v-model="signUpData.email"
+                        label="E-mail"
+                        placeholder="Type your e-mail"
+                        color="space"
+                        class="py-0"
+                        :rules=[required]
+                      ></v-text-field>
 
-                    <v-checkbox
-                      label="I agree with the use terms and with the cookies use policy"
-                      value="terms_and_privacy_agree"
-                      color="space"
-                      class="py-0"
-                      dense
-                    />
+                      <v-text-field
+                        v-model="signUpData.password"
+                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="showPassword ? 'text' : 'password'"
+                        @click:append="showPassword = !showPassword"
+                        label="Password"
+                        placeholder="Type your password"
+                        color="space"
+                        class="py-0 mb-2"
+                        :rules=[required]
+                      />
 
-                    <v-checkbox
-                      label="I agree with the privacy policy"
-                      value="terms_and_privacy_agree"
-                      color="space"
-                      class="py-0"
-                      dense
-                    />
+                      <v-checkbox
+                        v-model="signUpData.termsAgree"
+                        label="I agree with the use terms and with the cookies use policy"
+                        color="space"
+                        class="py-0"
+                        dense
+                        :rules=[required]
+                      />
 
-                    <v-btn
-                      color="#FFF"
-                      class="google-red-text"
-                      block
-                    >
-                      <v-icon class="mr-3" size="20px">
-                        mdi-google
-                      </v-icon>
-                      Sign up with Google
-                    </v-btn>
+                      <v-checkbox
+                        v-model="signUpData.privacyAgree"
+                        label="I agree with the privacy policy"
+                        color="space"
+                        class="py-0"
+                        dense
+                        :rules=[required]
+                      />
 
-                    <v-btn
-                      color="space"
-                      class="white--text mt-5"
-                      block
-                      @click="step = 2"
-                    >
-                      Next
-                    </v-btn>
+                      <v-btn
+                        color="#FFF"
+                        class="google-red-text"
+                        block
+                        :disabled="!signUpValid"
+                      >
+                        <v-icon class="mr-3" size="20px">
+                          mdi-google
+                        </v-icon>
+                        Sign up with Google
+                      </v-btn>
+
+                      <v-btn
+                        color="space"
+                        class="white--text mt-5"
+                        block
+                        @click="step = 2"
+                        :disabled="!signUpValid"
+                      >
+                        Next
+                      </v-btn>
+                    </v-form>
                   </v-card-text>
                 </v-stepper-content>
 
@@ -101,6 +109,7 @@
                   <v-card-text>
                     <p>Choose your profile photo!</p>
                     <v-file-input
+                      v-model="signUpData.profilePhoto"
                       accept="image/png, image/jpeg, image/bmp"
                       placeholder="Pick an avatar"
                       prepend-icon="mdi-camera-plus"
@@ -109,6 +118,7 @@
 
                     <p>Choose your profile background image</p>
                     <v-file-input
+                      v-model="signUpData.profileBackground"
                       accept="image/png, image/jpeg, image/bmp"
                       placeholder="Pick an image"
                       prepend-icon="mdi-tooltip-image"
@@ -134,6 +144,7 @@
                         class="white--text"
                         @click="step = 3"
                         block
+                        :disabled="!signUpValid"
                       >
                         Next
                       </v-btn>
@@ -142,7 +153,6 @@
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
-          </v-form>
         </v-card>
 
       </v-col>
@@ -161,6 +171,7 @@ interface ISignUpData {
 interface Data {
   signUpData : ISignUpData;
   loading: boolean;
+  signUpValid: boolean;
 };
 
 interface Methods {};
@@ -179,7 +190,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     signUpData: {
       email: '',
       password: '',
-    }
+    },
+    signUpValid: false,
   }),
 
   computed: {
@@ -191,8 +203,18 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       set (v: boolean) {
         this.loading = v;
       },
-    }
+    },
   },
+
+  methods: {
+    required (v: boolean) {
+      if (!v) {
+        return false
+      }
+
+      return true;
+    }
+  }
 });
 </script>
 
