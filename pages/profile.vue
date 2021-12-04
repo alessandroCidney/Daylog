@@ -4,6 +4,7 @@
       :src="backgroundPhoto"
       alt="Profile background photo"
       class="profile-background-photo"
+      :height="1000"
     ></v-parallax>
 
     <v-row justify-md="end" justify-sm="center">

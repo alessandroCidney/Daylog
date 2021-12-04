@@ -1,5 +1,6 @@
 <template>
   <v-card
+    id="createPostEditor"
     class="editor"
     flat
     width="100%"

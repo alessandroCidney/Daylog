@@ -97,15 +97,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         this.title &&
         this.content &&
         this.thumb &&
-        this.user?.authUser.displayName &&
-        this.user?.authUser.email
+        this.user?.firestoreUser.username &&
+        this.user?.firestoreUser.email
       ) {
         await this.postsService?.savePost(
           this.title,
           this.content,
-          this.user?.authUser.displayName,
-          this.user?.authUser.email,
-          this.user.authUser.photoURL ? this.user.authUser.photoURL : '',
+          this.user?.firestoreUser.username,
+          this.user?.firestoreUser.email,
+          this.user.firestoreUser.profile_photo ? this.user.firestoreUser.profile_photo : '',
           this.thumb || null
         );
       };
