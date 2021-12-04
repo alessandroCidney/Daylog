@@ -85,5 +85,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 .post-content {
   font-size: 19px !important;
   line-height: 38px;
+
+  pre {
+    white-space: pre-line;
+    background-color: rgb(33, 33, 33);
+    color: #fff;
+  }
 }
 </style>

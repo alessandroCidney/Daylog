@@ -1,5 +1,5 @@
 <template>
-  <v-container class="login-container d-flex align-center">
+  <v-container class="login-container d-flex align-center" fluid>
     <v-row align="center" justify="center">
       <v-col lg="5" md="6" sm="8">
         

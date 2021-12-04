@@ -168,7 +168,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     border-bottom: 3px solid #f0f0f0 !important;
   }
   
-  > div {
+  code {
+    background-color: rgb(33, 33, 33) !important;
+    color: #fff !important;
+  }
+
+> div {
     > div {
       padding: 20px;
     }

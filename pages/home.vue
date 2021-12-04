@@ -10,7 +10,7 @@
         <ArticleCard
           :id="post.id"
           :title="post.title"
-          :description="post.content.slice(0, 100)"
+          :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
           :imageURL="post.thumbnail"
           :authorPhotoURL="post.author_photo_url"
         />
