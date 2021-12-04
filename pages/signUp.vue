@@ -33,6 +33,7 @@
                     <p>Please, type your email and password in the fields below</p>
 
                     <v-text-field
+                      v-model="signUpData.email"
                       label="Username"
                       placeholder="Type a username"
                       color="space"
@@ -40,6 +41,7 @@
                     ></v-text-field>
 
                     <v-text-field
+                      v-model="signUpData.password"
                       label="E-mail"
                       placeholder="Type your e-mail"
                       color="space"
@@ -151,13 +153,33 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export default Vue.extend({
+interface ISignUpData {
+  email: string;
+  password: string;
+};
+
+interface Data {
+  signUpData : ISignUpData;
+  loading: boolean;
+};
+
+interface Methods {};
+interface Computed {
+  formLoading: boolean;
+};
+interface Props {};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   layout: 'login',
 
   data: () => ({
     step: "1",
     loading: false,
     showPassword: false,
+    signUpData: {
+      email: '',
+      password: '',
+    }
   }),
 
   computed: {

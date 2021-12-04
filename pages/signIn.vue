@@ -72,7 +72,7 @@ import Vue from 'vue';
 
 import Authentication, { IAuthentication } from '@/services/authentication/index';
 
-interface LoginData {
+interface ILoginData {
   email: string;
   password: string;
 };
@@ -82,7 +82,7 @@ interface Data {
   showPassword: boolean;
   authenticationService: IAuthentication | null;
   validData: boolean;
-  loginData: LoginData;
+  loginData: ILoginData;
 };
 
 interface Methods {
