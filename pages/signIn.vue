@@ -14,8 +14,9 @@
           </v-card-title>
 
           <v-card-text class="px-10 mt-7">
-            <v-form>
-
+            <v-form
+              v-model="validData"
+            >
               <v-btn
                 color="#FFF"
                 class="google-red-text"
@@ -31,12 +32,14 @@
               <p class="mt-5">Or login with email and password</p>
             
               <v-text-field
+                v-model="loginData.email"
                 label="E-mail"
                 placeholder="Type your e-mail"
                 color="space"
               ></v-text-field>
 
               <v-text-field
+                v-model="loginData.password"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="showPassword ? 'text' : 'password'"
                 @click:append="showPassword = !showPassword"
@@ -50,6 +53,7 @@
                 color="space"
                 class="white--text mt-5"
                 block
+                @click="handleSignInWithEmail()"
               >
                 Login with email
               </v-btn>
@@ -68,14 +72,22 @@ import Vue from 'vue';
 
 import Authentication, { IAuthentication } from '@/services/authentication/index';
 
+interface LoginData {
+  email: string;
+  password: string;
+};
+
 interface Data {
   formLoading: boolean;
   showPassword: boolean;
   authenticationService: IAuthentication | null;
+  validData: boolean;
+  loginData: LoginData;
 };
 
 interface Methods {
   handleSignInWithGoogle: () => void;
+  handleSignInWithEmail: () => void;
 };
 
 interface Props {};
@@ -88,6 +100,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     formLoading: false,
     showPassword: false,
     authenticationService: null,
+    validData: false,
+    loginData: {
+      email: '',
+      password: '',
+    },
   }),
 
   created () {
@@ -97,6 +114,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   methods: {
     handleSignInWithGoogle () {
       this.authenticationService?.signInWithGoogle();
+    },
+
+    async handleSignInWithEmail () {
+      await this.authenticationService?.signInWithEmail(
+        this.loginData.email,
+        this.loginData.password
+      );
     }
   }
 });
