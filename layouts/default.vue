@@ -3,7 +3,7 @@
     <v-app-bar
       app
       elevation="1"
-      color="#FFF"
+      :color="headerColor"
       max-height="72px"
       class="pr-5 main-app-bar"
       clipped-left
@@ -54,13 +54,37 @@ import Vue from 'vue';
 import PopoverMenu from '@/components/layouts/PopoverMenu.vue';
 import SearchBar from '@/components/layouts/SearchBar.vue';
 
-export default Vue.extend({
+interface Data {};
+interface Methods {};
+
+interface Computed {
+  lightTheme: boolean;
+  headerColor: string;
+};
+
+interface Props {};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   middleware: 'authentication',
 
   components: {
     PopoverMenu,
     SearchBar
   },
+
+  computed: {
+    lightTheme () {
+      return !this.$vuetify.theme.dark;
+    },
+
+    headerColor () {
+      if (this.lightTheme) {
+        return '#FFF';
+      };
+
+      return '#1E1E1E'
+    }
+  }
 });
 </script>
 

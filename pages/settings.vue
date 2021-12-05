@@ -26,6 +26,7 @@
         <v-row>
           <v-col cols="6" class="d-flex align-center justify-start">
             <v-switch
+              v-model="lightTheme"
               color="yellow"
               prepend-icon="mdi-brightness-4"
             />
@@ -49,6 +50,7 @@
               value="alessandrocidney"
               prefix="@"
               :disabled="!allowEdit"
+              color="white"
             />
           </v-col>
 
@@ -57,6 +59,7 @@
               prepend-icon="mdi-camera-plus"
               placeholder="Change profile photo"
               :disabled="!allowEdit"
+              color="white"
             />
           </v-col>
 
@@ -65,6 +68,7 @@
               prepend-icon="mdi-tooltip-image"
               placeholder="Change profile background photo"
               :disabled="!allowEdit"
+              color="white"
             />
           </v-col>
         </v-row>
@@ -107,6 +111,7 @@ import { StoreUser } from '@/types/users';
 interface Data {
   authenticationService: IAuthentication | null;
   allowEdit: boolean;
+  lightTheme: boolean;
 };
 interface Methods {
   handleDeleteAccount: () => Promise<void>;
@@ -125,10 +130,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   data: () => ({
     authenticationService: null,
     allowEdit: false,
+    lightTheme: true
   }),
 
   created () {
     this.authenticationService = new Authentication();
+
+    this.lightTheme = !this.$vuetify.theme.dark;
   },
 
   computed: {
@@ -140,6 +148,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     backgroundPhoto () {
       return this.user?.firestoreUser.profile_background || '';
+    },
+  },
+
+  watch: {
+    lightTheme (activeLightTheme: boolean) {
+      this.$vuetify.theme.dark = !activeLightTheme;
     },
   },
 

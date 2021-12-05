@@ -19,7 +19,7 @@
     </v-row>
 
 
-    <v-btn color="#FFF" fab fixed right bottom to="/create">
+    <v-btn fab fixed right bottom to="/create">
       <v-icon color="space">mdi-plus</v-icon>
     </v-btn>
     
