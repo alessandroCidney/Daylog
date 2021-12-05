@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
     <v-parallax
-      :src="!!backgroundPhoto ? backgroundPhoto : require('@/assets/images/profile-mock/background.jpg')"
+      :src="!!backgroundPhoto ? backgroundPhoto : require('@/assets/images/b-background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
     ></v-parallax>
@@ -103,6 +103,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .profile-background-photo {
   height: 250px !important;
-  
+  border-bottom: 1px solid rgb(240, 240, 240);
 }
 </style>

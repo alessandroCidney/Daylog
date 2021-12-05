@@ -58,6 +58,13 @@
                 Login with email
               </v-btn>
 
+              <p class="mt-4">
+                Don't have an account? 
+                <nuxt-link to="/signUp" class="text-decoration-none">
+                  click here
+                </nuxt-link>
+              </p>
+
             </v-form>
           </v-card-text>
         </v-card>

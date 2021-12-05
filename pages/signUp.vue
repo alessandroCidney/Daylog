@@ -153,6 +153,15 @@
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
+
+            <v-card-text class="pt-0 px-10 mt-0">
+              <p>
+              Have an account? 
+              <nuxt-link to="/signIn" class="text-decoration-none">
+                click here
+              </nuxt-link>
+            </p>
+            </v-card-text>
         </v-card>
 
       </v-col>
