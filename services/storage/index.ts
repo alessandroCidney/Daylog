@@ -4,13 +4,15 @@ import {
   StorageReference,
   FirebaseStorage,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  deleteObject
 } from 'firebase/storage';
 
 export interface ICloudStorage {
   storage: FirebaseStorage;
   reference: StorageReference;
-  uploadFile: (file: File, childPath?: string) => Promise<string | null>; 
+  uploadFile: (file: File, childPath?: string) => Promise<string | null>;
+  deleteFiles: (childPath?: string) => Promise<boolean>;
 };
 
 class CloudStorage implements ICloudStorage {
@@ -40,8 +42,28 @@ class CloudStorage implements ICloudStorage {
 
     } catch (err) {
 
-      console.log('Error on storage service', err);
+      console.log('Error on storage service (UPLOAD)', err);
       return null;
+    };
+  };
+
+  async deleteFiles (childPath?: string) {
+    try {
+      let reference = this.reference;
+
+      if (!!childPath) {
+        reference = StorageRef(
+          this.storage,
+          `${this.reference.name}/${childPath}`
+        );
+      };
+
+      await deleteObject(reference);
+
+      return true;
+    } catch (err) {
+      console.log('Error on storage service (DELETE)', err);
+      return false;
     }
   };
 };
