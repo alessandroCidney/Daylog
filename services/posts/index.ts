@@ -28,9 +28,11 @@ class PostsService {
   };
 
   async fetchPosts () {
-    const posts: TPost[] | null = await this.database.get();
+    const posts: Record<string, TPost> = await this.database.get();
 
-    return !!posts ? posts : [] as TPost[];
+    const postsArr = Object.values(posts);
+
+    return !!postsArr ? postsArr : [] as TPost[];
   };
 
   async fetchPostsWhere (key: string, value: string) {

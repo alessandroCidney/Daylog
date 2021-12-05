@@ -20,26 +20,7 @@
       </v-col>
 
       <v-col md="4" sm="6" class="d-flex align-center justify-center">
-        <v-autocomplete
-          class="app-bar-search"
-          solo
-          dense
-          color="space"
-          placeholder="Search"
-          hide-details
-        >
-          <template slot="prepend-inner">
-            <v-btn
-              icon
-              small
-              color="space"
-            >
-              <v-icon>
-                mdi-magnify
-              </v-icon>
-            </v-btn>
-          </template>
-        </v-autocomplete>
+        <SearchBar />
       </v-col>
 
       <v-col md="4" sm="6" class="d-flex align-center justify-end">
@@ -71,12 +52,14 @@
 import Vue from 'vue';
 
 import PopoverMenu from '@/components/layouts/PopoverMenu.vue';
+import SearchBar from '@/components/layouts/SearchBar.vue';
 
 export default Vue.extend({
   middleware: 'authentication',
 
   components: {
-    PopoverMenu
+    PopoverMenu,
+    SearchBar
   },
 });
 </script>
