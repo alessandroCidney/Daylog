@@ -55,7 +55,7 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import { StoreUser } from '@/types/users';
 import PostsService, { IPostService } from '@/services/posts';
-import Editor from '@/components/commons/Editor.vue';
+import Editor from '~/components/commons/Editor/index.vue';
 import DropPhotoZone from '@/components/utils/DropPhotoZone.vue';
 
 interface Data {

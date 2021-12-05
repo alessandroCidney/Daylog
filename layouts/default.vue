@@ -20,7 +20,7 @@
       </v-col>
 
       <v-col md="4" sm="6" class="d-flex align-center justify-center">
-        <v-text-field
+        <v-autocomplete
           class="app-bar-search"
           solo
           dense
@@ -39,7 +39,7 @@
               </v-icon>
             </v-btn>
           </template>
-        </v-text-field>
+        </v-autocomplete>
       </v-col>
 
       <v-col md="4" sm="6" class="d-flex align-center justify-end">
