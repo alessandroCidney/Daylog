@@ -56,7 +56,7 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item to="/profile" @click="showMenu = false">
+          <v-list-item to="/me" @click="showMenu = false">
             <v-list-item-icon>
               <v-icon color="space">mdi-account-circle</v-icon>
             </v-list-item-icon>

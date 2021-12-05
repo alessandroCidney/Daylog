@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
     <v-parallax
-      :src="!!backgroundPhoto ? backgroundPhoto : require('@/assets/images/b-background.jpg')"
+      :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
     ></v-parallax>
@@ -10,13 +10,13 @@
       <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
         <v-avatar width="165px" height="165px" class="profile-avatar-photo translated">
           <v-img
-            :src="avatar? avatar : require('@/assets/images/profile/user.jpg')"
+            :src="avatar || require('@/assets/images/profile/user.jpg')"
             alt="Avatar photo"
           />
         </v-avatar>
 
         <p class="master-title translated mt-3">
-          @{{ username ? username : '' }}
+          @{{ username || '' }}
         </p>
       </v-col>
 
@@ -78,23 +78,47 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   }),
 
   async mounted () {
-    const id = this.$route.params.id;
+    this.id = this.$route.params.id;
+    
+    if (!this.id) {
+      return;
+    };
 
     this.usersDatabase = new Database('users');
     this.postsService = new PostsService();
+
+    this.user = await this.usersDatabase.get(this.id) as FirestoreUser | null;
+    
+    if (!this.user) {
+      return;
+    };
+
+    this.posts = Object.values(await this.postsService.fetchPostsWhere('author_email', this.user.email));
   },
 
   computed: {
     username () {
-      return ''
+      if (this.user) {
+        return this.user.username;
+      };
+
+      return '';
     },
 
     avatar () {
-      return ''
+      if (this.user) {
+        return this.user.profile_photo;
+      };
+
+      return '';
     },
 
     backgroundPhoto () {
-      return ''
+      if (this.user) {
+        return this.user.profile_background;
+      };
+
+      return '';
     },
   }
 });
