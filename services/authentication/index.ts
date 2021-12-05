@@ -119,6 +119,10 @@ class Authentication implements IAuthentication {
   async checkGoogleAuthResults () {
     const results = await getRedirectResult(auth);
 
+    if (!results) {
+      return;
+    }
+
     const alreadyExists = await this.database.getWhere('email', results?.user.email);
 
     if (!!results && !alreadyExists) {

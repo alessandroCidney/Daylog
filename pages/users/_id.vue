@@ -10,13 +10,13 @@
       <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
         <v-avatar width="165px" height="165px" class="profile-avatar-photo translated">
           <v-img
-            :src="profilePhoto"
+            :src="avatar? avatar : require('@/assets/images/profile/user.jpg')"
             alt="Avatar photo"
           />
         </v-avatar>
 
         <p class="master-title translated mt-3">
-          @{{ firestoreUser ? firestoreUser.username : '' }}
+          @{{ username ? username : '' }}
         </p>
       </v-col>
 
@@ -43,16 +43,18 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
-
-import { StoreUser, FirestoreUser } from '@/types/users';
 import { TPost } from '@/types/posts';
+import { FirestoreUser } from '@/types/users';
+import Database, { IDatabase } from '@/services/database';
 import PostsService, { IPostService } from '@/services/posts';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
 interface Data {
+  id: string;
+  user: FirestoreUser | null;
   postsService: IPostService | null;
+  usersDatabase: IDatabase | null;
   posts: TPost[];
 };
 
@@ -60,10 +62,6 @@ interface Methods {};
 interface Props {};
 
 interface Computed {
-  user: StoreUser | null;
-  firestoreUser: FirestoreUser | undefined;
-  profilePhoto: string;
-  backgroundPhoto: string;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -72,46 +70,33 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   data: () => ({
+    id: '',
+    user: null,
     postsService: null,
-    posts: [] as TPost[]
+    usersDatabase: null,
+    posts: []
   }),
 
-  created () {
+  async mounted () {
+    const id = this.$route.params.id;
+
+    this.usersDatabase = new Database('users');
     this.postsService = new PostsService();
   },
 
-  mounted () {
-    if (this.user && this.user.firestoreUser && this.user.firestoreUser.email) {
-      this.postsService?.fetchPostsByAuthorEmail(this.user.firestoreUser.email)
-        .then((posts) => {
-          this.posts = Object.values(posts);
-        });
-    };
-  },
-
   computed: {
-    ...mapGetters(['user']),
+    username () {
+      return ''
+    },
 
-    profilePhoto () {
-      if (this.user && this.user.firestoreUser.profile_photo) {
-        return this.user.firestoreUser.profile_photo;
-      };
-
-      return '';
+    avatar () {
+      return ''
     },
 
     backgroundPhoto () {
-      if (this.user && this.user.firestoreUser.profile_background) {
-        return this.user.firestoreUser.profile_background;
-      };
-
-      return '';
+      return ''
     },
-
-    firestoreUser () {
-      return this.user?.firestoreUser;
-    },
-  },
+  }
 });
 </script>
 

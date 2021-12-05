@@ -15,7 +15,7 @@ export interface IPostService {
     authorPhotoURL: string,
     thumb: File | null
   ) => Promise<string | null | undefined>;
-  fetchPostsByAuthorEmail: (authorEmail: string) => Promise<Record<string, TPost>>
+  fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>
 };
 
 class PostsService {
@@ -33,8 +33,8 @@ class PostsService {
     return !!posts ? posts : [] as TPost[];
   };
 
-  async fetchPostsByAuthorEmail (authorEmail: string) {
-    const posts: Record<string, TPost> = await this.database.getWhere('author_email', authorEmail);
+  async fetchPostsWhere (key: string, value: string) {
+    const posts: Record<string, TPost> = await this.database.getWhere(key, value);
 
     return !!posts ? posts : {} as Record<string, TPost>;
   };
