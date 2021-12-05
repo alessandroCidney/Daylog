@@ -10,7 +10,6 @@ const vuetify = new Vuetify({
     options: {
       customProperties: true
     },
-    dark: false,
     themes: {
       dark: {
         primary: colors.blue.darken2,
