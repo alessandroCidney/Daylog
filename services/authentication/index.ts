@@ -143,12 +143,14 @@ class Authentication implements IAuthentication {
   async deleteAccount () {
     async function deleteUserPosts (authorEmail: string) {
       const postsDatabase = new Database('posts');
+      const postsStorage = new CloudStorage('posts');
 
       const postKeys = Object.keys(
         await postsDatabase.getWhere('author_email', authorEmail)
       );
 
       await Promise.all(postKeys.map((key) => postsDatabase.remove(key)));
+      await Promise.all(postKeys.map((key) => postsStorage.deleteFiles(key)));
     };
 
     if (!auth.currentUser || !auth.currentUser.email) {

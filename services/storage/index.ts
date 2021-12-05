@@ -5,6 +5,7 @@ import {
   FirebaseStorage,
   uploadBytes,
   getDownloadURL,
+  listAll,
   deleteObject
 } from 'firebase/storage';
 
@@ -58,7 +59,9 @@ class CloudStorage implements ICloudStorage {
         );
       };
 
-      await deleteObject(reference);
+      const fileRefs = await (await listAll(reference)).items;
+
+      await Promise.all(fileRefs.map((fileRef) => deleteObject(fileRef)))
 
       return true;
     } catch (err) {
