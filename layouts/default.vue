@@ -13,8 +13,15 @@
       <v-col cols="4" class=" d-none d-md-flex align-center justify-start">
         <nuxt-link to="/home">
           <v-img
+            v-if="lightTheme"
             max-width="147px"
             :src="require('@/assets/svg/logo_dark.svg')"
+          />
+
+          <v-img
+            v-else
+            max-width="147px"
+            :src="require('@/assets/svg/logo_white.svg')"
           />
         </nuxt-link>
       </v-col>
@@ -83,7 +90,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       };
 
       return '#1E1E1E'
-    }
+    },
   }
 });
 </script>
