@@ -22,18 +22,17 @@
 
       <v-col md="8" sm="12" class="py-16">
         <v-row align="center" justify="center">
-          <v-col cols="11">          
+          <v-col
+            v-for="(post, index) in posts"
+            :key="`post-profile-${index}`"
+            cols="11"
+          >
             <ArticleCard
-              title="Como criar seu primeiro bot com Node.js"
-              description="Aprenda como criar um bot desenvolvido apenas com Node.js, uma tecnologia que permite a utilização de JavaScript sem a necessidade de um navegador."
-              imageURL="https://cdn.pixabay.com/photo/2016/03/27/18/54/technology-1283624_960_720.jpg"
-            />
-          </v-col>
-          <v-col cols="11">
-            <ArticleCard
-              title="A arte do trabalho em equipe"
-              description="Descubra as vantagens do trabalho em equipe para o desenvolvimento de projetos."
-              imageURL="https://cdn.pixabay.com/photo/2014/07/08/10/47/team-386673_960_720.jpg"
+              :id="post.id"
+              :title="post.title"
+              :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+              :imageURL="post.thumbnail"
+              :authorPhotoURL="post.author_photo_url"
             />
           </v-col>
         </v-row>
@@ -47,10 +46,16 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
 import { StoreUser, FirestoreUser } from '@/types/users';
+import { TPost } from '@/types/posts';
+import PostsService, { IPostService } from '@/services/posts';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
-interface Data {};
+interface Data {
+  postsService: IPostService | null;
+  posts: TPost[];
+};
+
 interface Methods {};
 interface Props {};
 
@@ -64,6 +69,24 @@ interface Computed {
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
     ArticleCard
+  },
+
+  data: () => ({
+    postsService: null,
+    posts: [] as TPost[]
+  }),
+
+  created () {
+    this.postsService = new PostsService();
+  },
+
+  mounted () {
+    if (this.user && this.user.firestoreUser && this.user.firestoreUser.email) {
+      this.postsService?.fetchPostsByAuthorEmail(this.user.firestoreUser.email)
+        .then((posts) => {
+          this.posts = Object.values(posts);
+        });
+    };
   },
 
   computed: {
