@@ -11,7 +11,7 @@
         v-on="on"
       >
         <v-img
-          :src="profilePhoto"
+          :src="profilePhoto || require('@/assets/images/profile/user.jpg')"
           alt="Profile photo"
           width="46px"
         />
@@ -23,13 +23,13 @@
         <v-list-item>
           <v-list-item-avatar>
             <v-img
-              :src="profilePhoto"
+              :src="profilePhoto || require('@/assets/images/profile/user.jpg')"
               alt="Profile photo"
             />
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title class="overflow-200">{{ user.firestoreUser.username }}</v-list-item-title>
+            <v-list-item-title class="overflow-200">{{ username }}</v-list-item-title>
             <v-list-item-subtitle class="overflow-200">Iniciante</v-list-item-subtitle>
           </v-list-item-content>
 
@@ -56,7 +56,7 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item to="/me" @click="showMenu = false">
+          <v-list-item :to="`/users/${userId}`" @click="showMenu = false">
             <v-list-item-icon>
               <v-icon color="space">mdi-account-circle</v-icon>
             </v-list-item-icon>
@@ -84,13 +84,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import { StoreUser } from '@/types/users';
+import { StoreUser, FirestoreUser } from '@/types/users';
 
-import Authentication, { IAuthentication } from '@/services/authentication/index';
+import Authentication, { IAuthentication } from '@/services/authentication';
+import Database, { IDatabase } from '@/services/database';
 
 interface Data {
+  userId: string;
   showMenu: boolean;
   authenticationService: IAuthentication | null;
+  usersDatabase: IDatabase | null;
 };
 
 interface Methods {
@@ -99,6 +102,7 @@ interface Methods {
 
 interface Computed {
   user: StoreUser | null;
+  username: string;
   profilePhoto: string;
 };
 
@@ -106,23 +110,38 @@ interface Props {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   data: () => ({
+    userId: '',
     showMenu: false,
     authenticationService: null,
+    usersDatabase: null
   }),
 
-  created () {
+  async created () {
     this.authenticationService = new Authentication();
+    this.usersDatabase = new Database('users');
+
+    const user = await this.usersDatabase.getWhere(
+      'email',
+      this.user?.firestoreUser.email
+    );
+
+    if (!user) {
+      return;
+    };
+
+    const [ userId ] = Object.keys(user);
+    this.userId = userId;
   },
 
   computed: {
     ...mapGetters(['user']),
 
-    profilePhoto () {
-      if (this.user && this.user.firestoreUser.profile_photo) {
-        return this.user.firestoreUser.profile_photo;
-      };
+    username () {
+      return this.user?.firestoreUser.username || '';
+    },
 
-      return '';
+    profilePhoto () {
+      return this.user?.firestoreUser.profile_photo || '';
     }
   },
 
