@@ -1,5 +1,13 @@
 <template>
-  <v-container class="login-container d-flex align-center" fluid>
+  <v-container
+    :class="{
+      'login-container': true,
+      'login-container-dark': !lightTheme,
+      'd-flex': true, 
+      'align-center': true
+    }"
+    fluid
+  >
     <v-row align="center" justify="center">
       <v-col lg="6" md="6" sm="8">
         
@@ -102,6 +110,13 @@
                         Next
                       </v-btn>
                     </v-form>
+
+                    <p class="mt-4">
+                      Have an account? 
+                      <nuxt-link to="/signIn" class="text-decoration-none">
+                        click here
+                      </nuxt-link>
+                    </p>
                   </v-card-text>
                 </v-stepper-content>
 
@@ -153,15 +168,6 @@
                 </v-stepper-content>
               </v-stepper-items>
             </v-stepper>
-
-            <v-card-text class="pt-0 px-10 mt-0">
-              <p>
-              Have an account? 
-              <nuxt-link to="/signIn" class="text-decoration-none">
-                click here
-              </nuxt-link>
-            </p>
-            </v-card-text>
         </v-card>
 
       </v-col>
@@ -191,9 +197,12 @@ interface Data {
 };
 
 interface Methods {};
+
 interface Computed {
   formLoading: boolean;
+  lightTheme: boolean;
 };
+
 interface Props {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -230,6 +239,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         this.loading = v;
       },
     },
+
+    lightTheme () {
+      return !this.$vuetify.theme.dark;
+    },
   },
 
   methods: {
@@ -263,5 +276,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   background-image: url('@/assets/images/b-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.login-container-dark {
+  background-image: url('@/assets/images/b-background-dark.jpg') !important;
 }
 </style>

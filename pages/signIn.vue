@@ -1,5 +1,13 @@
 <template>
-  <v-container class="login-container d-flex align-center" fluid>
+  <v-container
+    :class="{
+      'login-container': true,
+      'login-container-dark': !lightTheme,
+      'd-flex': true, 
+      'align-center': true
+    }"
+    fluid
+  >
     <v-row align="center" justify="center">
       <v-col lg="5" md="6" sm="8">
         
@@ -8,8 +16,15 @@
 
           <v-card-title class="d-flex align-center justify-center pa-0 flex-column">
             <v-img
+              v-if="lightTheme"
               max-width="150px"
               :src="require('@/assets/svg/logo_dark.svg')"
+            />
+
+            <v-img
+              v-else
+              max-width="150px"
+              :src="require('@/assets/svg/logo_white.svg')"
             />
           </v-card-title>
 
@@ -98,7 +113,10 @@ interface Methods {
 };
 
 interface Props {};
-interface Computed {};
+
+interface Computed {
+  lightTheme: boolean;
+};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   layout: 'login',
@@ -116,6 +134,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   created () {
     this.authenticationService = new Authentication();
+  },
+
+  computed: {
+    lightTheme () {
+      return !this.$vuetify.theme.dark;
+    },
   },
 
   methods: {
@@ -140,5 +164,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   background-image: url('@/assets/images/b-background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.login-container-dark {
+  background-image: url('@/assets/images/b-background-dark.jpg') !important;
 }
 </style>
