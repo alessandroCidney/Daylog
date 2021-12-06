@@ -91,6 +91,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 
 import Authentication, { IAuthentication } from '@/services/authentication/index';
 
@@ -109,13 +110,14 @@ interface Data {
 
 interface Methods {
   handleSignInWithGoogle: () => void;
-  handleSignInWithEmail: () => void;
+  handleSignInWithEmail: () => Promise<void>;
 };
 
 interface Props {};
 
 interface Computed {
   lightTheme: boolean;
+  isAuthenticated: boolean;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -137,9 +139,19 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
+    ...mapGetters(['isAuthenticated']),
+
     lightTheme () {
       return !this.$vuetify.theme.dark;
     },
+  },
+
+  watch: {
+    isAuthenticated (v) {
+      if (!!v) {
+        this.$router.push('/home');
+      };
+    }
   },
 
   methods: {
@@ -148,10 +160,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     async handleSignInWithEmail () {
-      await this.authenticationService?.signInWithEmail(
+      this.formLoading = true;
+
+      const success = await this.authenticationService?.signInWithEmail(
         this.loginData.email,
         this.loginData.password
       );
+
+      this.formLoading = false;
     }
   }
 });

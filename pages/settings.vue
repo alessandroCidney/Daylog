@@ -50,7 +50,7 @@
               value="alessandrocidney"
               prefix="@"
               :disabled="!allowEdit"
-              color="white"
+              :color="lightTheme ? 'space' : 'white'"
             />
           </v-col>
 
@@ -59,7 +59,7 @@
               prepend-icon="mdi-camera-plus"
               placeholder="Change profile photo"
               :disabled="!allowEdit"
-              color="white"
+              :color="lightTheme ? 'space' : 'white'"
             />
           </v-col>
 
@@ -68,7 +68,7 @@
               prepend-icon="mdi-tooltip-image"
               placeholder="Change profile background photo"
               :disabled="!allowEdit"
-              color="white"
+              :color="lightTheme ? 'space' : 'white'"
             />
           </v-col>
         </v-row>
