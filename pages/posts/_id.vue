@@ -47,7 +47,7 @@
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
 
-          <v-btn icon color="space">
+          <v-btn icon color="space" @click="handleDeletePost">
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
@@ -85,7 +85,10 @@ interface Data {
   authorId: string;
 };
 
-interface Methods {};
+interface Methods {
+  handleDeletePost: () => Promise<void>;
+};
+
 interface Props {};
 
 interface Computed {
@@ -169,7 +172,19 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
       return false;
     }
-  }
+  },
+
+  methods: {
+    async handleDeletePost () {
+      if (!this.viewerIsTheAuthor || !this.post) {
+        return;
+      };
+
+      await this.postsService?.deletePostsWhere('id', this.post.id);
+
+      this.$router.push('/home');
+    }
+  },
 });
 </script>
 

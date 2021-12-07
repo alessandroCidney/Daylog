@@ -15,7 +15,8 @@ export interface IPostService {
     authorPhotoURL: string,
     thumb: File | null
   ) => Promise<string | null | undefined>;
-  fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>
+  fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>;
+  deletePostsWhere: (key: string, value: string) => Promise<boolean | null>;
 };
 
 class PostsService {
