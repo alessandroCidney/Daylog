@@ -96,8 +96,27 @@ class PostsService {
     } catch (err) {
       console.log('Error on post service (SAVE POST)', err);
       return null
+    };
+  };
+
+  async deletePostsWhere (key: string, value: string) {
+    try {
+      const posts: Record<string, TPost> = await this.database.getWhere(key, value);
+
+      if (!posts) {
+        return null;
+      };
+
+      const postKeys = Object.keys(posts);
+
+      await Promise.all(postKeys.map(postKey => this.database.remove(postKey)));
+      await Promise.all(postKeys.map(postKey => this.storage.deleteFiles(postKey)));
+
+      return true;
+    } catch (err) {
+      console.log('Error on posts service (DELETE POSTS WHERE)', err);
+      return false;
     }
-    
   };
 };
 
