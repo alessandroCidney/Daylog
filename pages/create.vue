@@ -39,12 +39,7 @@
       </v-tooltip>
     </div>
 
-    <v-card min-height="500px" flat class="create-post-editor pa-0" :loading="loading">
-
-      <template v-slot:progress>
-        <v-progress-linear color="space" indeterminate />
-      </template>
-
+    <v-card min-height="500px" flat class="create-post-editor pa-0">
       <Editor v-model="content" />
     </v-card>
   </v-container>
@@ -100,7 +95,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     async save () {
-      this.loading = true;
+      this.$nuxt.$loading.start();
 
       if (
         this.title &&
@@ -125,7 +120,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         };
       };
 
-      this.loading = false;
+      this.$nuxt.$loading.finish();
     },
   },
 });

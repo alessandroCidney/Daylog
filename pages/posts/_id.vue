@@ -176,12 +176,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     async handleDeletePost () {
+      this.$nuxt.$loading.start();
+      
       if (!this.viewerIsTheAuthor || !this.post) {
         return;
       };
 
       await this.postsService?.deletePostsWhere('id', this.post.id);
 
+      this.$nuxt.$loading.finish();
       this.$router.push('/home');
     }
   },

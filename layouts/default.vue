@@ -9,42 +9,40 @@
       clipped-left
     >
       <v-row>
-        
-      <v-col cols="4" class=" d-none d-md-flex align-center justify-start">
-        <nuxt-link to="/home">
-          <v-img
-            v-if="lightTheme"
-            max-width="147px"
-            :src="require('@/assets/svg/logo_dark.svg')"
-          />
+        <v-col cols="4" class=" d-none d-md-flex align-center justify-start">
+          <nuxt-link to="/home">
+            <v-img
+              v-if="lightTheme"
+              max-width="147px"
+              :src="require('@/assets/svg/logo_dark.svg')"
+            />
 
-          <v-img
-            v-else
-            max-width="147px"
-            :src="require('@/assets/svg/logo_white.svg')"
-          />
-        </nuxt-link>
-      </v-col>
+            <v-img
+              v-else
+              max-width="147px"
+              :src="require('@/assets/svg/logo_white.svg')"
+            />
+          </nuxt-link>
+        </v-col>
 
-      <v-col md="4" sm="6" class="d-flex align-center justify-center">
-        <SearchBar />
-      </v-col>
+        <v-col md="4" sm="6" class="d-flex align-center justify-center">
+          <SearchBar />
+        </v-col>
 
-      <v-col md="4" sm="6" class="d-flex align-center justify-end">
-        <v-spacer />
-        
-        <v-btn to="/home" icon color="space" depressed plain>
-          <v-icon>mdi-home</v-icon>
-        </v-btn>
+        <v-col md="4" sm="6" class="d-flex align-center justify-end">
+          <v-spacer />
+          
+          <v-btn to="/home" icon color="space" depressed plain>
+            <v-icon>mdi-home</v-icon>
+          </v-btn>
 
-        <v-btn class="mr-2" icon color="space" depressed plain>
-          <v-icon>mdi-bell</v-icon>
-        </v-btn>
-        
-        <PopoverMenu />
+          <v-btn class="mr-2" icon color="space" depressed plain>
+            <v-icon>mdi-bell</v-icon>
+          </v-btn>
+          
+          <PopoverMenu />
 
-      </v-col>
-
+        </v-col>
       </v-row>
     </v-app-bar>
 
