@@ -47,8 +47,8 @@
     <v-row align="center" justify="center" class="mt-10">
       <v-col md="8" sm="10" class="pa-0 mr-2">
         <v-card flat>
-          <v-card-text
-            class="black--text post-content"
+          <div
+            class="post-content"
             v-html="content"
           />
         </v-card>
@@ -168,6 +168,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 .post-content {
   font-size: 19px !important;
   line-height: 38px;
+
+  padding: 20px;
+
+  h1 {
+    margin-top: 50px;
+  }
 
   pre {
     white-space: pre-line;
