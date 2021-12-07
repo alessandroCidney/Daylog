@@ -41,6 +41,16 @@
             @{{ author }}
           </nuxt-link>
         </p>
+
+        <div v-if="viewerIsTheAuthor">
+          <v-btn icon color="space">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+
+          <v-btn icon color="space">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
 
@@ -61,8 +71,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import { TPost } from '@/types/posts';
-import { FirestoreUser } from '@/types/users';
+import { FirestoreUser, StoreUser } from '@/types/users';
 import PostsService, { IPostService } from '@/services/posts';
 import Database, { IDatabase } from '@/services/database';
 
@@ -78,11 +89,13 @@ interface Methods {};
 interface Props {};
 
 interface Computed {
+  user: StoreUser | null;
   thumbnail: string;
   title: string;
   content: string;
   author: string;
   breakpoint: string;
+  viewerIsTheAuthor: boolean;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -127,6 +140,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
+    ...mapGetters(['user']),
+
     thumbnail () {
       return (this.post && this.post.thumbnail) ? this.post.thumbnail : '';
     },
@@ -145,6 +160,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     breakpoint () {
       return this.$vuetify.breakpoint.name;
+    },
+
+    viewerIsTheAuthor () {
+      if (this.user?.firestoreUser.email === this.post?.author_email) {
+        return true;
+      };
+
+      return false;
     }
   }
 });
