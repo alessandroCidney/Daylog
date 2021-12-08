@@ -106,7 +106,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import Authentication, { IAuthentication } from '@/services/authentication';
 import Users, { IUsers } from '@/services/users';
 import { StoreUser } from '@/types/users';
@@ -127,6 +127,7 @@ interface Data {
 interface Methods {
   handleDeleteAccount: () => Promise<void>;
   handleSaveChanges: () => Promise<void>;
+  getCurrentFirestoreUser: () => Promise<void>;
 };
 
 interface Computed {
@@ -187,6 +188,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   methods: {
+    ...mapActions(['getCurrentFirestoreUser']),
+
     async handleDeleteAccount () {
       await this.authenticationService?.deleteAccount();
     },
@@ -209,6 +212,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
           this.changes.profileBackgroundPhoto
         );
       };
+
+      if (Object.values(this.changes).find(change => !!change)) {
+        await this.getCurrentFirestoreUser();
+      }
 
       this.$nuxt.$loading.finish();
 

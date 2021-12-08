@@ -1,12 +1,12 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-parallax
+    <v-img
       :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
       :height="250"
       ref="parallaxRef"
-    ></v-parallax>
+    ></v-img>
 
     <v-row justify-md="end" justify-sm="center">
       <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
@@ -113,9 +113,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   updated () {
-    (this.$refs.parallaxRef as any).$refs.img.onload = () => {
+    /* (this.$refs.parallaxRef as any).$refs.img.onload = () => {
       this.parallaxLoaded = true;
-    };
+    }; */
   },
 
   computed: {

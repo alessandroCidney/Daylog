@@ -1,5 +1,7 @@
-import { StoreUser } from '@/types/users';
+import { StoreUser, FirestoreUser } from '@/types/users';
 import { auth } from '@/plugins/firebase';
+
+import Database from '@/services/database';
 
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -24,8 +26,33 @@ const createStore = () => new Vuex.Store({
   mutations: {
     setUser (state, payload: StoreUser | null) {
       Vue.set(state, 'user', payload);
-    }
+    },
   },
+
+  actions: {
+    async getCurrentFirestoreUser ({ state, commit }): Promise<void> {
+      if (!state.user) {
+        return;
+      };
+
+      const usersDatabase = new Database('users');
+      const results = await usersDatabase.getWhere(
+        'email',
+        state.user.firestoreUser.email
+      ) as Record<string, FirestoreUser>;
+
+      if (!results) {
+        return;
+      };
+
+      const user = Object.values(results)[0];
+
+      commit('setUser', {
+        ...state.user,
+        firestoreUser: user
+      });
+    }
+  } 
 });
 
 export default createStore;
