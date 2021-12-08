@@ -66,6 +66,7 @@
 
           <v-col cols="6">
             <v-file-input
+              v-model="changes.profileBackgroundPhoto"
               prepend-icon="mdi-tooltip-image"
               placeholder="Change profile background photo"
               :disabled="!allowEdit"
@@ -112,6 +113,7 @@ import { StoreUser } from '@/types/users';
 
 type TProfileChanges = {
   profilePhoto: File | null;
+  profileBackgroundPhoto: File | null;
 };
 
 interface Data {
@@ -144,7 +146,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     allowEdit: false,
     lightTheme: true,
     changes: {
-      profilePhoto: null
+      profilePhoto: null,
+      profileBackgroundPhoto: null
     }
   }),
 
@@ -189,11 +192,25 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     async handleSaveChanges () {
-      if (this.changes.profilePhoto && this.usersService) {
+      this.$nuxt.$loading.start();
+
+      if (!this.usersService) {
+        return;
+      };
+
+      if (this.changes.profilePhoto) {
         await this.usersService.changeProfilePhoto(
           this.changes.profilePhoto
         );
       };
+
+      if (this.changes.profileBackgroundPhoto) {
+        await this.usersService.changeProfileBackgroundPhoto(
+          this.changes.profileBackgroundPhoto
+        );
+      };
+
+      this.$nuxt.$loading.finish();
     }
   }
 });

@@ -9,6 +9,7 @@ export interface IUsers {
   database: IDatabase;
   storage: ICloudStorage;
   changeProfilePhoto: (file: File) => Promise<boolean>;
+  changeProfileBackgroundPhoto: (file: File) => Promise<boolean>;
 };
 
 class Users implements IUsers {
@@ -48,6 +49,34 @@ class Users implements IUsers {
       return true;
     } catch (error) {
       console.log('Error on users service (CHANGE PROFILE PHOTO)', error);
+      return false;
+    };
+  };
+
+  async changeProfileBackgroundPhoto (file: File) {
+    try {
+
+      const renamedFile = this.utils.renameFile(
+        file,
+        CloudStorageConstants.USER_PROFILE_BACKGROUND_PHOTO_FILENAME
+      );
+
+      const newProfileBackgroundPhotoURL = await this.storage.uploadFile(
+        renamedFile,
+        this.userId
+      );
+
+      if (!newProfileBackgroundPhotoURL) {
+        return false;
+      };
+
+      await this.database.update({
+        profile_background: newProfileBackgroundPhotoURL
+      }, this.userId);
+
+      return true;
+    } catch (error) {
+      console.log('Error on users service (CHANGE PROFILE BACKGROUND PHOTO)', error);
       return false;
     };
   };
