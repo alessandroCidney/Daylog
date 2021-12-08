@@ -1,9 +1,15 @@
 <template>
   <v-card :width="width" elevation="1" :to="`/posts/${id}`">
     <v-img
-      v-if="imageURL"
       :src="imageURL"
       :alt="`Imagem do post ${title}`"
+      :max-height="imageLoaded ? '216px' : '0'"
+      @load="imageLoaded = true"
+    />
+
+    <v-skeleton-loader
+      v-if="!imageLoaded"
+      type="image"
       max-height="216px"
     />
 
@@ -59,8 +65,25 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from 'vue'
-export default Vue.extend({
+import Vue, { PropOptions } from 'vue';
+
+interface Data {
+  imageLoaded: boolean;
+};
+
+interface Methods {};
+interface Computed {};
+
+interface Props {
+  width: number | string;
+  title: string;
+  description: string;
+  imageURL: string | undefined;
+  authorPhotoURL: string | undefined;
+  id: string | undefined;
+};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
   props: {
     width: { type: [Number, String], default: "100%", required: false } as PropOptions<number | string>,
     title: { type: String, required: true } as PropOptions<string>,
@@ -68,6 +91,10 @@ export default Vue.extend({
     imageURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
     authorPhotoURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
     id: { type: String, required: false, default: undefined },
-  }, 
-})
+  },
+
+  data: () => ({
+    imageLoaded: false
+  })
+});
 </script>

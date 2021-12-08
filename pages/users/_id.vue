@@ -4,6 +4,8 @@
       :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
+      :height="250"
+      ref="parallaxRef"
     ></v-parallax>
 
     <v-row justify-md="end" justify-sm="center">
@@ -56,13 +58,12 @@ interface Data {
   postsService: IPostService | null;
   usersDatabase: IDatabase | null;
   posts: TPost[];
+  parallaxLoaded: boolean;
 };
 
 interface Methods {};
 interface Props {};
-
-interface Computed {
-};
+interface Computed {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
@@ -74,7 +75,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     user: null,
     postsService: null,
     usersDatabase: null,
-    posts: []
+    posts: [],
+    parallaxLoaded: false
   }),
 
   async mounted () {
@@ -94,6 +96,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     };
 
     this.posts = Object.values(await this.postsService.fetchPostsWhere('author_email', this.user.email));
+  },
+
+  updated () {
+    (this.$refs.parallaxRef as any).$refs.img.onload = () => {
+      this.parallaxLoaded = true;
+    };
   },
 
   computed: {
@@ -120,7 +128,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
       return '';
     },
-  }
+  },
 });
 </script>
 
@@ -134,7 +142,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 }
 
 .profile-background-photo {
-  height: 250px !important;
   border-bottom: 1px solid rgb(240, 240, 240);
 }
 </style>
