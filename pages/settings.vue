@@ -211,6 +211,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       };
 
       this.$nuxt.$loading.finish();
+
+      this.$router.push(`/users/${this.userId}`);
     }
   }
 });
