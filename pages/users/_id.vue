@@ -63,7 +63,12 @@ interface Data {
 
 interface Methods {};
 interface Props {};
-interface Computed {};
+
+interface Computed {
+  username: string;
+  avatar: string;
+  backgroundPhoto: string;
+};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
@@ -95,7 +100,16 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       return;
     };
 
-    this.posts = Object.values(await this.postsService.fetchPostsWhere('author_email', this.user.email));
+    const postsObject = await this.postsService.fetchPostsWhere(
+      'author_email',
+      this.user.email
+    );
+
+    if (!postsObject) {
+      return;
+    };
+
+    this.posts = Object.values(postsObject);
   },
 
   updated () {

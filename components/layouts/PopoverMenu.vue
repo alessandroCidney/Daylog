@@ -29,7 +29,7 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title class="overflow-200">{{ username }}</v-list-item-title>
+            <v-list-item-title class="overflow-200">@{{ username }}</v-list-item-title>
             <v-list-item-subtitle class="overflow-200">Iniciante</v-list-item-subtitle>
           </v-list-item-content>
 

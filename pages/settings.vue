@@ -47,7 +47,7 @@
           <v-col cols="12">
             <v-text-field
               label="Username"
-              value="alessandrocidney"
+              :value="username"
               prefix="@"
               :disabled="!allowEdit"
               :color="lightTheme ? 'space' : 'white'"
@@ -122,6 +122,7 @@ interface Computed {
   user: StoreUser | null;
   profilePhoto: string;
   backgroundPhoto: string;
+  username: string;
 };
 
 interface Props {};
@@ -149,6 +150,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     backgroundPhoto () {
       return this.user?.firestoreUser.profile_background || '';
     },
+
+    username () {
+      return this.user?.firestoreUser.username || '';
+    }
   },
 
   watch: {
