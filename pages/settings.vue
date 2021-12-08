@@ -56,6 +56,7 @@
 
           <v-col cols="6">
             <v-file-input
+              v-model="changes.profilePhoto"
               prepend-icon="mdi-camera-plus"
               placeholder="Change profile photo"
               :disabled="!allowEdit"
@@ -105,20 +106,29 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import Authentication, { IAuthentication } from '@/services/authentication'
+import Authentication, { IAuthentication } from '@/services/authentication';
+import Users, { IUsers } from '@/services/users';
 import { StoreUser } from '@/types/users';
+
+type TProfileChanges = {
+  profilePhoto: File | null;
+};
 
 interface Data {
   authenticationService: IAuthentication | null;
+  usersService: IUsers | null;
   allowEdit: boolean;
   lightTheme: boolean;
+  changes: TProfileChanges;
 };
+
 interface Methods {
   handleDeleteAccount: () => Promise<void>;
   handleSaveChanges: () => Promise<void>;
 };
 
 interface Computed {
+  userId: string;
   user: StoreUser | null;
   profilePhoto: string;
   backgroundPhoto: string;
@@ -130,14 +140,21 @@ interface Props {};
 export default Vue.extend<Data, Methods, Computed, Props>({
   data: () => ({
     authenticationService: null,
+    usersService: null,
     allowEdit: false,
-    lightTheme: true
+    lightTheme: true,
+    changes: {
+      profilePhoto: null
+    }
   }),
 
   created () {
     this.authenticationService = new Authentication();
-
     this.lightTheme = !this.$vuetify.theme.dark;
+
+    if (!!this.userId) {
+      this.usersService = new Users(this.userId);
+    };
   },
 
   computed: {
@@ -153,6 +170,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     username () {
       return this.user?.firestoreUser.username || '';
+    },
+
+    userId () {
+      return this.user?.firestoreUser.id || '';
     }
   },
 
@@ -168,7 +189,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     async handleSaveChanges () {
-      alert('Save changes!')
+      if (this.changes.profilePhoto && this.usersService) {
+        await this.usersService.changeProfilePhoto(
+          this.changes.profilePhoto
+        );
+      };
     }
   }
 });

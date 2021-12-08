@@ -1,6 +1,7 @@
 import { User } from 'firebase/auth';
 
 export type FirestoreUser = {
+  id: string;
   name: string;
   email: string;
   profile_photo: string;

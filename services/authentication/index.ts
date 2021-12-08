@@ -11,6 +11,8 @@ import {
 } from 'firebase/auth';
 import Database, { IDatabase }  from '../database';
 import CloudStorage, { ICloudStorage } from '../storage';
+import Utils, { IUtils } from '@/utils';
+import * as CloudStorageConstants from '@/data/constants/storage';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -18,6 +20,7 @@ export interface IAuthentication {
   database: IDatabase;
   storage: ICloudStorage;
   auth: Auth;
+  utils: IUtils;
   signInWithGoogle: () => void;
   signOut: () => Promise<boolean>;
   signUpWithEmail: (
@@ -37,11 +40,13 @@ class Authentication implements IAuthentication {
   database;
   auth;
   storage;
+  utils;
 
   constructor () {
     this.auth = auth;
     this.database = new Database('users');
     this.storage = new CloudStorage('users');
+    this.utils = new Utils();
   };
 
   signInWithGoogle () {
@@ -77,9 +82,34 @@ class Authentication implements IAuthentication {
           acepted_privacy: aceptedPrivacy
         });
 
-        if (userKey && profilePhoto && profileBackground) {
-          const profilePhotoURL = await this.storage.uploadFile(profilePhoto, userKey);
-          const profileBackgroundURL = await this.storage.uploadFile(profileBackground, userKey);
+        if (!userKey) {
+          return false;
+        }
+
+        await this.database.update({
+          id: userKey
+        }, userKey);
+
+        if (profilePhoto && profileBackground) {
+          const renamedProfilePhoto = this.utils.renameFile(
+            profilePhoto,
+            CloudStorageConstants.USER_PROFILE_PHOTO_FILENAME
+          );
+
+          const renamedProfileBackgroundPhoto = this.utils.renameFile(
+            profileBackground,
+            CloudStorageConstants.USER_PROFILE_BACKGROUND_PHOTO_FILENAME
+          );
+
+          const profilePhotoURL = await this.storage.uploadFile(
+            renamedProfilePhoto,
+            userKey
+          );
+
+          const profileBackgroundURL = await this.storage.uploadFile(
+            renamedProfileBackgroundPhoto,
+            userKey
+          );
 
           await this.database.update({
             profile_photo: profilePhotoURL,
@@ -126,12 +156,18 @@ class Authentication implements IAuthentication {
     const alreadyExists = await this.database.getWhere('email', results?.user.email);
 
     if (!!results && !alreadyExists) {
-      await this.database.push({
+      const userKey = await this.database.push({
         name: results.user.displayName,
         email: results.user.email,
         profile_photo: results.user.photoURL,
         profile_background: null,
       });
+
+      if (userKey) {
+        await this.database.update({
+          id: userKey
+        }, userKey);
+      }
     };
   };
 

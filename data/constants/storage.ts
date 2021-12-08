@@ -1,0 +1,7 @@
+const USER_PROFILE_PHOTO_FILENAME = 'user_profile_photo';
+const USER_PROFILE_BACKGROUND_PHOTO_FILENAME = 'user_profile_background_photo';
+
+export {
+  USER_PROFILE_PHOTO_FILENAME,
+  USER_PROFILE_BACKGROUND_PHOTO_FILENAME
+};

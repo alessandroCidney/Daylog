@@ -6,7 +6,7 @@ export interface IPostService {
   storage: ICloudStorage;
   database: IDatabase;
   fetchPosts: () => Promise<TPost[]>;
-  fetchPost: (id: string) => Promise<TPost>;
+  fetchPost: (id: string) => Promise<TPost | undefined>;
   savePost: (
     title: string,
     content: string,
@@ -31,6 +31,10 @@ class PostsService {
   async fetchPosts () {
     const posts: Record<string, TPost> = await this.database.get();
 
+    if (!posts) {
+      return [];
+    };
+
     const postsArr = Object.values(posts);
 
     return !!postsArr ? postsArr : [] as TPost[];
@@ -39,13 +43,17 @@ class PostsService {
   async fetchPostsWhere (key: string, value: string) {
     const posts: Record<string, TPost> = await this.database.getWhere(key, value);
 
+    if (!posts) {
+      return {};
+    };
+
     return !!posts ? posts : {} as Record<string, TPost>;
   };
 
   async fetchPost (id: string) {
     const post: Record<string, TPost> = await this.database.getWhere('id', id);
 
-    return post[id];
+    return post[id] || undefined;
   };
 
   async savePost (
