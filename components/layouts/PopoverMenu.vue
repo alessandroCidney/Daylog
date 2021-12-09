@@ -9,13 +9,21 @@
       <v-avatar
         v-bind="attrs"
         v-on="on"
+        :class="!avatarLoaded && 'invisible-avatar'"
       >
         <v-img
           :src="profilePhoto || require('@/assets/images/profile/user.jpg')"
           alt="Profile photo"
-          width="46px"
+          :width="avatarLoaded ? '46px' : '0'"
+          @load="avatarLoaded = true"
         />
       </v-avatar>
+
+      <v-skeleton-loader
+        v-if="!avatarLoaded"
+        type="avatar"
+        class="avatar-loader"
+      />
     </template>
 
     <v-card>
@@ -94,6 +102,7 @@ interface Data {
   showMenu: boolean;
   authenticationService: IAuthentication | null;
   usersDatabase: IDatabase | null;
+  avatarLoaded: boolean;
 };
 
 interface Methods {
@@ -113,7 +122,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     userId: '',
     showMenu: false,
     authenticationService: null,
-    usersDatabase: null
+    usersDatabase: null,
+    avatarLoaded: false,
   }),
 
   async created () {
@@ -154,3 +164,17 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   }
 });
 </script>
+
+<style lang="scss">
+.avatar-loader.v-skeleton-loader.v-skeleton-loader--is-loading {
+  .v-skeleton-loader__image {
+    width: 46px;
+  }
+}
+
+.invisible-avatar {
+  width: 0 !important;
+  min-width: 0 !important;
+  height: 0 !important;
+}
+</style>
