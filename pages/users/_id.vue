@@ -4,9 +4,15 @@
       :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
-      :height="250"
-      ref="parallaxRef"
+      :height="backgroundPhotoLoaded ? 250 : 0"
+      @load="backgroundPhotoLoaded = true"
     ></v-img>
+
+    <v-skeleton-loader
+      v-if="!backgroundPhotoLoaded"
+      type="image"
+      class="profile-background-photo"
+    />
 
     <v-row justify-md="end" justify-sm="center">
       <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
@@ -58,7 +64,7 @@ interface Data {
   postsService: IPostService | null;
   usersDatabase: IDatabase | null;
   posts: TPost[];
-  parallaxLoaded: boolean;
+  backgroundPhotoLoaded: boolean;
 };
 
 interface Methods {};
@@ -81,7 +87,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     postsService: null,
     usersDatabase: null,
     posts: [],
-    parallaxLoaded: false
+    parallaxLoaded: false,
+    backgroundPhotoLoaded: false,
   }),
 
   async mounted () {
@@ -110,12 +117,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     };
 
     this.posts = Object.values(postsObject);
-  },
-
-  updated () {
-    /* (this.$refs.parallaxRef as any).$refs.img.onload = () => {
-      this.parallaxLoaded = true;
-    }; */
   },
 
   computed: {
@@ -157,5 +158,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .profile-background-photo {
   border-bottom: 1px solid rgb(240, 240, 240);
+
+  .v-skeleton-loader__image {
+    height: 250px !important;
+  }
 }
 </style>
