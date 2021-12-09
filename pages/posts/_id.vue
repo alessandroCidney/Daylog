@@ -17,9 +17,17 @@
         }"
       >
         <v-img
-          min-width="100%"
-          min-height="400px"
+          :min-width="thumbLoaded ? '100%' : '0'"
+          height="thumbLoaded ? '400px' : '0'"
           :src="thumbnail"
+          :alt="'Imagem do post ' + title"
+          @load="thumbLoaded = true"
+        />
+
+        <v-skeleton-loader
+          v-if="!thumbLoaded"
+          class="post-thumb"
+          type="image"
         />
       </v-col>
 
@@ -31,7 +39,10 @@
           'text-center': breakpoint === 'sm'
         }"
         >
-        <h1 class="post-title">{{ title }}</h1>
+          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
+          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
+          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
+          <h1 class="post-title">{{ title }}</h1>
         <p class="mt-2">
           Created by 
           <nuxt-link
@@ -83,6 +94,7 @@ interface Data {
   usersDatabase: IDatabase | null;
   id: string;
   authorId: string;
+  thumbLoaded: boolean;
 };
 
 interface Methods {
@@ -107,7 +119,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     postsService: null,
     usersDatabase: null,
     id: '',
-    authorId: ''
+    authorId: '',
+    thumbLoaded: false
   }),
 
   async created () {
@@ -220,6 +233,28 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     white-space: pre-line;
     background-color: rgb(33, 33, 33);
     color: #fff;
+  }
+}
+
+.post-thumb.v-skeleton-loader.v-skeleton-loader--is-loading {
+  .v-skeleton-loader__image {
+    min-height: 400px;
+  }
+}
+
+.post-title.v-skeleton-loader.v-skeleton-loader--is-loading {
+  
+  &:nth-child(2n+1) {
+    .v-skeleton-loader__text {
+      min-height: 50px;
+    }
+  }
+  
+  &:nth-child(2n) {
+    .v-skeleton-loader__text {
+      min-height: 50px;
+      width: 70%;
+    }
   }
 }
 </style>
