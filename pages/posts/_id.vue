@@ -4,7 +4,7 @@
       align="center"
       justify-md="start"
       justify-sm="center"
-      class="mt-10"
+      :class="breakpoint !== 'sm' && 'mt-10'"
     >
       <v-col
         md="6"
@@ -36,7 +36,8 @@
         sm="10"
         :class="{
           'text-left': breakpoint !== 'sm',
-          'text-center': breakpoint === 'sm'
+          'text-center': breakpoint === 'sm',
+          'mt-10': breakpoint === 'sm'
         }"
         >
           <v-skeleton-loader v-if="!title" type="text" class="post-title" />

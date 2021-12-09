@@ -10,6 +10,7 @@ export interface IUsers {
   storage: ICloudStorage;
   changeProfilePhoto: (file: File) => Promise<boolean>;
   changeProfileBackgroundPhoto: (file: File) => Promise<boolean>;
+  changeUsername: (username: string) => Promise<boolean>;
 };
 
 class Users implements IUsers {
@@ -23,6 +24,20 @@ class Users implements IUsers {
     this.utils = new Utils();
     this.database = new Database('users');
     this.storage = new CloudStorage('users');
+  };
+
+  async changeUsername (username: string) {
+    if (!username) {
+      return false;
+    };
+
+    try {
+      await this.database.update({ username }, this.userId);
+      return true;
+    } catch (error) {
+      console.log('Error on users service (CHANGE USERNAME)', error);
+      return false;
+    }
   };
 
   async changeProfilePhoto (file: File) {

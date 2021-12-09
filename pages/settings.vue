@@ -46,6 +46,7 @@
         <v-row align="center" justify="center">
           <v-col cols="12">
             <v-text-field
+              v-model="changes.username"
               label="Username"
               :value="username"
               prefix="@"
@@ -81,6 +82,7 @@
               color="space"
               class="white--text"
               width="100%"
+              :loading="saveChangesLoading"
               @click="handleSaveChanges"
             >
               Salvar alterações
@@ -114,6 +116,7 @@ import { StoreUser } from '@/types/users';
 type TProfileChanges = {
   profilePhoto: File | null;
   profileBackgroundPhoto: File | null;
+  username: string | null;
 };
 
 interface Data {
@@ -122,6 +125,7 @@ interface Data {
   allowEdit: boolean;
   lightTheme: boolean;
   changes: TProfileChanges;
+  saveChangesLoading: boolean;
 };
 
 interface Methods {
@@ -146,10 +150,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     usersService: null,
     allowEdit: false,
     lightTheme: true,
+    saveChangesLoading: false,
     changes: {
+      username: null,
       profilePhoto: null,
       profileBackgroundPhoto: null
-    }
+    },
   }),
 
   created () {
@@ -159,6 +165,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     if (!!this.userId) {
       this.usersService = new Users(this.userId);
     };
+
+    this.changes.username = this.username;
   },
 
   computed: {
@@ -196,9 +204,16 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     async handleSaveChanges () {
       this.$nuxt.$loading.start();
+      this.saveChangesLoading = true;
 
       if (!this.usersService) {
         return;
+      };
+
+      if (this.changes.username && this.changes.username !== this.username) {
+        await this.usersService.changeUsername(
+          this.changes.username
+        );
       };
 
       if (this.changes.profilePhoto) {
@@ -218,6 +233,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       }
 
       this.$nuxt.$loading.finish();
+      this.saveChangesLoading = false;
 
       this.$router.push(`/users/${this.userId}`);
     }
