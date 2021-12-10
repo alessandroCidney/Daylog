@@ -131,7 +131,7 @@ class PostsService {
     }
   };
 
-  async addLike (postKey: string, userId: string) {
+  async toggleLike (postKey: string, userId: string) {
     try {
       const results = await this.database.get(postKey) as Record<string, TPost> | undefined | null;
 
@@ -146,10 +146,16 @@ class PostsService {
         likes = [];
       }
 
-      likes.push({
-        author_id: userId,
-        created_at: (new Date()).getTime()
-      });
+      const alreadyExistsIndex = likes.findIndex((like) => like.author_id === userId);
+
+      if (alreadyExistsIndex !== -1) {
+        likes.push({
+          author_id: userId,
+          created_at: (new Date()).getTime()
+        });
+      } else {
+        likes.splice(alreadyExistsIndex, 1);
+      };
 
       await this.database.update({
         likes
