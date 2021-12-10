@@ -94,6 +94,7 @@
               color="error"
               class="white--text"
               width="100%"
+              :loading="deleteAccountLoading"
               @click="handleDeleteAccount"
             >
               Excluir minha conta
@@ -111,7 +112,7 @@ import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import Authentication, { IAuthentication } from '@/services/authentication';
 import Users, { IUsers } from '@/services/users';
-import { StoreUser } from '@/types/users';
+import { StoreUser, FirestoreUser } from '@/types/users';
 
 type TProfileChanges = {
   profilePhoto: File | null;
@@ -126,6 +127,7 @@ interface Data {
   lightTheme: boolean;
   changes: TProfileChanges;
   saveChangesLoading: boolean;
+  deleteAccountLoading: boolean;
 };
 
 interface Methods {
@@ -140,6 +142,7 @@ interface Computed {
   profilePhoto: string;
   backgroundPhoto: string;
   username: string;
+  firestoreUser: FirestoreUser | undefined;
 };
 
 interface Props {};
@@ -151,6 +154,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     allowEdit: false,
     lightTheme: true,
     saveChangesLoading: false,
+    deleteAccountLoading: false,
     changes: {
       username: null,
       profilePhoto: null,
@@ -170,7 +174,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
-    ...mapGetters(['user']),
+    ...mapGetters(['user', 'firestoreUser']),
 
     profilePhoto () {
       return this.user?.firestoreUser.profile_photo || '';
@@ -186,7 +190,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     userId () {
       return this.user?.firestoreUser.id || '';
-    }
+    },
   },
 
   watch: {
@@ -199,7 +203,20 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapActions(['getCurrentFirestoreUser']),
 
     async handleDeleteAccount () {
-      await this.authenticationService?.deleteAccount();
+      if (!this.firestoreUser || !this.firestoreUser.id || !this.firestoreUser.email) {
+        return;
+      };
+
+      this.deleteAccountLoading = true;
+      
+      await this.authenticationService?.deleteAccount(
+        this.firestoreUser.id,
+        this.firestoreUser.email
+      );
+      
+      this.deleteAccountLoading = false;
+      
+      this.$router.push('/');
     },
 
     async handleSaveChanges () {

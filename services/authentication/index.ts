@@ -13,6 +13,7 @@ import Database, { IDatabase }  from '../database';
 import CloudStorage, { ICloudStorage } from '../storage';
 import Utils, { IUtils } from '@/utils';
 import * as CloudStorageConstants from '@/data/constants/storage';
+import { TPost } from '~/types/posts';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -33,7 +34,7 @@ export interface IAuthentication {
     aceptedPrivacy: boolean,
   ) => Promise<boolean>;
   signInWithEmail: (email: string, password: string) => Promise<boolean>;
-  deleteAccount: () => Promise<void>;
+  deleteAccount: (userId: string, userEmail: string) => Promise<void>;
 };
 
 class Authentication implements IAuthentication {
@@ -180,33 +181,40 @@ class Authentication implements IAuthentication {
     };
   };
 
-  async deleteAccount () {
+  async deleteAccount (userId: string, userEmail: string) {
     async function deleteUserPosts (authorEmail: string) {
       const postsDatabase = new Database('posts');
       const postsStorage = new CloudStorage('posts');
 
-      const postKeys = Object.keys(
-        await postsDatabase.getWhere('author_email', authorEmail)
-      );
+      const userPosts = await postsDatabase
+        .getWhere('author_email', authorEmail) as Record<string, TPost> | undefined | null; 
+      
+      if (!userPosts) {
+        return;
+      };
+
+      const postKeys = Object.keys(userPosts);
+
+      if (postKeys.length === 0) {
+        return;
+      };
 
       await Promise.all(postKeys.map((key) => postsDatabase.remove(key)));
       await Promise.all(postKeys.map((key) => postsStorage.deleteFiles(key)));
     };
 
-    if (!auth.currentUser || !auth.currentUser.email) {
-      return;
-    }
-
-    const userKey = Object.keys(
-      await this.database.getWhere('email', auth.currentUser.email)
-    )[0];
-
-    const userEmail = auth.currentUser.email;
-
-    /*await this.database.remove(userKey);
-    await deleteUser(auth.currentUser);*/
-
-    deleteUserPosts(userEmail);
+    try {
+      if (!auth.currentUser) {
+        throw new Error('User not found');
+      }
+  
+      await deleteUserPosts(userEmail);
+      await this.database.remove(userId);
+      await this.storage.deleteFiles(userId);
+      await deleteUser(auth.currentUser);
+    } catch (error) {
+      console.log('Error on authentication service (DELETE USER)', error);
+    };
   };
 };
 
