@@ -1,8 +1,8 @@
 <template>
-  <v-container class="mt-10 create-post-container">
-    <v-row class="create-post-header mb-5">
-      <v-col md="6" sm="12">
-        <DropPhotoZone v-model="thumb" />
+  <v-container class="mt-10" fluid>
+    <v-row class="create-post-header mb-5" align="center" justify="center">
+      <v-col md="6" sm="12" class="pa-0">
+        <DropPhotoZone v-model="thumb" class="create-page-drop-photo-zone" />
       </v-col>
 
       <v-col align-self="center" md="6" sm="12">
@@ -19,29 +19,32 @@
       </v-col>
     </v-row>
 
-    <div class="d-flex">
-      <v-spacer />
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-on="on"
-            v-bind="attrs"
-            icon
-            color="space"
-            @click="save"
-          >
-            <v-icon size="24">
-              mdi-content-save
-            </v-icon>
-          </v-btn>
-        </template>
-        <span>Save post</span>
-      </v-tooltip>
-    </div>
-
-    <v-card min-height="500px" flat class="create-post-editor pa-0">
-      <Editor v-model="content" />
-    </v-card>
+    <v-row align="center" justify="center" class="editor-and-controls">
+      <v-col md="8" sm="10">
+        <div class="d-flex">
+          <v-spacer />
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                v-on="on"
+                v-bind="attrs"
+                icon
+                color="space"
+                @click="save"
+              >
+                <v-icon size="24">
+                  mdi-content-save
+                </v-icon>
+              </v-btn>
+            </template>
+            <span>Save post</span>
+          </v-tooltip>
+        </div>
+        <v-card min-height="500px" flat class="create-post-editor pa-0">
+          <Editor v-model="content" />
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -128,15 +131,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 <style lang="scss">
 .article-creation-title-textarea {
-  font-size: 2.5rem !important;
+  font-size: 3.5em !important;
   
   textarea {
-    line-height: 2.8rem !important;
+    line-height: 3.5rem !important;
   }
-}
-
-.create-post-container {
-  width: 70%;
 }
 
 .create-post-editor {
@@ -145,5 +144,16 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .create-post-header {
   height: 280px;
+}
+
+.create-page-drop-photo-zone {
+  border-left: 0 !important;
+  height: 449px !important;
+}
+</style>
+
+<style lang="scss" scoped>
+.editor-and-controls {
+  margin-top: 149px !important;
 }
 </style>

@@ -91,7 +91,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   height: 100%;
   min-height: 100px;
 
-  border-radius: 4px;
+  border-radius: 8px;
 
   background-position: center;
   background-size: cover;
