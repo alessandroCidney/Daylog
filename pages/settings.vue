@@ -194,8 +194,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   watch: {
-    lightTheme (activeLightTheme: boolean) {
+    async lightTheme (activeLightTheme: boolean) {
       this.$vuetify.theme.dark = !activeLightTheme;
+      await this.usersService?.changeTheme(!activeLightTheme);
+      await this.getCurrentFirestoreUser();
     },
   },
 

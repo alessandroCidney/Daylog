@@ -8,7 +8,8 @@ export type FirestoreUser = {
   profile_background: string;
   username: string;
   acepted_terms: string;
-  acepted_privacy: string
+  acepted_privacy: string;
+  theme: 'dark' | 'light' | undefined;
 };
 
 export type StoreUser = {

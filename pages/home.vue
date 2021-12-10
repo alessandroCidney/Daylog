@@ -9,6 +9,9 @@
           class="white--text"
           to="/create"
         >
+          <v-icon left>
+            mdi-plus
+          </v-icon>
           Create a new post
         </v-btn>
       </v-col>

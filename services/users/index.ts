@@ -11,6 +11,7 @@ export interface IUsers {
   changeProfilePhoto: (file: File) => Promise<boolean>;
   changeProfileBackgroundPhoto: (file: File) => Promise<boolean>;
   changeUsername: (username: string) => Promise<boolean>;
+  changeTheme: (dark: boolean) => Promise<boolean>;
 };
 
 class Users implements IUsers {
@@ -95,6 +96,20 @@ class Users implements IUsers {
       return false;
     };
   };
+
+  async changeTheme (dark: boolean) {
+    try {
+
+      await this.database.update({
+        theme: dark ? 'dark' : 'light'
+      }, this.userId);
+
+      return true;
+    } catch (error) {
+      console.log('Error on users service (CHANGE THEME)', error);
+      return false;
+    }
+  }
 };
 
 export default Users;
