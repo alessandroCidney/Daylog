@@ -1,6 +1,20 @@
 <template>
   <v-container>
-    <v-row v-if="posts.length > 0" align="center" justify="center" class="mt-10">
+    <v-row align="center" justify="center" >
+      <v-col sm="10" md="8">
+        <v-btn
+          block
+          depressed
+          color="space"
+          class="white--text"
+          to="/create"
+        >
+          Create a new post
+        </v-btn>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="posts.length > 0" align="center" justify="center" class="mt-5">
       <v-col
         v-for="(post, index) in posts"
         :key="`home-post-${index}`"
@@ -19,10 +33,9 @@
       </v-col>
     </v-row>
 
-    <div v-else>
+    <div v-else-if="!loadingPosts" class="text-center">
       Nenhuma postagem encontrada ;-;
     </div>
-
 
     <v-btn fab fixed right bottom to="/create">
       <v-icon color="space">mdi-plus</v-icon>
@@ -42,6 +55,7 @@ import ArticleCard from '@/components/commons/ArticleCard.vue';
 interface Data {
   postsService: IPostService | null;
   posts: TPost[];
+  loadingPosts: boolean;
 };
 
 interface Props {};
@@ -62,7 +76,8 @@ export default Vue.extend<Data, Props, Computed, Methods>({
   
   data: () => ({
     postsService: null,
-    posts: []
+    posts: [],
+    loadingPosts: true
   }),
 
   created () {
@@ -71,6 +86,7 @@ export default Vue.extend<Data, Props, Computed, Methods>({
 
   async mounted () {
     await this.fetchPosts();
+    this.loadingPosts = false;
   },
 
   computed: {
