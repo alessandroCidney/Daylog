@@ -255,7 +255,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     async handleSignUpWithEmail () {
-      await this.authenticationService?.signUpWithEmail(
+      this.$nuxt.$loading.start();
+
+      const success = await this.authenticationService?.signUpWithEmail(
         this.signUpData.email,
         this.signUpData.password,
         this.signUpData.username,
@@ -263,7 +265,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         this.signUpData.profileBackground,
         this.signUpData.termsAgree,
         this.signUpData.privacyAgree
-      )
+      );
+
+      this.$nuxt.$loading.finish();
+      
+      if (success) {
+        this.$router.push('/home');
+      }
     },
   }
 });
