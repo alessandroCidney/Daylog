@@ -25,10 +25,10 @@
       <v-btn
         icon
         color="space"
-        @click.prevent="() => {}"
+        @click.prevent="like"
       >
         <v-icon>
-          mdi-heart
+          {{ alreadyLiked ? 'mdi-heart' : 'mdi-heart-outline' }}
         </v-icon>
       </v-btn>
 
@@ -81,6 +81,8 @@ interface Props {
   imageURL: string | undefined;
   authorPhotoURL: string | undefined;
   id: string | undefined;
+  alreadyLiked: boolean;
+  like: any;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -90,7 +92,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     description: { type: String, required: false, default: "" } as PropOptions<string>,
     imageURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
     authorPhotoURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
-    id: { type: String, required: false, default: undefined },
+    id: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
+    alreadyLiked: { type: Boolean, required: false, default: false } as PropOptions<boolean>,
+    like: { type: Function, required: false, default: () => {} }
   },
 
   data: () => ({

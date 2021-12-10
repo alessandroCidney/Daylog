@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row align="center" justify="center" class="mt-10">
+    <v-row v-if="posts.length > 0" align="center" justify="center" class="mt-10">
       <v-col
         v-for="(post, index) in posts"
         :key="`home-post-${index}`"
@@ -13,10 +13,15 @@
           :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
           :imageURL="post.thumbnail"
           :authorPhotoURL="post.author_photo_url"
+          :already-liked="post.alreadyLiked"
+          :like="() => like(post.id)"
         />
       </v-col>
-
     </v-row>
+
+    <div v-else>
+      Nenhuma postagem encontrada ;-;
+    </div>
 
 
     <v-btn fab fixed right bottom to="/create">
@@ -28,7 +33,9 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 import PostsService, { IPostService } from '@/services/posts';
+import { FirestoreUser, StoreUser } from '@/types/users';
 import { TPost } from '@/types/posts';
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
@@ -38,8 +45,15 @@ interface Data {
 };
 
 interface Props {};
-interface Computed {};
-interface Methods {};
+
+interface Computed {
+  firestoreUser: FirestoreUser | null;
+};
+
+interface Methods {
+  like: () => Promise<void>;
+  fetchPosts: () => Promise<void>;
+};
 
 export default Vue.extend<Data, Props, Computed, Methods>({
   components: {
@@ -55,10 +69,42 @@ export default Vue.extend<Data, Props, Computed, Methods>({
     this.postsService = new PostsService();
   },
 
-  mounted () {
-    this.postsService?.fetchPosts().then((posts) => {
-      this.posts = posts;
-    });
+  async mounted () {
+    await this.fetchPosts();
+  },
+
+  computed: {
+    ...mapGetters(['firestoreUser']),
+  },
+
+  methods: {
+    async fetchPosts () {
+      const user = this.firestoreUser;
+
+      if (!this.postsService || !user) {
+        return;
+      };
+
+      const posts = await this.postsService.fetchPosts();
+
+      this.posts = posts.map(post => ({
+        ...post,
+        alreadyLiked: post.likes &&
+          post.likes.findIndex(like => like.author_id === user.id) !== -1
+      }));
+    },
+
+    async like (postKey: string) {
+      if (!this.postsService || !this.firestoreUser) {
+        return;
+      };
+
+      const success = await this.postsService.toggleLike(postKey, this.firestoreUser.id);
+      
+      if (success) {
+        await this.fetchPosts();
+      };
+    }
   }
 });
 </script>

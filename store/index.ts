@@ -18,6 +18,10 @@ const createStore = () => new Vuex.Store({
       return state.user;
     },
 
+    firestoreUser (state): FirestoreUser | undefined {
+      return state.user?.firestoreUser
+    },
+
     isAuthenticated (state): boolean {
       return !!state.user;
     },

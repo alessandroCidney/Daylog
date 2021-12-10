@@ -17,7 +17,7 @@ export interface IPostService {
   ) => Promise<string | null | undefined>;
   fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>;
   deletePostsWhere: (key: string, value: string) => Promise<boolean | null>;
-  addLike: (postKey: string, userId: string) => Promise<boolean>;
+  toggleLike: (postKey: string, userId: string) => Promise<boolean>;
 };
 
 class PostsService {
@@ -133,13 +133,12 @@ class PostsService {
 
   async toggleLike (postKey: string, userId: string) {
     try {
-      const results = await this.database.get(postKey) as Record<string, TPost> | undefined | null;
+      const post = await this.database.get(postKey) as TPost | undefined | null;
 
-      if (!results) {
-        return false;
+      if (!post) {
+        throw new Error('Post not found');
       };
 
-      const post = Object.values(results)[0];
       let likes = post.likes;
 
       if (!likes) {
@@ -148,12 +147,12 @@ class PostsService {
 
       const alreadyExistsIndex = likes.findIndex((like) => like.author_id === userId);
 
-      if (alreadyExistsIndex !== -1) {
+      if (alreadyExistsIndex === -1) {
         likes.push({
           author_id: userId,
           created_at: (new Date()).getTime()
         });
-      } else {
+      } else if (likes.length > 0) {
         likes.splice(alreadyExistsIndex, 1);
       };
 
