@@ -17,6 +17,7 @@ export interface IPostService {
   ) => Promise<string | null | undefined>;
   fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>;
   deletePostsWhere: (key: string, value: string) => Promise<boolean | null>;
+  addLike: (postKey: string, userId: string) => Promise<boolean>;
 };
 
 class PostsService {
@@ -72,6 +73,8 @@ class PostsService {
         author,
         author_email: authorEmail,
         thumbnail: null,
+        created_at: (new Date()).getTime(),
+        likes: []
       });
   
       if (!postKey) {
@@ -124,6 +127,37 @@ class PostsService {
       return true;
     } catch (err) {
       console.log('Error on posts service (DELETE POSTS WHERE)', err);
+      return false;
+    }
+  };
+
+  async addLike (postKey: string, userId: string) {
+    try {
+      const results = await this.database.get(postKey) as Record<string, TPost> | undefined | null;
+
+      if (!results) {
+        return false;
+      };
+
+      const post = Object.values(results)[0];
+      let likes = post.likes;
+
+      if (!likes) {
+        likes = [];
+      }
+
+      likes.push({
+        author_id: userId,
+        created_at: (new Date()).getTime()
+      });
+
+      await this.database.update({
+        likes
+      }, postKey);
+      
+      return true;
+    } catch (error) {
+      console.log('Error on posts service (ADD LIKE)', error);
       return false;
     }
   };

@@ -1,3 +1,8 @@
+export type TPostLikes = {
+  author_id: string;
+  created_at: number;
+};
+
 export type TPost = {
   id: string;
   author: string;
@@ -5,5 +10,7 @@ export type TPost = {
   author_photo_url: string;
   content: string;
   title: string;
-  thumbnail: string | null;
+  thumbnail: string | undefined | null;
+  created_at: number;
+  likes: TPostLikes[] | undefined | null;
 };
