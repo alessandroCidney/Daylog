@@ -10,7 +10,7 @@
           v-model="title"
           flat
           solo
-          placeholder="Digite o título do seu novo artigo!"
+          placeholder="Enter a title for your post!"
           class="font-weight-bold article-creation-title-textarea"
           height="150px"
           no-resize
@@ -144,6 +144,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .create-page-drop-photo-zone {
   border-left: 0 !important;
-  height: 449px !important;
+  height: 400px !important;
 }
 </style>

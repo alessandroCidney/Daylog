@@ -18,7 +18,7 @@
       >
         <v-img
           :min-width="thumbLoaded ? '100%' : '0'"
-          height="thumbLoaded ? '400px' : '0'"
+          :height="thumbLoaded ? '400px' : '0'"
           :src="thumbnail"
           :alt="'Imagem do post ' + title"
           @load="thumbLoaded = true"

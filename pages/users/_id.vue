@@ -14,7 +14,7 @@
       class="profile-background-photo"
     />
 
-    <v-row justify-md="end" justify-sm="center">
+    <v-row justify-md="end" justify-sm="center" justify="center">
       <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
         <v-avatar width="165px" height="165px" class="profile-avatar-photo translated">
           <v-img
@@ -28,7 +28,7 @@
         </p>
       </v-col>
 
-      <v-col md="8" sm="12" class="py-16">
+      <v-col md="8" sm="10" cols="10" class="py-16">
         <v-row align="center" justify="center">
           <v-tabs color="space">
             <v-tab>
@@ -45,7 +45,9 @@
                 <v-col
                   v-for="(post, index) in posts"
                   :key="`post-profile-${index}`"
-                  cols="11"
+                  md="11"
+                  sm="12"
+                  cols="12"
                 >
                   <ArticleCard
                     :id="post.id"
