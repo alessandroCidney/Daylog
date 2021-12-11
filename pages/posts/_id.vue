@@ -77,7 +77,7 @@
       </v-col>
     </v-row>
 
-    <v-row align="center" justify="center">
+    <v-row align="center" justify="center" class="mt-16">
       <v-col md="8" sm="10">
         <v-row align="center" justify="center">
           <v-col md="2" sm="3" cols="3" class="d-flex align-center justify-center">
