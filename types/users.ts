@@ -10,6 +10,7 @@ export type FirestoreUser = {
   acepted_terms: string;
   acepted_privacy: string;
   theme: 'dark' | 'light' | undefined;
+  savedPosts: string[] | undefined;
 };
 
 export type StoreUser = {
