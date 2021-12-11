@@ -70,6 +70,8 @@ interface Computed {
 interface Props {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
+  name: 'default',
+  
   middleware: ['authentication', 'theme'],
 
   components: {

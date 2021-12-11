@@ -14,3 +14,8 @@ export type TPost = {
   created_at: number;
   likes: TPostLike[] | undefined | null;
 };
+
+export type TValidatedPost = TPost & {
+  alreadyLiked: boolean;
+  alreadySaved: boolean;
+};

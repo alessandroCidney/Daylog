@@ -45,10 +45,10 @@
       <v-btn
         icon
         color="space"
-        @click.prevent="() => {}"
+        @click.prevent="save"
       >
         <v-icon>
-          mdi-bookmark-multiple-outline
+          {{ alreadySaved ? 'mdi-bookmark-multiple' : 'mdi-bookmark-multiple-outline' }}
         </v-icon>
       </v-btn>
 
@@ -82,19 +82,23 @@ interface Props {
   authorPhotoURL: string | undefined;
   id: string | undefined;
   alreadyLiked: boolean;
+  alreadySaved: boolean;
   like: any;
+  save: any;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   props: {
-    width: { type: [Number, String], default: "100%", required: false } as PropOptions<number | string>,
-    title: { type: String, required: true } as PropOptions<string>,
-    description: { type: String, required: false, default: "" } as PropOptions<string>,
-    imageURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
-    authorPhotoURL: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
-    id: { type: String, required: false, default: undefined } as PropOptions<string | undefined>,
-    alreadyLiked: { type: Boolean, required: false, default: false } as PropOptions<boolean>,
-    like: { type: Function, required: false, default: () => {} }
+    width: { type: [Number, String], default: "100%", required: false },
+    title: { type: String, required: true },
+    description: { type: String, required: false, default: "" },
+    imageURL: { type: String, required: false, default: undefined },
+    authorPhotoURL: { type: String, required: false, default: undefined },
+    id: { type: String, required: false, default: undefined },
+    alreadyLiked: { type: Boolean, required: false, default: false },
+    like: { type: Function, required: false, default: () => {} },
+    save: { type: Function, required: false, default: () => {} },
+    alreadySaved: { type: Boolean, required: false, default: false },
   },
 
   data: () => ({

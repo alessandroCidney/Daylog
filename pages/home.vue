@@ -31,7 +31,9 @@
           :imageURL="post.thumbnail"
           :authorPhotoURL="post.author_photo_url"
           :already-liked="post.alreadyLiked"
+          :already-saved="post.alreadySaved"
           :like="() => like(post.id)"
+          :save="() => save(post.id)"
         />
       </v-col>
     </v-row>
@@ -77,15 +79,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import PostsService, { IPostService } from '@/services/posts';
+import Users, { IUsers } from '@/services/users';
 import { FirestoreUser } from '@/types/users';
-import { TPost } from '@/types/posts';
+import { TPost, TValidatedPost } from '@/types/posts';
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
 interface Data {
   postsService: IPostService | null;
-  posts: TPost[];
+  usersService: IUsers | null;
+  posts: TPost[] | TValidatedPost[];
   loadingPosts: boolean;
   speedDial: boolean;
 };
@@ -98,7 +102,9 @@ interface Computed {
 
 interface Methods {
   like: () => Promise<void>;
+  save: () => Promise<void>;
   fetchPosts: () => Promise<void>;
+  getCurrentFirestoreUser: () => Promise<void>;
 };
 
 export default Vue.extend<Data, Props, Computed, Methods>({
@@ -108,6 +114,7 @@ export default Vue.extend<Data, Props, Computed, Methods>({
   
   data: () => ({
     postsService: null,
+    usersService: null,
     posts: [],
     loadingPosts: true,
     speedDial: false
@@ -115,6 +122,12 @@ export default Vue.extend<Data, Props, Computed, Methods>({
 
   created () {
     this.postsService = new PostsService();
+    
+    const userId = this.firestoreUser?.id;
+
+    if (userId) {
+      this.usersService = new Users(userId);
+    };
   },
 
   async mounted () {
@@ -127,6 +140,8 @@ export default Vue.extend<Data, Props, Computed, Methods>({
   },
 
   methods: {
+    ...mapActions(['getCurrentFirestoreUser']),
+
     async fetchPosts () {
       const user = this.firestoreUser;
 
@@ -139,7 +154,9 @@ export default Vue.extend<Data, Props, Computed, Methods>({
       this.posts = posts.map(post => ({
         ...post,
         alreadyLiked: post.likes &&
-          post.likes.findIndex(like => like.author_id === user.id) !== -1
+          post.likes.findIndex(like => like.author_id === user.id) !== -1,
+        alreadySaved: user.savedPosts &&
+          user.savedPosts.indexOf(post.id) !== -1
       }));
     },
 
@@ -151,6 +168,19 @@ export default Vue.extend<Data, Props, Computed, Methods>({
       const success = await this.postsService.toggleLike(postKey, this.firestoreUser.id);
       
       if (success) {
+        await this.fetchPosts();
+      };
+    },
+
+    async save (postKey: string) {
+      if (!this.usersService || !this.firestoreUser) {
+        return;
+      };
+
+      const success = await this.usersService.toggleSavedPost(postKey);
+
+      if (success) {
+        await this.getCurrentFirestoreUser();
         await this.fetchPosts();
       };
     }

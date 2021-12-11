@@ -33,10 +33,10 @@
           <v-tabs color="space">
             <v-tab>
               <v-icon left>mdi-view-grid</v-icon>
-              My posts
+              Posts
             </v-tab>
 
-            <v-tab>
+            <v-tab v-if="pageUserIsLoggedUser">
               <v-icon left>mdi-bookmark-multiple</v-icon>
               Saved
             </v-tab>
@@ -56,14 +56,16 @@
                     :imageURL="post.thumbnail"
                     :authorPhotoURL="post.author_photo_url"
                     :already-liked="post.alreadyLiked"
+                    :already-saved="post.alreadySaved"
                     :like="() => like(post.id)"
+                    :save="() => save(post.id)"
                   />
                 </v-col>
               </v-tab-item>
 
-              <v-tab-item>
+              <v-tab-item v-if="pageUserIsLoggedUser">
                 <v-col
-                  v-for="(post, index) in posts"
+                  v-for="(post, index) in savedPosts"
                   :key="`post-profile-${index}`"
                   cols="11"
                 >
@@ -74,7 +76,9 @@
                     :imageURL="post.thumbnail"
                     :authorPhotoURL="post.author_photo_url"
                     :already-liked="post.alreadyLiked"
+                    :already-saved="post.alreadySaved"
                     :like="() => like(post.id)"
+                    :save="() => save(post.id)"
                   />
                 </v-col>
               </v-tab-item>
@@ -87,25 +91,32 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { TPost } from '@/types/posts';
+import { mapGetters, mapActions } from 'vuex';
+import { TPost, TValidatedPost } from '@/types/posts';
 import { FirestoreUser } from '@/types/users';
 import Database, { IDatabase } from '@/services/database';
 import PostsService, { IPostService } from '@/services/posts';
+import Users, { IUsers } from '@/services/users';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 
 interface Data {
   id: string;
-  user: FirestoreUser | null;
+  pageUser: FirestoreUser | null;
   postsService: IPostService | null;
   usersDatabase: IDatabase | null;
-  posts: TPost[];
+  usersService: IUsers | null;
+  posts: TPost[] | TValidatedPost[];
+  savedPosts: TPost[] | TValidatedPost[];
   backgroundPhotoLoaded: boolean;
 };
 
 interface Methods {
   fetchPosts: () => Promise<void>;
+  fetchSavedPosts: () => Promise<void>;
   like: (postKey: string) => Promise<void>;
+  save: (postKey: string) => Promise<void>;
+  getCurrentFirestoreUser: () => Promise<void>;
 };
 
 interface Props {};
@@ -114,6 +125,8 @@ interface Computed {
   username: string;
   avatar: string;
   backgroundPhoto: string;
+  firestoreUser: FirestoreUser | null;
+  pageUserIsLoggedUser: boolean;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -123,10 +136,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   data: () => ({
     id: '',
-    user: null,
+    pageUser: null,
     postsService: null,
     usersDatabase: null,
+    usersService: null,
     posts: [],
+    savedPosts: [],
     parallaxLoaded: false,
     backgroundPhotoLoaded: false,
   }),
@@ -141,31 +156,50 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     this.usersDatabase = new Database('users');
     this.postsService = new PostsService();
 
-    this.user = await this.usersDatabase.get(this.id) as FirestoreUser | null;
+    this.pageUser = await this.usersDatabase.get(this.id) as FirestoreUser | null;
     
+    if (this.firestoreUser) {
+      this.usersService = new Users(this.firestoreUser.id);
+    };
+
     await this.fetchPosts();
+    await this.fetchSavedPosts();
   },
 
   computed: {
+    ...mapGetters(['firestoreUser']),
+
+    pageUserIsLoggedUser () {
+      if (!this.firestoreUser) {
+        return false;
+      };
+      
+      if (this.firestoreUser?.id === this.pageUser?.id) {
+        return true;
+      };
+
+      return false;
+    },
+
     username () {
-      if (this.user) {
-        return this.user.username;
+      if (this.pageUser) {
+        return this.pageUser.username;
       };
 
       return '';
     },
 
     avatar () {
-      if (this.user) {
-        return this.user.profile_photo;
+      if (this.pageUser) {
+        return this.pageUser.profile_photo;
       };
 
       return '';
     },
 
     backgroundPhoto () {
-      if (this.user) {
-        return this.user.profile_background;
+      if (this.pageUser) {
+        return this.pageUser.profile_background;
       };
 
       return '';
@@ -173,14 +207,16 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   methods: {
+    ...mapActions(['getCurrentFirestoreUser']),
+
     async fetchPosts () {
-      if (!this.user || !this.postsService) {
+      if (!this.pageUser || !this.postsService) {
         return;
       };
 
       const postsObject = await this.postsService.fetchPostsWhere(
         'author_email',
-        this.user.email
+        this.pageUser.email
       );
 
       if (!postsObject) {
@@ -190,19 +226,62 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       this.posts = Object.values(postsObject).map(post => ({
         ...post,
         alreadyLiked: post.likes &&
-          post.likes.findIndex(like => this.user && like.author_id === this.user.id) !== -1
+          post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
+        alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
+          this.firestoreUser.savedPosts.indexOf(post.id) !== -1
+      }));
+    },
+
+    async fetchSavedPosts () {
+      if (!this.pageUserIsLoggedUser) {
+        return;
+      };
+
+      const savedPosts = this.firestoreUser?.savedPosts;
+
+      if (!savedPosts) {
+        return;
+      };
+
+      let results = await Promise.all(
+        savedPosts.map(postKey => this.postsService?.fetchPost(postKey))
+      );
+
+      let posts = results.filter(post => !!post) as TPost[];
+
+      this.savedPosts = posts.map(post => ({
+        ...post,
+        alreadyLiked: post.likes &&
+          post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
+        alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
+          this.firestoreUser.savedPosts.indexOf(post.id) !== -1
       }));
     },
 
     async like (postKey: string) {
-      if (!this.postsService || !this.user) {
+      if (!this.postsService || !this.firestoreUser) {
         return;
       };
 
-      const success = await this.postsService.toggleLike(postKey, this.user.id);
+      const success = await this.postsService.toggleLike(postKey, this.firestoreUser.id);
       
       if (success) {
-        await this.fetchPosts();
+        this.fetchPosts();
+        this.fetchSavedPosts()
+      };
+    },
+
+    async save (postKey: string) {
+      if (!this.usersService || !this.firestoreUser) {
+        return;
+      };
+
+      const success = await this.usersService.toggleSavedPost(postKey);
+
+      if (success) {
+        await this.getCurrentFirestoreUser();
+        this.fetchPosts();
+        this.fetchSavedPosts();
       };
     }
   }
