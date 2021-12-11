@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pb-16">
     <v-row
       align="center"
       justify-md="start"
@@ -77,7 +77,29 @@
       </v-col>
     </v-row>
 
-    
+    <v-row align="center" justify="center">
+      <v-col md="8" sm="10">
+        <v-row align="center" justify="center">
+          <v-col md="2" sm="3" cols="3" class="d-flex align-center justify-center">
+            <v-avatar width="70px" height="70px">
+              <v-img
+                :src="authorPhotoURL || require('@/assets/images/profile/user.jpg')"
+                width="150px"
+              />
+            </v-avatar>
+          </v-col>
+
+          <v-col md="3" sm="6" cols="6" class="d-flex align-start justify-center flex-column">
+            <p class="text-left mb-0">
+              Created by <span class="font-weight-bold">@{{ author }}</span>
+            </p>
+            <p class="text-left mb-0">
+              <small>on {{ createdAt }}</small>
+            </p>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>    
   </v-container>
 </template>
 
@@ -112,6 +134,8 @@ interface Computed {
   author: string;
   breakpoint: string;
   viewerIsTheAuthor: boolean;
+  authorPhotoURL: string;
+  createdAt: string;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -173,6 +197,27 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     author () {
       return (this.post && this.post.author) ? this.post.author : '';
+    },
+
+    authorPhotoURL () {
+      return (this.post && this.post.author_photo_url) ? this.post.author_photo_url : '';
+    },
+
+    createdAt () {
+      if (!this.post) {
+        return '';
+      };
+
+      const createdAt = this.post.created_at;
+      const date = new Date(createdAt);
+
+      const dateString = date.toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      return dateString;
     },
 
     breakpoint () {

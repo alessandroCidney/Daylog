@@ -2,7 +2,7 @@
   <v-container>
     <v-row align="center" justify="center" class="mt-10">
 
-      <v-col cols="8">
+      <v-col md="8" sm="10" cols="10">
         <v-row align="center" justify="center" class="photosArea">
           <v-col cols="12">
             <v-img
