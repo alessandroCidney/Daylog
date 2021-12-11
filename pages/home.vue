@@ -79,7 +79,7 @@
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import PostsService, { IPostService } from '@/services/posts';
-import { FirestoreUser, StoreUser } from '@/types/users';
+import { FirestoreUser } from '@/types/users';
 import { TPost } from '@/types/posts';
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 

@@ -41,6 +41,8 @@
               :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
               :imageURL="post.thumbnail"
               :authorPhotoURL="post.author_photo_url"
+              :already-liked="post.alreadyLiked"
+              :like="() => like(post.id)"
             />
           </v-col>
         </v-row>
@@ -67,7 +69,11 @@ interface Data {
   backgroundPhotoLoaded: boolean;
 };
 
-interface Methods {};
+interface Methods {
+  fetchPosts: () => Promise<void>;
+  like: (postKey: string) => Promise<void>;
+};
+
 interface Props {};
 
 interface Computed {
@@ -103,20 +109,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     this.user = await this.usersDatabase.get(this.id) as FirestoreUser | null;
     
-    if (!this.user) {
-      return;
-    };
-
-    const postsObject = await this.postsService.fetchPostsWhere(
-      'author_email',
-      this.user.email
-    );
-
-    if (!postsObject) {
-      return;
-    };
-
-    this.posts = Object.values(postsObject);
+    await this.fetchPosts();
   },
 
   computed: {
@@ -144,6 +137,41 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       return '';
     },
   },
+
+  methods: {
+    async fetchPosts () {
+      if (!this.user || !this.postsService) {
+        return;
+      };
+
+      const postsObject = await this.postsService.fetchPostsWhere(
+        'author_email',
+        this.user.email
+      );
+
+      if (!postsObject) {
+        return;
+      };
+
+      this.posts = Object.values(postsObject).map(post => ({
+        ...post,
+        alreadyLiked: post.likes &&
+          post.likes.findIndex(like => this.user && like.author_id === this.user.id) !== -1
+      }));
+    },
+
+    async like (postKey: string) {
+      if (!this.postsService || !this.user) {
+        return;
+      };
+
+      const success = await this.postsService.toggleLike(postKey, this.user.id);
+      
+      if (success) {
+        await this.fetchPosts();
+      };
+    }
+  }
 });
 </script>
 

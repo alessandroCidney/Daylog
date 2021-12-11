@@ -7,19 +7,45 @@
           <v-col cols="12">
             <v-img
               width="100%"
-              height="200px"
+              :height="backgroundPhotoLoaded ? '200px' : 0"
               class="overflow-hidden"
               :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
+              @load="backgroundPhotoLoaded = true"
+            />
+
+            <v-skeleton-loader
+              v-if="!backgroundPhotoLoaded"
+              type="image"
+              width="100%"
+              height="200px"
             />
           </v-col>
 
           <v-col cols="6" class="d-flex align-center justify-center">
-            <v-avatar width="150px" height="150px" class="avatarPhoto">
+            <v-avatar
+              :width="profilePhotoLoaded ? '150px' : 0"
+              :height="profilePhotoLoaded ? '150px' : 0"
+              :class="{
+                'avatarPhoto': true ,
+                'zeroWidth': !profilePhotoLoaded
+              }"
+            >
               <v-img
                 :src="profilePhoto || require('@/assets/images/profile/user.jpg')"
                 alt="Avatar photo"
+                :width="profilePhotoLoaded ? '150px' : 0"
+                :height="profilePhotoLoaded ? '150px' : 0"
+                @load="profilePhotoLoaded = true"
               />
             </v-avatar>
+
+            <v-skeleton-loader
+              v-if="!profilePhotoLoaded"
+              class="profilePhotoLoader"
+              type="image"
+              width="150px"
+              height="150px"
+            />
           </v-col>
         </v-row>
 
@@ -128,6 +154,8 @@ interface Data {
   changes: TProfileChanges;
   saveChangesLoading: boolean;
   deleteAccountLoading: boolean;
+  backgroundPhotoLoaded: boolean;
+  profilePhotoLoaded: boolean;
 };
 
 interface Methods {
@@ -153,6 +181,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     usersService: null,
     allowEdit: false,
     lightTheme: true,
+    backgroundPhotoLoaded: false,
+    profilePhotoLoaded: false,
     saveChangesLoading: false,
     deleteAccountLoading: false,
     changes: {
@@ -262,11 +292,36 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 <style lang="scss">
 .avatarPhoto {
-  transform: translateY(-99px) !important;
   border: 3px solid #FFF;
+  transform: translateY(-99px) !important;
 }
 
 .photosArea ~ * {
   transform: translateY(-99px) !important;
+}
+
+.profilePhotoLoader {
+  transform: translateY(-99px) !important;
+
+  background-color: #FFF;
+  border: 3px solid #FFF !important;
+  border-radius: 50% !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  .v-skeleton-loader__image {
+    border-radius: 50% !important;
+    width: 150px !important;
+    height: 150px !important;
+  }
+}
+
+.zeroWidth {
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  border: 0 !important;
 }
 </style>
