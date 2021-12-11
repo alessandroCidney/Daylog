@@ -38,7 +38,7 @@
         @click.prevent="() => {}"
       >
         <v-icon>
-          mdi-comment-multiple
+          mdi-comment-multiple-outline
         </v-icon>
       </v-btn>
 
@@ -48,7 +48,7 @@
         @click.prevent="() => {}"
       >
         <v-icon>
-          mdi-bookmark-multiple
+          mdi-bookmark-multiple-outline
         </v-icon>
       </v-btn>
 

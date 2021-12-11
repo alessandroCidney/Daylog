@@ -30,21 +30,53 @@
 
       <v-col md="8" sm="12" class="py-16">
         <v-row align="center" justify="center">
-          <v-col
-            v-for="(post, index) in posts"
-            :key="`post-profile-${index}`"
-            cols="11"
-          >
-            <ArticleCard
-              :id="post.id"
-              :title="post.title"
-              :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-              :imageURL="post.thumbnail"
-              :authorPhotoURL="post.author_photo_url"
-              :already-liked="post.alreadyLiked"
-              :like="() => like(post.id)"
-            />
-          </v-col>
+          <v-tabs color="space">
+            <v-tab>
+              <v-icon left>mdi-view-grid</v-icon>
+              My posts
+            </v-tab>
+
+            <v-tab>
+              <v-icon left>mdi-bookmark-multiple</v-icon>
+              Saved
+            </v-tab>
+
+              <v-tab-item>
+                <v-col
+                  v-for="(post, index) in posts"
+                  :key="`post-profile-${index}`"
+                  cols="11"
+                >
+                  <ArticleCard
+                    :id="post.id"
+                    :title="post.title"
+                    :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+                    :imageURL="post.thumbnail"
+                    :authorPhotoURL="post.author_photo_url"
+                    :already-liked="post.alreadyLiked"
+                    :like="() => like(post.id)"
+                  />
+                </v-col>
+              </v-tab-item>
+
+              <v-tab-item>
+                <v-col
+                  v-for="(post, index) in posts"
+                  :key="`post-profile-${index}`"
+                  cols="11"
+                >
+                  <ArticleCard
+                    :id="post.id"
+                    :title="post.title"
+                    :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+                    :imageURL="post.thumbnail"
+                    :authorPhotoURL="post.author_photo_url"
+                    :already-liked="post.alreadyLiked"
+                    :like="() => like(post.id)"
+                  />
+                </v-col>
+              </v-tab-item>
+          </v-tabs>
         </v-row>
       </v-col>
     </v-row>
