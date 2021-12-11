@@ -49,6 +49,19 @@
     <v-main>
       <Nuxt />
     </v-main>
+
+    <v-snackbar
+      color="space"
+      v-model="message"
+    >
+      Olá! seja bem vindo!
+
+      <template v-slot:action="{ attrs }">
+        <v-btn icon right v-bind="attrs" @click="message = false" small>
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </template>
+    </v-snackbar>
     
   </v-app>
 </template>
@@ -59,7 +72,10 @@ import Vue from 'vue';
 import PopoverMenu from '@/components/layouts/PopoverMenu.vue';
 import SearchBar from '@/components/layouts/SearchBar.vue';
 
-interface Data {};
+interface Data {
+  message: boolean;
+};
+
 interface Methods {};
 
 interface Computed {
@@ -73,6 +89,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   name: 'default',
   
   middleware: ['authentication', 'theme'],
+
+  data: () => ({
+    message: true
+  }),
 
   components: {
     PopoverMenu,
