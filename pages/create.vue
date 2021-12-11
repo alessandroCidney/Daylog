@@ -1,11 +1,11 @@
 <template>
   <v-container class="mt-10" fluid>
     <v-row class="create-post-header mb-5" align="center" justify="center">
-      <v-col md="6" sm="12" class="pa-0">
+      <v-col md="6" sm="12" cols="12" class="pa-0">
         <DropPhotoZone v-model="thumb" class="create-page-drop-photo-zone" />
       </v-col>
 
-      <v-col align-self="center" md="6" sm="12">
+      <v-col align-self="center" md="6" sm="12" cols="12">
         <v-textarea
           v-model="title"
           flat
@@ -142,18 +142,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   border: 3px solid #f0f0f0 !important;
 }
 
-.create-post-header {
-  height: 280px;
-}
-
 .create-page-drop-photo-zone {
   border-left: 0 !important;
   height: 449px !important;
-}
-</style>
-
-<style lang="scss" scoped>
-.editor-and-controls {
-  margin-top: 149px !important;
 }
 </style>
