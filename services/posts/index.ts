@@ -59,7 +59,7 @@ class PostsService {
   async fetchPost (id: string) {
     const post: Record<string, TPost> = await this.database.getWhere('id', id);
 
-    return post[id] || undefined;
+    return post ? post[id] : undefined;
   };
 
   async savePost (
