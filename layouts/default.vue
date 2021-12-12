@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-bar />
+    <AppBar />
 
     <v-main>
       <Nuxt />
@@ -18,7 +18,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-    
   </v-app>
 </template>
 

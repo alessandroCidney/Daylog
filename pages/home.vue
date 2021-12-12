@@ -1,21 +1,6 @@
 <template>
   <v-container>
-    <v-row align="center" justify="center" >
-      <v-col sm="10" md="8">
-        <v-btn
-          block
-          depressed
-          color="space"
-          class="white--text"
-          to="/create"
-        >
-          <v-icon left>
-            mdi-plus
-          </v-icon>
-          Create a new post
-        </v-btn>
-      </v-col>
-    </v-row>
+    <CreatePostButton />
 
     <v-row v-if="posts.length > 0" align="center" justify="center" class="mt-5">
       <v-col
@@ -42,20 +27,23 @@
       Nenhuma postagem encontrada ;-;
     </div>
 
-    <speed-dial />
+    <SpeedDial />
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters, mapActions } from 'vuex';
+
 import PostsService, { IPostService } from '@/services/posts';
 import Users, { IUsers } from '@/services/users';
+
 import { FirestoreUser } from '@/types/users';
 import { TPost, TValidatedPost } from '@/types/posts';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 import SpeedDial from '@/components/pages/home/SpeedDial.vue';
+import CreatePostButton from '@/components/pages/home/CreatePostButton.vue';
 
 interface Data {
   postsService: IPostService | null;
@@ -80,7 +68,8 @@ interface Methods {
 export default Vue.extend<Data, Props, Computed, Methods>({
   components: {
     ArticleCard,
-    SpeedDial
+    SpeedDial,
+    CreatePostButton
   },
   
   data: () => ({
