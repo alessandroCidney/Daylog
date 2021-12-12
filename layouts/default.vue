@@ -6,29 +6,16 @@
       <Nuxt />
     </v-main>
 
-    <v-snackbar
-      color="space"
-      v-model="message"
-    >
-      Olá! seja bem vindo!
-
-      <template v-slot:action="{ attrs }">
-        <v-btn icon right v-bind="attrs" @click="message = false" small>
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <AppMessage />
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import AppBar from '@/components/layouts/default/AppBar/index.vue';
+import AppMessage from '@/components/layouts/AppMessage.vue';
 
-interface Data {
-  message: boolean;
-};
-
+interface Data {};
 interface Methods {};
 interface Computed {};
 interface Props {};
@@ -38,12 +25,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   
   middleware: ['authentication', 'theme'],
 
-  data: () => ({
-    message: true
-  }),
-
   components: {
     AppBar,
+    AppMessage
   },
 });
 </script>

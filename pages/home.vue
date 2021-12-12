@@ -5,6 +5,8 @@
     <PostsList
       :posts="posts"
       :loadingPosts="loadingPosts"
+      :like="like"
+      :save="save"
     />
 
     <SpeedDial />

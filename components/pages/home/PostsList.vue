@@ -36,6 +36,8 @@ interface Computed {};
 
 interface Props {
   posts: TPost[] | TValidatedPost[];
+  like: (postKey: string) => Promise<void>;
+  save: (postKey: string) => Promise<void>;
   loadingPosts: boolean;
 };
 
@@ -46,6 +48,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   props: {
     posts: { type: Array, required: true },
+    like: { type: Function, required: true },
+    save: { type: Function, required: true },
     loadingPosts: Boolean
   }
 });

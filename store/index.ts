@@ -11,6 +11,12 @@ Vue.use(Vuex);
 const createStore = () => new Vuex.Store({
   state: () => ({
     user: null as StoreUser | null,
+
+    appMessage: {
+      active: true,
+      status: 'none',
+      content: 'Potato',
+    }
   }),
 
   getters: {
@@ -25,12 +31,20 @@ const createStore = () => new Vuex.Store({
     isAuthenticated (state): boolean {
       return !!state.user;
     },
+
+    appMessage (state) {
+      return state.appMessage;
+    },
   },
 
   mutations: {
     setUser (state, payload: StoreUser | null) {
       Vue.set(state, 'user', payload);
     },
+
+    setAppMessage (state, payload) {
+      Vue.set(state, 'appMessage', payload);
+    }
   },
 
   actions: {
@@ -56,7 +70,7 @@ const createStore = () => new Vuex.Store({
         firestoreUser: user
       });
     }
-  } 
+  }
 });
 
 export default createStore;
