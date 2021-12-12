@@ -2,30 +2,10 @@
   <v-container>
     <CreatePostButton />
 
-    <v-row v-if="posts.length > 0" align="center" justify="center" class="mt-5">
-      <v-col
-        v-for="(post, index) in posts"
-        :key="`home-post-${index}`"
-        md="8"
-        sm="10"
-      >
-        <ArticleCard
-          :id="post.id"
-          :title="post.title"
-          :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-          :imageURL="post.thumbnail"
-          :authorPhotoURL="post.author_photo_url"
-          :already-liked="post.alreadyLiked"
-          :already-saved="post.alreadySaved"
-          :like="() => like(post.id)"
-          :save="() => save(post.id)"
-        />
-      </v-col>
-    </v-row>
-
-    <div v-else-if="!loadingPosts" class="text-center">
-      Nenhuma postagem encontrada ;-;
-    </div>
+    <PostsList
+      :posts="posts"
+      :loadingPosts="loadingPosts"
+    />
 
     <SpeedDial />
   </v-container>
@@ -41,9 +21,9 @@ import Users, { IUsers } from '@/services/users';
 import { FirestoreUser } from '@/types/users';
 import { TPost, TValidatedPost } from '@/types/posts';
 
-import ArticleCard from '@/components/commons/ArticleCard.vue';
 import SpeedDial from '@/components/pages/home/SpeedDial.vue';
 import CreatePostButton from '@/components/pages/home/CreatePostButton.vue';
+import PostsList from '@/components/pages/home/PostsList.vue';
 
 interface Data {
   postsService: IPostService | null;
@@ -67,7 +47,7 @@ interface Methods {
 
 export default Vue.extend<Data, Props, Computed, Methods>({
   components: {
-    ArticleCard,
+    PostsList,
     SpeedDial,
     CreatePostButton
   },
