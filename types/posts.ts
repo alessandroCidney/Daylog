@@ -10,6 +10,7 @@ export type TPost = {
   author_photo_url: string;
   content: string;
   title: string;
+  formatted_title: string;
   thumbnail: string | undefined | null;
   created_at: number;
   likes: TPostLike[] | undefined | null;

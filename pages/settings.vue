@@ -73,7 +73,7 @@
             <v-text-field
               v-model="changes.username"
               label="Username"
-              :value="username"
+              :value="firestoreUserUsername"
               prefix="@"
               :disabled="!allowEdit"
               :color="lightTheme ? 'space' : 'white'"

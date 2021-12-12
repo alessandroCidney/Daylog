@@ -13,17 +13,21 @@ import {
   remove as DatabaseRemove,
   Query,
   orderByChild,
+  limitToFirst,
+  startAt,
+  endAt,
   equalTo
 } from 'firebase/database';
 
 export interface IDatabase {
   database: FirebaseDatabase;
   reference: DatabaseReference;
-  get: (childPath?: string) => Promise<DataSnapshot | null>;
-  getWhere: (key: string, value: any, childPath?: string) => Promise<Query | DataSnapshot | null>;
+  get: (childPath?: string) => Promise<any>;
+  getWhere: (key: string, value: any, childPath?: string) => Promise<any>;
   set: (content: any, childPath?: string) => Promise<boolean>;
   push: (content: any, childPath?: string) => Promise<string | boolean | null>;
   update: (content: any, childPath?: string) => Promise<boolean>;
+  search: (orderedByKey: string, searchString: string, limit: number) => Promise<any>;
 };
 
 class Database implements IDatabase {
@@ -160,7 +164,29 @@ class Database implements IDatabase {
     } catch (err) {
       console.log('Error on database service (DELETE)', err);
     }
-  }
+  };
+
+  async search (orderedByKey: string, searchString: string, limit: number = 10) {
+    try {
+      const query = DatabaseQuery(
+        this.reference,
+        orderByChild(orderedByKey),
+        startAt(searchString),
+        endAt(searchString + "\uf8ff")
+      );
+  
+      const snapshot = await DatabaseGet(query);
+  
+      if (snapshot.exists()) {
+        return snapshot.val();
+      };
+  
+      return null;
+    } catch (error) {
+      console.log('Error on database service (DELETE)', error);
+      return null;
+    }
+  };
 };
 
 export default Database;

@@ -1,10 +1,12 @@
 import CloudStorage, { ICloudStorage } from "../storage";
 import Database, { IDatabase } from "../database";
+import Utils, { IUtils } from '@/utils';
 import { TPost } from '@/types/posts';
 
 export interface IPostService {
   storage: ICloudStorage;
   database: IDatabase;
+  utils: IUtils;
   fetchPosts: () => Promise<TPost[]>;
   fetchPost: (id: string) => Promise<TPost | undefined>;
   savePost: (
@@ -18,15 +20,18 @@ export interface IPostService {
   fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>;
   deletePostsWhere: (key: string, value: string) => Promise<boolean | null>;
   toggleLike: (postKey: string, userId: string) => Promise<boolean>;
+  searchPosts: (title: string) => Promise<TPost[]>;
 };
 
 class PostsService {
   storage;
   database;
-  
+  utils;
+
   constructor () {
     this.storage = new CloudStorage('posts');
     this.database = new Database('posts');
+    this.utils = new Utils();
   };
 
   async fetchPosts () {
@@ -69,6 +74,7 @@ class PostsService {
     try {
       const postKey = await this.database.push({
         title,
+        formatted_title: this.utils.clearString(title),
         content,
         author,
         author_email: authorEmail,
@@ -129,6 +135,16 @@ class PostsService {
       console.log('Error on posts service (DELETE POSTS WHERE)', err);
       return false;
     }
+  };
+
+  async searchPosts (title: string) {
+    const posts: Record<string, TPost> | null = await this.database.search(
+      'formatted_title',
+      title.toLowerCase(),
+      5
+    );
+
+    return !!posts ? Object.values(posts) : [];
   };
 
   async toggleLike (postKey: string, userId: string) {
