@@ -1,7 +1,6 @@
 <template>
   <v-container>
     <v-row align="center" justify="center" class="mt-10">
-
       <v-col md="8" sm="10" cols="10">
         <v-row align="center" justify="center" class="photosArea">
           <v-col cols="12">
@@ -9,7 +8,7 @@
               width="100%"
               :height="backgroundPhotoLoaded ? '200px' : 0"
               class="overflow-hidden"
-              :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
+              :src="firestoreUserProfileBackground || require('@/assets/images/b-background.jpg')"
               @load="backgroundPhotoLoaded = true"
             />
 
@@ -31,7 +30,7 @@
               }"
             >
               <v-img
-                :src="profilePhoto || require('@/assets/images/profile/user.jpg')"
+                :src="firestoreUserProfilePhoto || require('@/assets/images/profile/user.jpg')"
                 alt="Avatar photo"
                 :width="profilePhotoLoaded ? '150px' : 0"
                 :height="profilePhotoLoaded ? '150px' : 0"
@@ -134,11 +133,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import Authentication, { IAuthentication } from '@/services/authentication';
 import Users, { IUsers } from '@/services/users';
-import { StoreUser, FirestoreUser } from '@/types/users';
+import { StoreUser } from '@/types/users';
+import FirestoreUserData from '@/mixins/FirestoreUserData';
 
 type TProfileChanges = {
   profilePhoto: File | null;
@@ -167,15 +167,15 @@ interface Methods {
 interface Computed {
   userId: string;
   user: StoreUser | null;
-  profilePhoto: string;
-  backgroundPhoto: string;
-  username: string;
-  firestoreUser: FirestoreUser | undefined;
 };
 
 interface Props {};
 
-export default Vue.extend<Data, Methods, Computed, Props>({
+export default (
+  Vue as VueConstructor<Vue & InstanceType<typeof FirestoreUserData>>
+).extend<Data, Methods, Computed, Props>({
+  mixins: [FirestoreUserData],
+  
   data: () => ({
     authenticationService: null,
     usersService: null,
@@ -200,23 +200,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       this.usersService = new Users(this.userId);
     };
 
-    this.changes.username = this.username;
+    this.changes.username = this.firestoreUserUsername;
   },
 
   computed: {
-    ...mapGetters(['user', 'firestoreUser']),
-
-    profilePhoto () {
-      return this.user?.firestoreUser.profile_photo || '';
-    },
-
-    backgroundPhoto () {
-      return this.user?.firestoreUser.profile_background || '';
-    },
-
-    username () {
-      return this.user?.firestoreUser.username || '';
-    },
+    ...mapGetters(['user']),
 
     userId () {
       return this.user?.firestoreUser.id || '';
@@ -259,7 +247,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         return;
       };
 
-      if (this.changes.username && this.changes.username !== this.username) {
+      if (this.changes.username && this.changes.username !== this.firestoreUserUsername) {
         await this.usersService.changeUsername(
           this.changes.username
         );
