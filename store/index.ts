@@ -13,9 +13,9 @@ const createStore = () => new Vuex.Store({
     user: null as StoreUser | null,
 
     appMessage: {
-      active: true,
+      active: false,
       status: 'none',
-      content: 'Potato',
+      message: 'Potato',
     }
   }),
 
@@ -44,6 +44,15 @@ const createStore = () => new Vuex.Store({
 
     setAppMessage (state, payload) {
       Vue.set(state, 'appMessage', payload);
+    },
+
+    showAppMessage (state, payload) {
+      const message = {
+        ...payload,
+        active: true
+      };
+
+      Vue.set(state, 'appMessage', message);
     }
   },
 

@@ -10,7 +10,7 @@
     {{ appMessageContent }}
 
     <template v-slot:action="{ attrs }">
-      <v-btn icon right v-bind="attrs" @click="message = false">
+      <v-btn icon right v-bind="attrs" @click="appMessageActive = false">
         <v-icon small>mdi-close</v-icon>
       </v-btn>
     </template>
@@ -58,7 +58,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     appMessageContent () {
-      return this.appMessage.content;
+      return this.appMessage.message;
     },
 
     appMessageStatus () {

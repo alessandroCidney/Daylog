@@ -1,6 +1,9 @@
+import firebaseCodesHandler, { TFirebaseCodesHandler } from "./firebaseCodesHandler";
+
 export interface IUtils {
   clearString: (str: string) => string;
   renameFile: (file: File, newName: string) => File;
+  analiseFirebaseCode: TFirebaseCodesHandler;
 };
 
 class Utils implements IUtils {
@@ -17,7 +20,11 @@ class Utils implements IUtils {
   renameFile (file: File, newName: string): File {
     const fileName = file.name.replace(/(.+)(\.[^\.]+)$/g, `${newName}$2`);
     return new File([file], fileName, { type: file.type });
-  }; 
+  };
+
+  analiseFirebaseCode (code: string) {
+    return firebaseCodesHandler(code);
+  } 
 };
 
 export default Utils;

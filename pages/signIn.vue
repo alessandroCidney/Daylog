@@ -91,9 +91,11 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 import Authentication, { IAuthentication } from '@/services/authentication/index';
+
+import { TApplicationMessage } from '@/types/messages';
 
 interface ILoginData {
   email: string;
@@ -111,6 +113,7 @@ interface Data {
 interface Methods {
   handleSignInWithGoogle: () => void;
   handleSignInWithEmail: () => Promise<void>;
+  showAppMessage: (message: TApplicationMessage) => void;
 };
 
 interface Props {};
@@ -155,6 +158,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   methods: {
+    ...mapMutations(['showAppMessage']),
+
     handleSignInWithGoogle () {
       this.authenticationService?.signInWithGoogle();
     },
@@ -162,10 +167,18 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     async handleSignInWithEmail () {
       this.formLoading = true;
 
-      const success = await this.authenticationService?.signInWithEmail(
+      if (!this.authenticationService) {
+        return;
+      };
+
+      const results = await this.authenticationService.signInWithEmail(
         this.loginData.email,
         this.loginData.password
       );
+
+      if (results.status === 'error') {
+        this.showAppMessage(results);
+      };
 
       this.formLoading = false;
     }

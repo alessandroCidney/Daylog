@@ -5,13 +5,25 @@
         <Nuxt />
       </v-container>
     </v-main>
+
+    <AppMessage />
   </v-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import AppMessage from '@/components/layouts/AppMessage.vue';
 
-export default Vue.extend({
-  middleware: 'authentication'
+interface Data {};
+interface Methods {};
+interface Computed {};
+interface Props {};
+
+export default Vue.extend<Data, Methods, Computed, Props>({
+  middleware: 'authentication',
+
+  components: {
+    AppMessage
+  }
 });
 </script>

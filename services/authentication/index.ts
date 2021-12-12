@@ -1,4 +1,5 @@
 import { auth } from '@/plugins/firebase';
+import { AuthError } from 'firebase/auth';
 import {
   GoogleAuthProvider,
   signInWithRedirect,
@@ -9,11 +10,16 @@ import {
   signInWithEmailAndPassword,
   deleteUser
 } from 'firebase/auth';
+
 import Database, { IDatabase }  from '../database';
 import CloudStorage, { ICloudStorage } from '../storage';
+
 import Utils, { IUtils } from '@/utils';
+
 import * as CloudStorageConstants from '@/data/constants/storage';
-import { TPost } from '~/types/posts';
+
+import { TPost } from '@/types/posts';
+import { TApplicationMessage } from '@/types/messages';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -33,7 +39,7 @@ export interface IAuthentication {
     aceptedTerms: boolean,
     aceptedPrivacy: boolean,
   ) => Promise<boolean>;
-  signInWithEmail: (email: string, password: string) => Promise<boolean>;
+  signInWithEmail: (email: string, password: string) => Promise<TApplicationMessage>;
   deleteAccount: (userId: string, userEmail: string) => Promise<void>;
 };
 
@@ -137,13 +143,25 @@ class Authentication implements IAuthentication {
       );
 
       if (!!userCredentials) {
-        return true;
+        return {
+          status: 'success',
+          message: 'User successfully authenticated.'
+        } as TApplicationMessage;
       };
 
-      return false;
+      return {
+        status: 'error',
+        message: 'An error occurred during authentication.'
+      } as TApplicationMessage;
     } catch (err) {
+      const authError = err as AuthError;
+
       console.log('Error on authentication service', err);
-      return false;
+      
+      return {
+        status: 'error',
+        message: this.utils.analiseFirebaseCode(authError.code)
+      } as TApplicationMessage;
     };
   };
 
