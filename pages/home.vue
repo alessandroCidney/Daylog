@@ -42,38 +42,7 @@
       Nenhuma postagem encontrada ;-;
     </div>
 
-    <v-speed-dial
-      v-model="speedDial"
-      direction="top"
-      :top="false"
-      :right="true"
-      :bottom="true"
-      :left="false"
-      fixed
-    >
-      <template v-slot:activator>
-        <v-btn fab>
-          <v-icon v-if="speedDial" color="space">mdi-close</v-icon>
-          <v-icon v-else color="space">mdi-feather</v-icon>
-        </v-btn>
-      </template>
-
-      <v-tooltip bottom>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            v-on="on"
-            to="/create"
-            fab
-            small
-          >
-            <v-icon color="space">mdi-plus</v-icon>
-          </v-btn>
-        </template>
-        <span>Create a new post</span>
-      </v-tooltip>
-    </v-speed-dial>
-    
+    <speed-dial />
   </v-container>
 </template>
 
@@ -84,14 +53,15 @@ import PostsService, { IPostService } from '@/services/posts';
 import Users, { IUsers } from '@/services/users';
 import { FirestoreUser } from '@/types/users';
 import { TPost, TValidatedPost } from '@/types/posts';
+
 import ArticleCard from '@/components/commons/ArticleCard.vue';
+import SpeedDial from '@/components/pages/home/SpeedDial.vue';
 
 interface Data {
   postsService: IPostService | null;
   usersService: IUsers | null;
   posts: TPost[] | TValidatedPost[];
   loadingPosts: boolean;
-  speedDial: boolean;
 };
 
 interface Props {};
@@ -109,7 +79,8 @@ interface Methods {
 
 export default Vue.extend<Data, Props, Computed, Methods>({
   components: {
-    ArticleCard
+    ArticleCard,
+    SpeedDial
   },
   
   data: () => ({
@@ -117,7 +88,6 @@ export default Vue.extend<Data, Props, Computed, Methods>({
     usersService: null,
     posts: [],
     loadingPosts: true,
-    speedDial: false
   }),
 
   created () {
