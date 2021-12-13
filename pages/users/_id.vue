@@ -42,45 +42,57 @@
             </v-tab>
 
               <v-tab-item>
-                <v-col
-                  v-for="(post, index) in posts"
-                  :key="`post-profile-${index}`"
-                  md="11"
-                  sm="12"
-                  cols="12"
-                >
-                  <ArticleCard
-                    :id="post.id"
-                    :title="post.title"
-                    :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-                    :imageURL="post.thumbnail"
-                    :authorPhotoURL="post.author_photo_url"
-                    :already-liked="post.alreadyLiked"
-                    :already-saved="post.alreadySaved"
-                    :like="() => like(post.id)"
-                    :save="() => save(post.id)"
-                  />
-                </v-col>
+                <template v-if="posts.length > 0">
+                  <v-col
+                    v-for="(post, index) in posts"
+                    :key="`post-profile-${index}`"
+                    md="11"
+                    sm="12"
+                    cols="12"
+                  >
+                    <ArticleCard
+                      :id="post.id"
+                      :title="post.title"
+                      :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+                      :imageURL="post.thumbnail"
+                      :authorPhotoURL="post.author_photo_url"
+                      :already-liked="post.alreadyLiked"
+                      :already-saved="post.alreadySaved"
+                      :like="() => like(post.id)"
+                      :save="() => save(post.id)"
+                    />
+                  </v-col>
+                </template>
+
+                <template v-else>
+                  <NoPostsAlert />
+                </template>
               </v-tab-item>
 
               <v-tab-item v-if="pageUserIsLoggedUser">
-                <v-col
-                  v-for="(post, index) in savedPosts"
-                  :key="`post-profile-${index}`"
-                  cols="11"
-                >
-                  <ArticleCard
-                    :id="post.id"
-                    :title="post.title"
-                    :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-                    :imageURL="post.thumbnail"
-                    :authorPhotoURL="post.author_photo_url"
-                    :already-liked="post.alreadyLiked"
-                    :already-saved="post.alreadySaved"
-                    :like="() => like(post.id)"
-                    :save="() => save(post.id)"
-                  />
-                </v-col>
+                <template v-if="posts.length > 0">
+                  <v-col
+                    v-for="(post, index) in savedPosts"
+                    :key="`post-profile-${index}`"
+                    cols="11"
+                  >
+                    <ArticleCard
+                      :id="post.id"
+                      :title="post.title"
+                      :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+                      :imageURL="post.thumbnail"
+                      :authorPhotoURL="post.author_photo_url"
+                      :already-liked="post.alreadyLiked"
+                      :already-saved="post.alreadySaved"
+                      :like="() => like(post.id)"
+                      :save="() => save(post.id)"
+                    />
+                  </v-col>
+                </template>
+
+                <template v-else>
+                  <NoPostsAlert />
+                </template>
               </v-tab-item>
           </v-tabs>
         </v-row>
@@ -99,6 +111,7 @@ import PostsService, { IPostService } from '@/services/posts';
 import Users, { IUsers } from '@/services/users';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
+import NoPostsAlert from '@/components/commons/NoPostsAlert.vue';
 
 interface Data {
   id: string;
@@ -131,7 +144,8 @@ interface Computed {
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
-    ArticleCard
+    ArticleCard,
+    NoPostsAlert
   },
 
   data: () => ({

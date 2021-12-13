@@ -20,14 +20,13 @@
     </v-col>
   </v-row>
 
-  <div v-else-if="!loadingPosts" class="text-center">
-    Nenhuma postagem encontrada ;-;
-  </div>
+  <NoPostsAlert v-else-if="!loadingPosts" />
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import ArticleCard from '@/components/commons/ArticleCard.vue';
+import NoPostsAlert from '@/components/commons/NoPostsAlert.vue';
 import { TPost, TValidatedPost } from '@/types/posts';
 
 interface Data {};
@@ -43,7 +42,8 @@ interface Props {
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
-    ArticleCard
+    ArticleCard,
+    NoPostsAlert
   },
 
   props: {
