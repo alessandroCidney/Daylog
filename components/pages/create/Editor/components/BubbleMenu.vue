@@ -3,7 +3,7 @@
     class="bubbleMenu"
     :tippy-options="{ duration: 100 }"
     :editor="editor"
-    v-if="editor"
+    v-if="editor && editor.getHTML().length > 300"
   >
     <v-btn
       @click="editor.chain().focus().toggleBold().run()"
@@ -30,7 +30,7 @@
     </v-btn>
 
     <v-btn
-      @click="editor.chain().focus().toggleCodeBlock().run()"
+      @click="editor.chain().focus().toggleCode().run()"
       :class="{ 'is-active': editor.isActive('code') }"
       retain-focus-on-click
       dark
@@ -39,6 +39,18 @@
       height="40px"
     >
       <v-icon>mdi-code-tags</v-icon>
+    </v-btn>
+
+    <v-btn
+      @click="editor.chain().focus().toggleCodeBlock().run()"
+      :class="{ 'is-active': editor.isActive('code') }"
+      retain-focus-on-click
+      dark
+      tile
+      shaped
+      height="40px"
+    >
+      <v-icon>mdi-code-not-equal-variant</v-icon>
     </v-btn>
   </bubble-menu>
 </template>

@@ -20,10 +20,6 @@ import Vue from 'vue';
 
 import { Editor, EditorContent } from '@tiptap/vue-2';
 import StarterKit from '@tiptap/starter-kit';
-import Document from '@tiptap/extension-document'
-import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import CodeBlock from '@tiptap/extension-code-block'
 
 import ControlsMenu from './components/ControlsMenu.vue';
 import BubbleMenu from './components/BubbleMenu.vue';
@@ -69,10 +65,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   mounted () {
     this.editor = new Editor({
       extensions: [
-        Document,
-        Paragraph,
-        Text,
-        CodeBlock,
+        StarterKit
       ],
       content: ''
     });
@@ -103,6 +96,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       border: 0 !important;
       padding: 12px !important;
       padding-top: 0;
+
+      h1, h2, h3 {
+        margin: 16px 0 !important;
+      }
 
       pre {
         background: #0D0D0D;

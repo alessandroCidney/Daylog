@@ -15,7 +15,7 @@
     <v-icon
       v-if="!file"
       color="space"
-      size="50"
+      size="40"
     >
       mdi-image-plus
     </v-icon>
@@ -91,13 +91,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   height: 100%;
   min-height: 100px;
 
-  border-radius: 8px;
-
   background-position: center;
   background-size: cover;
 
   &.bordered {
-    border: 3px dashed #DDD;
+    border: 1px solid #f0f0f0;
   }
 }
 </style>

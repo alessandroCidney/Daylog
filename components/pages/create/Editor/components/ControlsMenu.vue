@@ -34,6 +34,20 @@
           </v-list-item-icon>
           <v-list-item-title>Heading 1</v-list-item-title>
         </v-list-item>
+
+        <v-list-item @click="editor.chain().focus().toggleHeading({ level: 2 }).run()">
+          <v-list-item-icon>
+            <v-icon>mdi-format-header-2</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Heading 2</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="editor.chain().focus().toggleHeading({ level: 3 }).run()">
+          <v-list-item-icon>
+            <v-icon>mdi-format-header-3</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>Heading 3</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-menu>
 
@@ -43,6 +57,14 @@
       @click="editor.chain().focus().toggleCode().run()"
     >
       <v-icon>mdi-code-tags</v-icon>
+    </v-btn>
+
+    <v-btn
+      color="space"
+      icon
+      @click="editor.chain().focus().toggleCodeBlock().run()"
+    >
+      <v-icon>mdi-code-not-equal-variant</v-icon>
     </v-btn>
   </div>
 </template>
@@ -68,6 +90,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 <style lang="scss">
 .editorControls {
-  border-bottom: 3px solid #f0f0f0 !important;
+  border-bottom: 1px solid #f0f0f0 !important;
 }
 </style>

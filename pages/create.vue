@@ -1,48 +1,67 @@
 <template>
-  <v-container class="mt-10" fluid>
-    <v-row class="create-post-header mb-5" align="center" justify="center">
-      <v-col md="6" sm="12" cols="12" class="pa-0">
-        <DropPhotoZone v-model="thumb" class="create-page-drop-photo-zone" />
-      </v-col>
+  <v-container class="mt-10">
+    <v-row align="center" justify="center">
+      <v-col cols="10">
+        <v-row align="center" justify="center">
+          <v-col cols="10" align="center" justify="center">
+            <v-row class="create-post-header mb-5" align="center" justify="center">
+              <v-col cols="12" class="pa-0">
+                <DropPhotoZone
+                  v-model="thumb"
+                  :class="{
+                    'create-page-drop-photo-zone': true,
+                    'bigger-drop-photo-zone': !!thumb
+                  }"
+                />
+              </v-col>
 
-      <v-col align-self="center" md="6" sm="12" cols="12">
-        <v-textarea
-          v-model="title"
-          flat
-          solo
-          placeholder="Enter a title for your post!"
-          class="font-weight-bold article-creation-title-textarea"
-          height="150px"
-          no-resize
-          color="space"
-        />
-      </v-col>
-    </v-row>
+              <v-col cols="12" class="pa-0 mt-16">
+                <v-textarea
+                  v-model="title"
+                  flat
+                  solo
+                  placeholder="Enter a title for your post!"
+                  class="font-weight-bold article-creation-title-textarea"
+                  height="150px"
+                  no-resize
+                  color="space"
+                />
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
 
-    <v-row align="center" justify="center" class="editor-and-controls">
-      <v-col md="8" sm="10">
-        <div class="d-flex">
-          <v-spacer />
-          <v-tooltip bottom>
-            <template v-slot:activator="{ on, attrs }">
+        <v-row align="center" justify="center" class="editor-and-controls">
+          <v-col md="10" sm="10" class="pa-0">
+            <div class="d-flex">
+              <v-spacer />
               <v-btn
-                v-on="on"
-                v-bind="attrs"
-                icon
+                text
                 color="space"
                 @click="save"
               >
-                <v-icon size="24">
-                  mdi-content-save
+                <v-icon size="24" left>
+                  mdi-content-save-outline
                 </v-icon>
+                Save post
               </v-btn>
-            </template>
-            <span>Save post</span>
-          </v-tooltip>
-        </div>
-        <v-card min-height="500px" flat class="create-post-editor pa-0">
-          <Editor v-model="content" />
-        </v-card>
+
+              <v-btn
+                text
+                color="space"
+                to="/home"
+              >
+                <v-icon size="24" left>
+                  mdi-delete-outline
+                </v-icon>
+                Discard draft
+              </v-btn>
+            </div>
+            <v-card min-height="500px" flat class="create-post-editor pa-0">
+              <Editor v-model="content" />
+            </v-card>
+          </v-col>
+        </v-row>
       </v-col>
     </v-row>
   </v-container>
@@ -139,11 +158,21 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 }
 
 .create-post-editor {
-  border: 3px solid #f0f0f0 !important;
+  border: 1px solid #f0f0f0 !important;
 }
 
 .create-page-drop-photo-zone {
-  border-left: 0 !important;
-  height: 400px !important;
+  height: 100px !important;
+  border: 2px solid #f0f0f0 !important;
+
+  transition: all .5s ease;
+}
+
+.create-page-drop-photo-zone:hover {
+  border: 2px dashed #f0f0f0 !important;
+}
+
+.bigger-drop-photo-zone {
+  height: 200px !important;
 }
 </style>
