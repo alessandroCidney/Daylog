@@ -20,6 +20,10 @@ import Vue from 'vue';
 
 import { Editor, EditorContent } from '@tiptap/vue-2';
 import StarterKit from '@tiptap/starter-kit';
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import CodeBlock from '@tiptap/extension-code-block'
 
 import ControlsMenu from './components/ControlsMenu.vue';
 import BubbleMenu from './components/BubbleMenu.vue';
@@ -65,7 +69,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   mounted () {
     this.editor = new Editor({
       extensions: [
-        StarterKit
+        Document,
+        Paragraph,
+        Text,
+        CodeBlock,
       ],
       content: ''
     });
@@ -96,6 +103,21 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       border: 0 !important;
       padding: 12px !important;
       padding-top: 0;
+
+      pre {
+        background: #0D0D0D;
+        color: #FFF;
+        font-family: 'JetBrainsMono', monospace;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+
+        code {
+          color: inherit;
+          padding: 0;
+          background: none;
+          font-size: 0.8rem;
+        }
+      }
     }
 
     .ProseMirror:focus-visible {

@@ -30,7 +30,7 @@
     </v-btn>
 
     <v-btn
-      @click="editor.chain().focus().toggleCode().run()"
+      @click="editor.chain().focus().toggleCodeBlock().run()"
       :class="{ 'is-active': editor.isActive('code') }"
       retain-focus-on-click
       dark
