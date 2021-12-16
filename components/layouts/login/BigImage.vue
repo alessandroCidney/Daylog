@@ -31,6 +31,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 <style lang="scss" scoped>
 .bigImage {
   width: 100% !important;
-  height: 100% !important;
+  height: 100vh !important;
 }
 </style>

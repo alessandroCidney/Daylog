@@ -1,89 +1,25 @@
 <template>
-  <v-container
-    :class="{
-      'login-container': true,
-      'login-container-dark': !lightTheme,
-      'd-flex': true, 
-      'align-center': true
-    }"
-    fluid
-  >
-    <v-row align="center" justify="center">
-      <v-col lg="5" md="6" sm="8">
-        
-        <v-card :loading="formLoading" height="70vh">
-          <v-progress-linear slot="progress" indeterminate color="space" />
-
-          <v-card-title class="d-flex align-center justify-center pa-0 flex-column">
-            <v-img
-              v-if="lightTheme"
-              max-width="150px"
-              :src="require('@/assets/svg/logo_dark.svg')"
-            />
-
-            <v-img
-              v-else
-              max-width="150px"
-              :src="require('@/assets/svg/logo_white.svg')"
-            />
-          </v-card-title>
-
-          <v-card-text class="px-10 mt-7">
-            <v-form
-              v-model="validData"
-            >
-              <v-btn
-                color="#FFF"
-                class="google-red-text"
-                block
-                @click="handleSignInWithGoogle"
-              >
-                <v-icon class="mr-3" size="20px">
-                  mdi-google
-                </v-icon>
-                Sign in with Google
-              </v-btn>
-
-              <p class="mt-5">Or login with email and password</p>
-            
-              <v-text-field
-                v-model="loginData.email"
-                label="E-mail"
-                placeholder="Type your e-mail"
-                color="space"
-              ></v-text-field>
-
-              <v-text-field
-                v-model="loginData.password"
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                @click:append="showPassword = !showPassword"
-                label="Password"
-                placeholder="Type your password"
-                color="space"
-                class="mb-2"
-              />
-
-              <v-btn
-                color="space"
-                class="white--text mt-5"
-                block
-                @click="handleSignInWithEmail"
-              >
-                Login with email
-              </v-btn>
-
-              <p class="mt-4">
-                Don't have an account? 
-                <nuxt-link to="/signUp" class="text-decoration-none">
-                  click here
-                </nuxt-link>
-              </p>
-
-            </v-form>
-          </v-card-text>
-        </v-card>
-
+  <v-container fluid class="pa-0">
+    <v-row
+      class="signInPage"
+      align="center"
+      justify="center"
+      :align-md="undefined"
+      :justify-md="undefined"
+    >
+      <v-col cols="6" class="pa-0 d-none d-md-flex">
+        <BigImage
+          title="Welcome back!<br>See what&#39;s being written around the world."
+          imageURL="https://cdn.pixabay.com/photo/2016/11/21/13/01/backlit-1845281_960_720.jpg"
+        />
+      </v-col>
+      <v-col cols="10" sm="10" md="6" class="d-flex align-center justify-center formCol">
+        <LoginForm
+          :emailAuthLoading="emailAuthLoading"
+          :googleAuthLoading="googleAuthLoading"
+          @emailAuthSubmit="handleSignInWithEmail"
+          @googleAuthSubmit="handleSignInWithGoogle"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -93,8 +29,10 @@
 import Vue from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
 
-import Authentication, { IAuthentication } from '@/services/authentication/index';
+import BigImage from '@/components/layouts/login/BigImage.vue';
+import LoginForm from '@/components/pages/signIn/loginForm.vue';
 
+import Authentication, { IAuthentication } from '@/services/authentication/index';
 import { TApplicationMessage } from '@/types/messages';
 
 interface ILoginData {
@@ -103,16 +41,15 @@ interface ILoginData {
 };
 
 interface Data {
-  formLoading: boolean;
+  emailAuthLoading: boolean;
+  googleAuthLoading: boolean;
   showPassword: boolean;
   authenticationService: IAuthentication | null;
-  validData: boolean;
-  loginData: ILoginData;
 };
 
 interface Methods {
   handleSignInWithGoogle: () => void;
-  handleSignInWithEmail: () => Promise<void>;
+  handleSignInWithEmail: (loginData: ILoginData) => Promise<void>;
   showAppMessage: (message: TApplicationMessage) => void;
 };
 
@@ -126,15 +63,16 @@ interface Computed {
 export default Vue.extend<Data, Methods, Computed, Props>({
   layout: 'login',
 
+  components: {
+    BigImage,
+    LoginForm
+  },
+
   data: () => ({
-    formLoading: false,
+    emailAuthLoading: false,
+    googleAuthLoading: false,
     showPassword: false,
     authenticationService: null,
-    validData: false,
-    loginData: {
-      email: '',
-      password: '',
-    },
   }),
 
   created () {
@@ -161,41 +99,41 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapMutations(['showAppMessage']),
 
     handleSignInWithGoogle () {
-      this.authenticationService?.signInWithGoogle();
+      this.googleAuthLoading = true;
+      
+      setTimeout(() => {
+        this.authenticationService?.signInWithGoogle();
+      }, 1000);
     },
 
-    async handleSignInWithEmail () {
-      this.formLoading = true;
+    async handleSignInWithEmail (loginData: ILoginData) {
+      this.emailAuthLoading = true;
 
       if (!this.authenticationService) {
         return;
       };
 
       const results = await this.authenticationService.signInWithEmail(
-        this.loginData.email,
-        this.loginData.password
+        loginData.email,
+        loginData.password
       );
 
       if (results.status === 'error') {
         this.showAppMessage(results);
       };
 
-      this.formLoading = false;
+      this.emailAuthLoading = false;
     }
   }
-});
+})
 </script>
 
-<style lang="scss">
-.login-container {
-  height: 100vh;
-
-  background-image: url('@/assets/images/b-background.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
+<style lang="scss" scoped>
+.signInPage {
+  height: 100vh !important;
 }
 
-.login-container-dark {
-  background-image: url('@/assets/images/b-background-dark.jpg') !important;
+.formCol {
+  height: 100vh !important;
 }
 </style>
