@@ -1,9 +1,9 @@
 <template>
   <v-container fluid class="pa-0">
     <v-row class="signUpPage">
-      <v-col cols="6" class="d-flex align-center justify-center">
+      <v-col cols="6" class="d-flex align-center justify-center formCol">
         <v-form class="signUpForm">
-          <h1 class="passero-one mb-8">
+          <h1 class="passero-one mb-6 pageTitle">
             Sign up to PontoBlog
           </h1>
 
@@ -19,7 +19,7 @@
             <v-divider class="mb-6" />
 
             <span class="px-2 mb-6 d-flex align-center justify-center grey--text">
-              Or sign up with Email and Password
+              <small>Or sign up with Email and Password</small>
             </span>
 
             <v-divider class="mb-6" />
@@ -30,6 +30,8 @@
             placeholder="Type a username"
             outlined
             color="space"
+            hide-details
+            class="mb-5"
           />
 
           <v-text-field
@@ -37,6 +39,8 @@
             placeholder="user@example.com"
             outlined
             color="space"
+            hide-details
+            class="mb-5"
           />
 
           <v-text-field
@@ -44,7 +48,7 @@
             placeholder="At least 8 characters"
             outlined
             color="space"
-            hide-details=""
+            hide-details
           />
 
           <v-checkbox
@@ -58,6 +62,10 @@
 
             Sign up with Email
           </v-btn>
+
+          <p class="grey--text mt-2 mb-0">
+            <small>Have an account? <NuxtLink to="login">Click here</NuxtLink></small>
+          </p>
         </v-form>
       </v-col>
       <v-col cols="6" class="pa-0">
@@ -95,5 +103,13 @@ export default Vue.extend({
 
 .signUpForm {
   width: 30vw !important;
+}
+
+.pageTitle {
+  font-size: 24px;
+}
+
+.formCol {
+  height: 100vh !important;
 }
 </style>
