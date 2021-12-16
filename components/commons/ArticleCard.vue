@@ -1,5 +1,5 @@
 <template>
-  <v-card :width="width" elevation="1" :to="`/posts/${id}`">
+  <v-card :width="width" :to="`/posts/${id}`" flat>
     <v-img
       :src="imageURL"
       :alt="`Imagem do post ${title}`"

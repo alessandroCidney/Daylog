@@ -2,7 +2,7 @@
   <v-app>
     <AppBar />
 
-    <v-main>
+    <v-main class="defaultContainer">
       <Nuxt />
     </v-main>
 
@@ -47,5 +47,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .main-app-bar {
   z-index: 10;
+}
+
+.defaultContainer {
+  background-color: var(--v-cloud-base) !important;
 }
 </style>

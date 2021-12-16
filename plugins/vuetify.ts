@@ -21,7 +21,8 @@ const vuetify = new Vuetify({
         success: colors.green.accent3
       },
       light: {
-        space: '#172b4d'
+        space: '#172b4d',
+        cloud: '#F8F9FB'
       }
     }
   }

@@ -30,7 +30,7 @@
 
       <v-col md="8" sm="10" cols="10" class="py-16">
         <v-row align="center" justify="center">
-          <v-tabs color="space">
+          <v-tabs color="space" background-color="cloud">
             <v-tab>
               <v-icon left>mdi-view-grid</v-icon>
               Posts
@@ -41,7 +41,7 @@
               Saved
             </v-tab>
 
-              <v-tab-item>
+              <v-tab-item class="cloud">
                 <template v-if="posts.length > 0">
                   <v-col
                     v-for="(post, index) in posts"
@@ -49,6 +49,7 @@
                     md="11"
                     sm="12"
                     cols="12"
+                    class="cloud"
                   >
                     <ArticleCard
                       :id="post.id"
@@ -69,12 +70,15 @@
                 </template>
               </v-tab-item>
 
-              <v-tab-item v-if="pageUserIsLoggedUser">
+              <v-tab-item v-if="pageUserIsLoggedUser" class="cloud">
                 <template v-if="posts.length > 0">
                   <v-col
                     v-for="(post, index) in savedPosts"
                     :key="`post-profile-${index}`"
-                    cols="11"
+                    md="11"
+                    sm="12"
+                    cols="12"
+                    class="cloud"
                   >
                     <ArticleCard
                       :id="post.id"
