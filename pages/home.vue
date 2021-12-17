@@ -1,15 +1,58 @@
 <template>
-  <v-container>
-    <CreatePostButton />
+  <v-container fluid>
+    <v-row>
+      <v-col cols="3" class="cloud">
+        <v-card flat class="mt-3 light rounded-xl">
+          <v-row align="center" justify="center" class="py-2">
+            <v-col cols="3">
+              <v-avatar>
+                <v-img
+                  src="https://firebasestorage.googleapis.com/v0/b/ponto-blog.appspot.com/o/users%2F-MqMUvjKWgiphY9ihXod%2Fuser_profile_photo.jpeg?alt=media&token=3aa35ba5-4d91-48c4-ae19-da0d5b67af97"
+                />
+              </v-avatar>
+            </v-col>
+            <v-col cols="8" class="pl-0">
+              <div><strong>@cidn__</strong></div>
+              <div><small>Iniciante</small></div>
+            </v-col>
+          </v-row>
+        </v-card>
 
-    <PostsList
-      :posts="posts"
-      :loadingPosts="loadingPosts"
-      :like="like"
-      :save="save"
-    />
+        <v-list class="mt-8 cloud">
+          <v-list-item-group class="light rounded-xl overflow-hidden">
 
-    <SpeedDial />
+            <v-list-item active-class="space--text">
+              <v-list-item-icon><v-icon>mdi-home-variant</v-icon></v-list-item-icon>
+              <v-list-item-title>Home</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item active-class="space--text">
+              <v-list-item-icon><v-icon>mdi-account-circle</v-icon></v-list-item-icon>
+              <v-list-item-title>Profile</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item active-class="space--text">
+              <v-list-item-icon><v-icon>mdi-cog</v-icon></v-list-item-icon>
+              <v-list-item-title>Settings</v-list-item-title>
+            </v-list-item>
+
+          </v-list-item-group>
+        </v-list>
+      </v-col>
+      <v-col cols="6">
+        <CreatePostButton />
+
+        <PostsList
+          :posts="posts"
+          :loadingPosts="loadingPosts"
+          :like="like"
+          :save="save"
+        />
+
+        <SpeedDial />
+      </v-col>
+      <v-col cols="3"></v-col>
+    </v-row>
   </v-container>
 </template>
 

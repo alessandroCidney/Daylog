@@ -3,8 +3,7 @@
     <v-col
       v-for="(post, index) in posts"
       :key="`home-post-${index}`"
-      md="8"
-      sm="10"
+      cols="12"
     >
       <ArticleCard
         :id="post.id"

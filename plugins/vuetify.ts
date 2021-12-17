@@ -22,7 +22,8 @@ const vuetify = new Vuetify({
       },
       light: {
         space: '#172b4d',
-        cloud: '#F8F9FB'
+        cloud: '#F8F9FB',
+        light: '#FFF'
       }
     }
   }
