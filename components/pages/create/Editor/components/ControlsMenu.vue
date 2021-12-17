@@ -1,5 +1,5 @@
 <template>
-  <div class="editorControls py-1 px-1">
+  <div class="editorControls py-1 px-1 d-flex align-center justify-center">
     <v-btn
       color="space"
       icon
@@ -28,25 +28,18 @@
         </v-btn>
       </template>
       <v-list>
-        <v-list-item @click="editor.chain().focus().toggleHeading({ level: 1 }).run()">
-          <v-list-item-icon>
-            <v-icon>mdi-format-header-1</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Heading 1</v-list-item-title>
+        <v-list-item
+          v-for="index in 3"
+          :key="'controlsMenu' + index"
+          @click="editor.chain().focus().toggleHeading({ level: index }).run()"
+        >
+          <v-list-item-title>Heading {{ index }}</v-list-item-title>
         </v-list-item>
 
-        <v-list-item @click="editor.chain().focus().toggleHeading({ level: 2 }).run()">
-          <v-list-item-icon>
-            <v-icon>mdi-format-header-2</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Heading 2</v-list-item-title>
-        </v-list-item>
-
-        <v-list-item @click="editor.chain().focus().toggleHeading({ level: 3 }).run()">
-          <v-list-item-icon>
-            <v-icon>mdi-format-header-3</v-icon>
-          </v-list-item-icon>
-          <v-list-item-title>Heading 3</v-list-item-title>
+        <v-list-item
+          @click="editor.chain().focus().setParagraph().run()"
+        >
+          <v-list-item-title>Normal</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -66,6 +59,10 @@
     >
       <v-icon>mdi-code-not-equal-variant</v-icon>
     </v-btn>
+
+    <v-spacer />
+
+    <slot name="rightItems" />
   </div>
 </template>
 

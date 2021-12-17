@@ -3,7 +3,6 @@
     class="bubbleMenu"
     :tippy-options="{ duration: 100 }"
     :editor="editor"
-    v-if="editor && editor.getHTML().length > 300"
   >
     <v-btn
       @click="editor.chain().focus().toggleBold().run()"
@@ -27,18 +26,6 @@
       height="40px"
     >
       <v-icon>mdi-format-italic</v-icon>
-    </v-btn>
-
-    <v-btn
-      @click="editor.chain().focus().toggleCode().run()"
-      :class="{ 'is-active': editor.isActive('code') }"
-      retain-focus-on-click
-      dark
-      tile
-      shaped
-      height="40px"
-    >
-      <v-icon>mdi-code-tags</v-icon>
     </v-btn>
 
     <v-btn

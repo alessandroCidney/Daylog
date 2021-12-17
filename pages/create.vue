@@ -4,30 +4,7 @@
       <v-col cols="10">
         <v-row align="center" justify="center">
           <v-col cols="10" align="center" justify="center">
-            <v-row class="create-post-header mb-5" align="center" justify="center">
-              <v-col cols="12" class="pa-0">
-                <DropPhotoZone
-                  v-model="thumb"
-                  :class="{
-                    'create-page-drop-photo-zone': true,
-                    'bigger-drop-photo-zone': !!thumb
-                  }"
-                />
-              </v-col>
-
-              <v-col cols="12" class="pa-0 mt-16">
-                <v-textarea
-                  v-model="title"
-                  flat
-                  solo
-                  placeholder="Enter a title for your post!"
-                  class="font-weight-bold article-creation-title-textarea"
-                  height="150px"
-                  no-resize
-                  color="space"
-                />
-              </v-col>
-            </v-row>
+            
           </v-col>
         </v-row>
 
@@ -35,30 +12,75 @@
           <v-col md="10" sm="10" class="pa-0">
             <div class="d-flex">
               <v-spacer />
-              <v-btn
-                text
-                color="space"
-                @click="save"
-              >
-                <v-icon size="24" left>
-                  mdi-content-save-outline
-                </v-icon>
-                Save post
-              </v-btn>
-
-              <v-btn
-                text
-                color="space"
-                to="/home"
-              >
-                <v-icon size="24" left>
-                  mdi-delete-outline
-                </v-icon>
-                Discard draft
-              </v-btn>
+              
             </div>
-            <v-card min-height="500px" flat class="create-post-editor pa-0">
-              <Editor v-model="content" />
+            <v-card min-height="500px" flat class="create-post-editor pa-0 rounded-xl overflow-hidden">
+              <Editor v-model="content">
+                <template v-slot:menuRightItems>
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                     <v-btn
+                        text
+                        color="space"
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="save"
+                      >
+                        <v-icon size="24">
+                          mdi-content-save-outline
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Save post</span>
+                  </v-tooltip>
+
+                  <v-tooltip bottom>
+                    <template v-slot:activator="{ on, attrs }">
+                     <v-btn
+                        text
+                        color="space"
+                        to="/home"
+                        icon
+                        v-bind="attrs"
+                        v-on="on"
+                      >
+                        <v-icon size="24">
+                          mdi-delete-outline
+                        </v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Discard post</span>
+                  </v-tooltip>
+                </template>
+
+                <template v-slot:centerItems>
+                  <v-row align="center" justify="center">
+                    <v-col cols="12" class="mt-10 py-0">
+                      <v-textarea
+                        v-model="title"
+                        flat
+                        solo
+                        placeholder="Enter a title for your post!"
+                        class="font-weight-bold article-creation-title-textarea"
+                        auto-grow
+                        rows="3"
+                        color="space"
+                      />
+                    </v-col>
+                    
+                    <v-col cols="12">
+                      <DropPhotoZone
+                        v-model="thumb"
+                        :class="{
+                          'create-page-drop-photo-zone': true,
+                          'bigger-drop-photo-zone': !!thumb
+                        }"
+                      />
+                    </v-col>
+                  </v-row>
+                </template>
+              </Editor>
             </v-card>
           </v-col>
         </v-row>
@@ -173,6 +195,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 }
 
 .bigger-drop-photo-zone {
-  height: 200px !important;
+  height: 500px !important;
 }
 </style>

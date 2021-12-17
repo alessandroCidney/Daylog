@@ -7,7 +7,13 @@
     height="100%"
     tile
   >
-    <ControlsMenu :editor="editor" />
+    <ControlsMenu :editor="editor">
+      <template v-slot:rightItems>
+        <slot name="menuRightItems" />
+      </template>
+    </ControlsMenu>
+
+    <slot name="centerItems" />
 
     <BubbleMenu :editor="editor" />
 
@@ -20,6 +26,7 @@ import Vue from 'vue';
 
 import { Editor, EditorContent } from '@tiptap/vue-2';
 import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder'
 
 import ControlsMenu from './components/ControlsMenu.vue';
 import BubbleMenu from './components/BubbleMenu.vue';
@@ -65,7 +72,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   mounted () {
     this.editor = new Editor({
       extensions: [
-        StarterKit
+        StarterKit,
+        Placeholder.configure({
+          placeholder: 'Write the post content here :)'
+        })
       ],
       content: ''
     });
@@ -115,6 +125,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
           font-size: 0.8rem;
         }
       }
+    }
+
+    .ProseMirror p.is-editor-empty:first-child::before {
+      content: attr(data-placeholder);
+      float: left;
+      color: #adb5bd;
+      pointer-events: none;
+      height: 0;
     }
 
     .ProseMirror:focus-visible {
