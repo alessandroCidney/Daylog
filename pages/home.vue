@@ -19,24 +19,22 @@
         </v-card>
 
         <v-list class="mt-8 cloud">
-          <v-list-item-group class="light rounded-xl overflow-hidden">
 
-            <v-list-item active-class="space--text">
+            <v-list-item active-class="space--text" to="/home">
               <v-list-item-icon><v-icon>mdi-home-variant</v-icon></v-list-item-icon>
               <v-list-item-title>Home</v-list-item-title>
             </v-list-item>
 
-            <v-list-item active-class="space--text">
+            <v-list-item active-class="space--text" :to="'/users/' + firestoreUser.id">
               <v-list-item-icon><v-icon>mdi-account-circle</v-icon></v-list-item-icon>
               <v-list-item-title>Profile</v-list-item-title>
             </v-list-item>
 
-            <v-list-item active-class="space--text">
+            <v-list-item active-class="space--text" to="/settings">
               <v-list-item-icon><v-icon>mdi-cog</v-icon></v-list-item-icon>
               <v-list-item-title>Settings</v-list-item-title>
             </v-list-item>
 
-          </v-list-item-group>
         </v-list>
       </v-col>
       <v-col cols="6">

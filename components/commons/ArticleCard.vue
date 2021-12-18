@@ -1,5 +1,5 @@
 <template>
-  <v-card :width="width" :to="`/posts/${id}`" class="rounded-xl" hover>
+  <v-card :width="width" :to="`/posts/${id}`" class="rounded-xl" elevation="2">
     <v-img
       :src="imageURL"
       :alt="`Imagem do post ${title}`"

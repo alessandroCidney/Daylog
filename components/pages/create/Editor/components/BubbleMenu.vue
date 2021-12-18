@@ -7,7 +7,7 @@
     <v-btn
       @click="editor.chain().focus().toggleBold().run()"
       retain-focus-on-click
-      :class="{ 'is-active': editor.isActive('bold') }"
+      :class="{ 'is-active': editor && editor.isActive('bold') }"
       dark
       tile
       shaped
@@ -18,7 +18,7 @@
 
     <v-btn
       @click="editor.chain().focus().toggleItalic().run()"
-      :class="{ 'is-active': editor.isActive('italic') }"
+      :class="{ 'is-active': editor && editor.isActive('italic') }"
       retain-focus-on-click
       dark
       tile
@@ -30,7 +30,7 @@
 
     <v-btn
       @click="editor.chain().focus().toggleCodeBlock().run()"
-      :class="{ 'is-active': editor.isActive('code') }"
+      :class="{ 'is-active': editor && editor.isActive('code') }"
       retain-focus-on-click
       dark
       tile
