@@ -107,9 +107,66 @@
     </v-row>
 
     <v-row align="center" justify="center" class="mt-16">
-      <v-col md="8" sm="10" class="d-flex align-center justify-center">
+      <v-col cols="12" class="d-flex align-center justify-center">
+        <IconButtonTooltip
+          icon="mdi-heart-outline"
+          text="Like"
+          size="30"
+          :action="() => {}"
+        />
+
+        <IconButtonTooltip
+          icon="mdi-comment-outline"
+          text="Comment"
+          size="30"
+          :action="() => {}"
+        />
+
+        <IconButtonTooltip
+          icon="mdi-bookmark-outline"
+          text="Save"
+          size="30"
+          :action="() => {}"
+        />
+      </v-col>
+
+      <v-col cols="12" class="d-flex align-center justify-center flex-column">
+        <div class="commentsFormArea">
+          <v-textarea
+            label="Comente algo!"
+            color="space"
+            auto-grow
+            outlined
+            hide-details
+            class="mb-2"
+          />
+        </div>
+
+        <div class="commentsFormArea d-flex">
+          <v-spacer />
+          
+          <v-btn
+            plain
+            color="space"
+            class="mr-2"
+            text
+          >
+            Discard
+          </v-btn>
+          
+          <v-btn
+            color="space"
+            class="white--text"
+            depressed
+          >
+            Send
+          </v-btn>
+        </div>
+      </v-col>
+
+      <v-col md="5" sm="10" cols="10" class="d-flex align-center justify-center">
         
-        <v-list two-line>
+        <v-list two-line class="width100">
           <div v-for="k in 5" :key="k">
             <v-list-item>
               <v-list-item-avatar>
@@ -124,10 +181,8 @@
               <v-list-item-content>
                 <v-list-item-title>@Writter</v-list-item-title>
                 <v-list-item-subtitle>
-                  Olá! Gostei muito do post!<br>
-                  Olá! Gostei muito do post!<br>
-                  Olá! Gostei muito do post!<br>
-                  Olá! Gostei muito do post!
+                  Olá! Gostei muito do post! <br>
+                  Poderiamos conversar posteriormente?
                 </v-list-item-subtitle>
               </v-list-item-content>
 
@@ -145,7 +200,7 @@
                   <v-btn icon small>
                     <v-icon>mdi-reply-outline</v-icon>
                   </v-btn>
-                  </div>
+                </div>
 
               </v-list-item-action>
             </v-list-item>
@@ -166,6 +221,7 @@ import { TPost } from '@/types/posts';
 import { FirestoreUser, StoreUser } from '@/types/users';
 import PostsService, { IPostService } from '@/services/posts';
 import Database, { IDatabase } from '@/services/database';
+import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
 
 interface Data {
   post: TPost | null;
@@ -195,6 +251,10 @@ interface Computed {
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
+  components: {
+    IconButtonTooltip
+  },
+
   data: () => ({
     post: null,
     postsService: null,
@@ -367,5 +427,9 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       width: 70%;
     }
   }
+}
+
+.commentsFormArea {
+  width: 500px;
 }
 </style>
