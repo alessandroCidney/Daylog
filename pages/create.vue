@@ -17,41 +17,17 @@
             <v-card min-height="500px" flat class="create-post-editor pa-0 rounded-xl overflow-hidden">
               <Editor v-model="content">
                 <template v-slot:menuRightItems>
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                     <v-btn
-                        text
-                        color="space"
-                        icon
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="save"
-                      >
-                        <v-icon size="24">
-                          mdi-content-save-outline
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Save post</span>
-                  </v-tooltip>
+                  <IconButtonTooltip
+                    icon="mdi-content-save-outline"
+                    text="Discard post"
+                    :action="save"
+                  />
 
-                  <v-tooltip bottom>
-                    <template v-slot:activator="{ on, attrs }">
-                     <v-btn
-                        text
-                        color="space"
-                        to="/home"
-                        icon
-                        v-bind="attrs"
-                        v-on="on"
-                      >
-                        <v-icon size="24">
-                          mdi-delete-outline
-                        </v-icon>
-                      </v-btn>
-                    </template>
-                    <span>Discard post</span>
-                  </v-tooltip>
+                  <IconButtonTooltip
+                    icon="mdi-delete-outline"
+                    text="Discard post"
+                    :action="() => $router.push('/home')"
+                  />
                 </template>
 
                 <template v-slot:centerItems>
@@ -96,6 +72,7 @@ import { StoreUser } from '@/types/users';
 import PostsService, { IPostService } from '@/services/posts';
 import Editor from '~/components/pages/create/Editor/index.vue';
 import DropPhotoZone from '@/components/utils/DropPhotoZone.vue';
+import IconButtonTooltip from '~/components/commons/IconButtonTooltip.vue';
 
 interface Data {
   title: string;
@@ -118,7 +95,8 @@ interface Computed {
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
     Editor,
-    DropPhotoZone
+    DropPhotoZone,
+    IconButtonTooltip
   },
 
   data: () => ({

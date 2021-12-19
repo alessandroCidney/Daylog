@@ -18,7 +18,7 @@
           </v-row>
         </v-card>
 
-        <v-list class="mt-8 cloud">
+        <v-list class="mt-8 py-0 overflow-hidden rounded-xl white">
 
             <v-list-item active-class="space--text" to="/home">
               <v-list-item-icon><v-icon>mdi-home-variant</v-icon></v-list-item-icon>

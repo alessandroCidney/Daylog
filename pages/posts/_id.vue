@@ -1,19 +1,58 @@
 <template>
-  <v-container fluid class="pb-16">
+  <v-container fluid class="pb-16 white">
     <v-row
       align="center"
-      justify-md="start"
-      justify-sm="center"
+      justify="center"
       :class="breakpoint !== 'sm' && 'mt-10'"
     >
       <v-col
-        md="6"
-        sm="12"
+        md="8"
+        sm="10"
+        cols="10"
+        class="pb-0"
+      >
+        {{ createdAt }}
+        <v-icon color="space">mdi-circle-small</v-icon>
+        <nuxt-link :to="`/users/${authorId}`" class="text-decoration-none font-weight-bold space--text">
+          @{{ author }}
+        </nuxt-link>
+      </v-col>
+
+      <v-col
+        md="8"
+        sm="10"
+        cols="10"
+        :class="{
+          'text-left': breakpoint !== 'sm',
+          'text-center': breakpoint === 'sm',
+          'mt-10': breakpoint === 'sm'
+        }"
+        >
+          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
+          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
+          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
+          <h1 class="post-title">{{ title }}</h1>
+
+        <div v-if="viewerIsTheAuthor">
+          <v-btn icon color="space">
+            <v-icon>mdi-pencil</v-icon>
+          </v-btn>
+
+          <v-btn icon color="space" @click="handleDeletePost">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </div>
+      </v-col>
+
+      <v-col
+        md="8"
+        sm="10"
+        cols="10"
         :class="{
           'post-thumbnail': true,
-          'pa-0': true, 
+          'pa-0 pt-4': true, 
           'mr-2': true,
-          'no-border-radius': breakpoint === 'sm'
+          'no-border-radius': true
         }"
       >
         <v-img
@@ -30,44 +69,10 @@
           type="image"
         />
       </v-col>
-
-      <v-col
-        md="5"
-        sm="10"
-        :class="{
-          'text-left': breakpoint !== 'sm',
-          'text-center': breakpoint === 'sm',
-          'mt-10': breakpoint === 'sm'
-        }"
-        >
-          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
-          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
-          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
-          <h1 class="post-title">{{ title }}</h1>
-        <p class="mt-2">
-          Created by 
-          <nuxt-link
-            :to="`/users/${authorId}`"
-            class="text-decoration-none"
-          >
-            @{{ author }}
-          </nuxt-link>
-        </p>
-
-        <div v-if="viewerIsTheAuthor">
-          <v-btn icon color="space">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-
-          <v-btn icon color="space" @click="handleDeletePost">
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-        </div>
-      </v-col>
     </v-row>
 
     <v-row align="center" justify="center" class="mt-10">
-      <v-col md="8" sm="10" class="pa-0 mr-2">
+      <v-col md="8" sm="10" cols="10" class="pa-0 mr-2">
         <v-card flat>
           <div
             class="post-content"
@@ -99,7 +104,58 @@
           </v-col>
         </v-row>
       </v-col>
-    </v-row>    
+    </v-row>
+
+    <v-row align="center" justify="center" class="mt-16">
+      <v-col md="8" sm="10" class="d-flex align-center justify-center">
+        
+        <v-list two-line>
+          <div v-for="k in 5" :key="k">
+            <v-list-item>
+              <v-list-item-avatar>
+                <v-avatar width="40px" height="40px">
+                  <v-img
+                    :src="authorPhotoURL || require('@/assets/images/profile/user.jpg')"
+                    width="150px"
+                  />
+                </v-avatar>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title>@Writter</v-list-item-title>
+                <v-list-item-subtitle>
+                  Olá! Gostei muito do post!<br>
+                  Olá! Gostei muito do post!<br>
+                  Olá! Gostei muito do post!<br>
+                  Olá! Gostei muito do post!
+                </v-list-item-subtitle>
+              </v-list-item-content>
+
+              <v-list-item-action>
+
+                <v-list-item-action-text>
+                  15 min
+                </v-list-item-action-text>
+
+                <div>
+                  <v-btn icon small>
+                    <v-icon>mdi-heart-outline</v-icon>
+                  </v-btn>
+
+                  <v-btn icon small>
+                    <v-icon>mdi-reply-outline</v-icon>
+                  </v-btn>
+                  </div>
+
+              </v-list-item-action>
+            </v-list-item>
+
+            <v-divider inset />
+          </div>
+          </v-list>
+
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -261,7 +317,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 }
 
 .post-title {
-  font-size: 3.5em;
+  font-size: 5em;
   font-weight: 900 !important;
 }
 
