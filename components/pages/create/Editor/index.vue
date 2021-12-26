@@ -15,7 +15,7 @@
 
     <slot name="centerItems" />
 
-    <BubbleMenu :editor="editor" />
+    <BubbleMenu v-if="editor" :editor="editor" />
 
     <EditorContent :editor="editor" />
   </v-card>

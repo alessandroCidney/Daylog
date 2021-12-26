@@ -54,9 +54,14 @@
 
       <v-spacer />
 
+      <div class="d-flex flex-column align-end justify-start mr-2">
+        <strong class="my-0"><small>{{ author }}</small></strong>
+        <small>{{ createdAt | formattedPeriod }}</small>
+      </div>
+
       <v-avatar>
         <v-img
-          width="39px"
+          width="20px"
           :src="authorPhotoURL"
         />
       </v-avatar>
@@ -65,7 +70,8 @@
 </template>
 
 <script lang="ts">
-import Vue, { PropOptions } from 'vue';
+import Vue from 'vue';
+import moment from 'moment';
 
 interface Data {
   imageLoaded: boolean;
@@ -79,26 +85,36 @@ interface Props {
   title: string;
   description: string;
   imageURL: string | undefined;
+  author: string | undefined;
   authorPhotoURL: string | undefined;
   id: string | undefined;
   alreadyLiked: boolean;
   alreadySaved: boolean;
   like: any;
   save: any;
+  createdAt: Date | undefined;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
+  filters: {
+    formattedPeriod (date: Date) {
+      return moment(date).fromNow();
+    }
+  },
+  
   props: {
     width: { type: [Number, String], default: "100%", required: false },
     title: { type: String, required: true },
     description: { type: String, required: false, default: "" },
     imageURL: { type: String, required: false, default: undefined },
+    author: { type: String, required: false, default: 'Unknown' },
     authorPhotoURL: { type: String, required: false, default: undefined },
     id: { type: String, required: false, default: undefined },
     alreadyLiked: { type: Boolean, required: false, default: false },
     like: { type: Function, required: false, default: () => {} },
     save: { type: Function, required: false, default: () => {} },
     alreadySaved: { type: Boolean, required: false, default: false },
+    createdAt: { type: Date, required: false, default: undefined },
   },
 
   data: () => ({

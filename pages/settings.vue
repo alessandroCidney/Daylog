@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <v-row align="center" justify="center" class="mt-10">
-      <v-col md="8" sm="10" cols="10" class="white">
+    <v-row align="center" justify="center" class="my-10">
+      <v-col md="8" sm="10" cols="10" class="white rounded-xl">
         <v-row align="center" justify="center" class="photosArea">
           <v-col cols="12">
             <v-img
               width="100%"
               :height="backgroundPhotoLoaded ? '200px' : 0"
-              class="overflow-hidden"
+              class="overflow-hidden rounded-t-xl"
               :src="firestoreUserProfileBackground || require('@/assets/images/b-background.jpg')"
               @load="backgroundPhotoLoaded = true"
             />

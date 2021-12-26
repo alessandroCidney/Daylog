@@ -1,7 +1,7 @@
 <template>
   <v-row align="center" justify="center" >
     <v-col cols="12">
-      <v-card flat class="light pa-3 rounded-xl">
+      <v-card flat class="light pa-3 rounded-lg">
         <v-row>
           <v-avatar width="50px" height="50px" class="mt-3 ml-3">
             <v-img
