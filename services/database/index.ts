@@ -108,7 +108,7 @@ class Database implements IDatabase {
 
       return true;
     } catch (err) {
-      console.log('Error on database service (SET)', err);
+      console.log('Error on database service (UPDATE)', err);
       return false;
     }
   };

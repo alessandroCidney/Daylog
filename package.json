@@ -15,9 +15,12 @@
     "@tiptap/extension-placeholder": "^2.0.0-beta.45",
     "@tiptap/starter-kit": "^2.0.0-beta.144",
     "@tiptap/vue-2": "^2.0.0-beta.69",
+    "@types/uuid": "^8.3.3",
     "core-js": "^3.15.1",
     "firebase": "^9.5.0",
+    "moment": "^2.29.1",
     "nuxt": "^2.15.7",
+    "uuid": "^8.3.2",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {

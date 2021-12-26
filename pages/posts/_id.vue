@@ -106,122 +106,23 @@
       </v-col>
     </v-row>
 
-    <v-row align="center" justify="center" class="mt-16">
-      <v-col cols="12" class="d-flex align-center justify-center">
-        <IconButtonTooltip
-          icon="mdi-heart-outline"
-          text="Like"
-          size="30"
-          :action="() => {}"
-        />
-
-        <IconButtonTooltip
-          icon="mdi-comment-outline"
-          text="Comment"
-          size="30"
-          :action="() => {}"
-        />
-
-        <IconButtonTooltip
-          icon="mdi-bookmark-outline"
-          text="Save"
-          size="30"
-          :action="() => {}"
-        />
-      </v-col>
-
-      <v-col cols="12" class="d-flex align-center justify-center flex-column">
-        <div class="commentsFormArea">
-          <v-textarea
-            label="Comente algo!"
-            color="space"
-            auto-grow
-            outlined
-            hide-details
-            class="mb-2"
-          />
-        </div>
-
-        <div class="commentsFormArea d-flex">
-          <v-spacer />
-          
-          <v-btn
-            plain
-            color="space"
-            class="mr-2"
-            text
-          >
-            Discard
-          </v-btn>
-          
-          <v-btn
-            color="space"
-            class="white--text"
-            depressed
-          >
-            Send
-          </v-btn>
-        </div>
-      </v-col>
-
-      <v-col md="5" sm="10" cols="10" class="d-flex align-center justify-center">
-        
-        <v-list two-line class="width100">
-          <div v-for="k in 5" :key="k">
-            <v-list-item>
-              <v-list-item-avatar>
-                <v-avatar width="40px" height="40px">
-                  <v-img
-                    :src="authorPhotoURL || require('@/assets/images/profile/user.jpg')"
-                    width="150px"
-                  />
-                </v-avatar>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title>@Writter</v-list-item-title>
-                <v-list-item-subtitle>
-                  Olá! Gostei muito do post! <br>
-                  Poderiamos conversar posteriormente?
-                </v-list-item-subtitle>
-              </v-list-item-content>
-
-              <v-list-item-action>
-
-                <v-list-item-action-text>
-                  15 min
-                </v-list-item-action-text>
-
-                <div>
-                  <v-btn icon small>
-                    <v-icon>mdi-heart-outline</v-icon>
-                  </v-btn>
-
-                  <v-btn icon small>
-                    <v-icon>mdi-reply-outline</v-icon>
-                  </v-btn>
-                </div>
-
-              </v-list-item-action>
-            </v-list-item>
-
-            <v-divider inset />
-          </div>
-          </v-list>
-
-      </v-col>
-    </v-row>
+    <ArticleInteractionsArea
+      :postId="id"
+      :comments="comments"
+      :updatePage="fetchPostData"
+    />
   </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
-import { TPost } from '@/types/posts';
+import { TPost, TPostComment } from '@/types/posts';
 import { FirestoreUser, StoreUser } from '@/types/users';
 import PostsService, { IPostService } from '@/services/posts';
 import Database, { IDatabase } from '@/services/database';
 import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
+import ArticleInteractionsArea from '@/components/pages/posts/ArticleInteractionsArea/index.vue';
 
 interface Data {
   post: TPost | null;
@@ -230,10 +131,12 @@ interface Data {
   id: string;
   authorId: string;
   thumbLoaded: boolean;
+  comments: TPostComment[];
 };
 
 interface Methods {
   handleDeletePost: () => Promise<void>;
+  fetchPostData: () => Promise<void>;
 };
 
 interface Props {};
@@ -252,7 +155,8 @@ interface Computed {
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   components: {
-    IconButtonTooltip
+    IconButtonTooltip,
+    ArticleInteractionsArea
   },
 
   data: () => ({
@@ -261,39 +165,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     usersDatabase: null,
     id: '',
     authorId: '',
-    thumbLoaded: false
+    thumbLoaded: false,
+    comments: [],
   }),
 
   async created () {
     this.id = this.$route.params.id;
 
-    if (!this.id) {
-      this.$router.push('/home');
-      return;
-    };
-
-    this.postsService = new PostsService();
-    const post = await this.postsService.fetchPost(this.id);
-
-    if (!post) {
-      this.$router.push('/home');
-      return;
-    };
-
-    this.post = post;
-
-    this.usersDatabase = new Database('users');
-    
-    const author = await this.usersDatabase.getWhere(
-      'email',
-      this.post.author_email
-    ) as Record<string, FirestoreUser> | null;
-
-    if (!author) {
-      return;
-    };
-
-    this.authorId = Object.keys(author)[0];
+    await this.fetchPostData();
   },
 
   computed: {
@@ -361,6 +240,37 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
       this.$nuxt.$loading.finish();
       this.$router.push('/home');
+    },
+
+    async fetchPostData () {
+      if (!this.id) {
+        this.$router.push('/home');
+        return;
+      };
+
+      this.postsService = new PostsService();
+      const post = await this.postsService.fetchPost(this.id);
+
+      if (!post) {
+        this.$router.push('/home');
+        return;
+      };
+
+      this.post = post;
+
+      this.usersDatabase = new Database('users');
+      
+      const author = await this.usersDatabase.getWhere(
+        'email',
+        this.post.author_email
+      ) as Record<string, FirestoreUser> | null;
+
+      if (!author) {
+        return;
+      };
+
+      this.authorId = Object.keys(author)[0];
+      this.comments = this.post.comments || [];
     }
   },
 });
@@ -431,5 +341,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 .commentsFormArea {
   width: 500px;
+}
+
+.commentContent {
+  .v-list-item__subtitle {
+    text-overflow: clip !important;
+    word-break: break-all !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    white-space: pre-line !important;
+  }
 }
 </style>

@@ -1,7 +1,15 @@
 import CloudStorage, { ICloudStorage } from "../storage";
 import Database, { IDatabase } from "../database";
 import Utils, { IUtils } from '@/utils';
-import { TPost } from '@/types/posts';
+import { TPost, TPostComment, TPostLike } from '@/types/posts';
+import { v1 as uuid } from 'uuid';
+
+type IncompletePostComment = {
+  author_id: string;
+  created_at: number;
+  content: string;
+  likes: TPostLike[] | undefined | null;
+};
 
 export interface IPostService {
   storage: ICloudStorage;
@@ -21,6 +29,7 @@ export interface IPostService {
   deletePostsWhere: (key: string, value: string) => Promise<boolean | null>;
   toggleLike: (postKey: string, userId: string) => Promise<boolean>;
   searchPosts: (title: string) => Promise<TPost[]>;
+  sendComment: (postKey: string, comment: IncompletePostComment) => Promise<void>;
 };
 
 class PostsService {
@@ -181,6 +190,29 @@ class PostsService {
       console.log('Error on posts service (ADD LIKE)', error);
       return false;
     }
+  };
+
+  async sendComment (postKey: string, comment: IncompletePostComment) {
+    const post = await this.database.get(postKey) as TPost | undefined | null;
+
+    if (!post) {
+      throw new Error('Post not found');
+    };
+
+    let comments: TPostComment[] | undefined | null = post.comments;
+
+    if (!comments) {
+      comments = [];
+    };
+
+    comments.push({
+      ...comment,
+      id: uuid()
+    });
+
+    await this.database.update({
+      comments
+    }, postKey);
   };
 };
 
