@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row align="center" justify="center" class="my-10">
-      <v-col md="8" sm="10" cols="10" class="white rounded-xl">
+      <v-col md="8" sm="10" cols="10" class="light rounded-xl pa-0">
         <v-row align="center" justify="center" class="photosArea">
           <v-col cols="12">
             <v-img
@@ -48,7 +48,7 @@
           </v-col>
         </v-row>
 
-        <v-row>
+        <v-row class="pa-4">
           <v-col cols="6" class="d-flex align-center justify-start">
             <v-switch
               v-model="lightTheme"
@@ -68,7 +68,7 @@
           </v-col>
         </v-row>
 
-        <v-row align="center" justify="center">
+        <v-row align="center" justify="center" class="pa-4">
           <v-col cols="12">
             <v-text-field
               v-model="changes.username"
@@ -101,7 +101,7 @@
           </v-col>
         </v-row>
 
-        <v-row align="center" justify="center">
+        <v-row align="center" justify="center" class="pa-4">
           <v-col cols="12">
             <v-btn
               color="space"
@@ -291,7 +291,7 @@ export default (
 .profilePhotoLoader {
   transform: translateY(-99px) !important;
 
-  background-color: #FFF;
+  background-color: var(--v-light-base);
   border: 3px solid #FFF !important;
   border-radius: 50% !important;
 

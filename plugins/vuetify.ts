@@ -18,12 +18,12 @@ const vuetify = new Vuetify({
         info: colors.teal.lighten1,
         warning: colors.amber.base,
         error: colors.deepOrange.accent4,
-        success: colors.green.accent3
+        success: colors.green.accent3,
       },
       light: {
         space: '#172b4d',
         cloud: '#F8F9FB',
-        light: '#FFF'
+        light: '#FFF',
       }
     }
   }

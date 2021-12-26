@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mt-10">
+  <v-container class="light" fluid>
     <v-row align="center" justify="center">
       <v-col cols="10">
         <v-row align="center" justify="center">
@@ -9,7 +9,7 @@
         </v-row>
 
         <v-row align="center" justify="center" class="editor-and-controls">
-          <v-col md="10" sm="10" class="pa-0">
+          <v-col md="11" sm="11" class="pa-0">
             <div class="d-flex">
               <v-spacer />
               
@@ -150,15 +150,14 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
 <style lang="scss">
 .article-creation-title-textarea {
-  font-size: 3.5em !important;
+  font-size: 80px !important;
   
   textarea {
-    line-height: 3.5rem !important;
+    line-height: 5rem !important;
   }
 }
 
 .create-post-editor {
-  border: 1px solid #f0f0f0 !important;
 }
 
 .create-page-drop-photo-zone {
