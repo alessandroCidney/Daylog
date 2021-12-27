@@ -245,13 +245,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         return;
       };
 
-      this.posts = Object.values(postsObject).map(post => ({
-        ...post,
-        alreadyLiked: post.likes &&
-          post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
-        alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
-          this.firestoreUser.savedPosts.indexOf(post.id) !== -1
-      }));
+      this.posts = Object.values(postsObject)
+        .map(post => ({
+          ...post,
+          alreadyLiked: post.likes &&
+            post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
+          alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
+            this.firestoreUser.savedPosts.indexOf(post.id) !== -1
+        }))
+        .sort((a, b) => b.created_at - a.created_at);
     },
 
     async fetchSavedPosts () {
@@ -271,13 +273,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
       let posts = results.filter(post => !!post) as TPost[];
 
-      this.savedPosts = posts.map(post => ({
-        ...post,
-        alreadyLiked: post.likes &&
-          post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
-        alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
-          this.firestoreUser.savedPosts.indexOf(post.id) !== -1
-      }));
+      this.savedPosts = posts
+        .map(post => ({
+          ...post,
+          alreadyLiked: post.likes &&
+            post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
+          alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
+            this.firestoreUser.savedPosts.indexOf(post.id) !== -1
+        }))
+        .sort((a, b) => b.created_at - a.created_at);
     },
 
     async like (postKey: string) {

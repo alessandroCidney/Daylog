@@ -92,13 +92,13 @@ interface Props {
   alreadySaved: boolean;
   like: any;
   save: any;
-  createdAt: Date | undefined;
+  createdAt: number | undefined;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   filters: {
-    formattedPeriod (date: Date) {
-      return moment(date).fromNow();
+    formattedPeriod (time: number) {
+      return moment(new Date(time)).fromNow();
     }
   },
   
@@ -114,7 +114,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     like: { type: Function, required: false, default: () => {} },
     save: { type: Function, required: false, default: () => {} },
     alreadySaved: { type: Boolean, required: false, default: false },
-    createdAt: { type: Date, required: false, default: undefined },
+    createdAt: { type: Number, required: false, default: undefined },
   },
 
   data: () => ({
