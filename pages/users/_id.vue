@@ -30,7 +30,7 @@
 
       <v-col md="8" sm="10" cols="10" class="py-16">
         <v-row align="center" justify="center">
-          <v-tabs color="space" background-color="cloud">
+          <v-tabs color="space" background-color="base">
             <v-tab>
               <v-icon left>mdi-view-grid</v-icon>
               Posts
@@ -41,7 +41,7 @@
               Saved
             </v-tab>
 
-              <v-tab-item class="cloud">
+              <v-tab-item class="base">
                 <template v-if="posts.length > 0">
                   <v-col
                     v-for="(post, index) in posts"
@@ -58,6 +58,7 @@
                       :imageURL="post.thumbnail"
                       :author="'@' + post.author"
                       :authorPhotoURL="post.author_photo_url"
+                      :createdAt="post.created_at"
                       :already-liked="post.alreadyLiked"
                       :already-saved="post.alreadySaved"
                       :like="() => like(post.id)"
@@ -71,7 +72,7 @@
                 </template>
               </v-tab-item>
 
-              <v-tab-item v-if="pageUserIsLoggedUser" class="cloud">
+              <v-tab-item v-if="pageUserIsLoggedUser" class="base">
                 <template v-if="posts.length > 0">
                   <v-col
                     v-for="(post, index) in savedPosts"
@@ -88,6 +89,7 @@
                       :imageURL="post.thumbnail"
                       :author="'@' + post.author"
                       :authorPhotoURL="post.author_photo_url"
+                      :createdAt="post.created_at"
                       :already-liked="post.alreadyLiked"
                       :already-saved="post.alreadySaved"
                       :like="() => like(post.id)"

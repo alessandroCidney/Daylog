@@ -68,8 +68,8 @@
 
       <v-col md="5" sm="10" cols="10" class="d-flex align-center justify-center">
         
-        <v-list two-line class="width100">
-          <div v-for="(comment, index) in viewComments" :key="`${postId}-comment-${index}`">
+        <v-list two-line :class="`width100 ${darkerTheme ? 'base' : 'light'}`">
+          <div v-for="(comment, index) in viewComments" :key="`${postId}-comment-${index}`" :class="darkerTheme ? 'base' : 'light'">
             <v-list-item>
               <v-list-item-avatar class="align-self-start">
                 <v-avatar width="40px" height="40px">
@@ -145,6 +145,7 @@ interface Methods {
 
 interface Computed {
   firestoreUser: FirestoreUser | null;
+  darkerTheme: boolean;
 };
 
 interface Props {
@@ -190,7 +191,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
-    ...mapGetters(['firestoreUser'])
+    ...mapGetters(['firestoreUser']),
+
+    darkerTheme () {
+      return this.$vuetify.theme.dark;
+    },
   },
 
   methods: {

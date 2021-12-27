@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="pb-16 white">
+  <v-container fluid class="pb-16 light">
     <v-row
       align="center"
       justify="center"
@@ -73,7 +73,7 @@
 
     <v-row align="center" justify="center" class="mt-10">
       <v-col md="8" sm="10" cols="10" class="pa-0 mr-2">
-        <v-card flat>
+        <v-card flat :class="darkerTheme ? 'base' : 'light'">
           <div
             class="post-content"
             v-html="content"
@@ -151,6 +151,7 @@ interface Computed {
   viewerIsTheAuthor: boolean;
   authorPhotoURL: string;
   createdAt: string;
+  darkerTheme: boolean;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -225,7 +226,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       };
 
       return false;
-    }
+    },
+
+    darkerTheme () {
+      return this.$vuetify.theme.dark;
+    },
   },
 
   methods: {

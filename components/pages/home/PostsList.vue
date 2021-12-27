@@ -1,7 +1,7 @@
 <template>
   <v-row v-if="posts.length > 0" align="center" justify="center" class="mt-5">
     <v-col
-      v-for="(post, index) in posts"
+      v-for="(post, index) in orderedPosts"
       :key="`home-post-${index}`"
       cols="12"
     >
@@ -32,7 +32,10 @@ import { TPost, TValidatedPost } from '@/types/posts';
 
 interface Data {};
 interface Methods {};
-interface Computed {};
+
+interface Computed {
+  orderedPosts: TPost[] | TValidatedPost[];
+};
 
 interface Props {
   posts: TPost[] | TValidatedPost[];
@@ -52,6 +55,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     like: { type: Function, required: true },
     save: { type: Function, required: true },
     loadingPosts: Boolean
+  },
+
+  computed: {
+    orderedPosts () {
+      return this.posts.sort((a, b) => b.created_at - a.created_at);
+    }
   }
 });
 </script>

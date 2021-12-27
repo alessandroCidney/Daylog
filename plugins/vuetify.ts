@@ -19,11 +19,13 @@ const vuetify = new Vuetify({
         warning: colors.amber.base,
         error: colors.deepOrange.accent4,
         success: colors.green.accent3,
+        base: '#121212',
       },
       light: {
         space: '#172b4d',
         cloud: '#F8F9FB',
         light: '#FFF',
+        base: '#F8F9FB',
       }
     }
   }

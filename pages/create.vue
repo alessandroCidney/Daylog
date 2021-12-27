@@ -90,6 +90,7 @@ interface Props {};
 
 interface Computed {
   user: StoreUser | null;
+  darkerTheme: boolean;
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
@@ -112,7 +113,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(['user']),
+
+    darkerTheme () {
+      return this.$vuetify.theme.dark;
+    },
   },
 
   methods: {
@@ -155,9 +160,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   textarea {
     line-height: 5rem !important;
   }
-}
-
-.create-post-editor {
 }
 
 .create-page-drop-photo-zone {
