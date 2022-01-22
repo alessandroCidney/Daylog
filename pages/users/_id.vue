@@ -42,7 +42,27 @@
             </v-tab>
 
               <v-tab-item class="base">
-                <template v-if="posts.length > 0">
+                <template v-if="loading">
+                  <v-col
+                    v-for="i in 3"
+                    :key="`post-profile-loading-${i}`"
+                    md="11"
+                    sm="12"
+                    cols="12"
+                    class="cloud"
+                  >
+                    <v-sheet
+                      :color="`grey ${theme.isDark ? 'darken-2' : 'lighten-4'}`"
+                    >
+                      <v-skeleton-loader
+                        class="mx-auto"
+                        type="card, list-item-two-line"
+                      ></v-skeleton-loader>
+                    </v-sheet>
+                  </v-col>
+                </template>
+
+                <template v-else-if="posts.length > 0">
                   <v-col
                     v-for="(post, index) in posts"
                     :key="`post-profile-${index}`"
@@ -73,10 +93,30 @@
               </v-tab-item>
 
               <v-tab-item v-if="pageUserIsLoggedUser" class="base">
-                <template v-if="posts.length > 0">
+                <template v-if="loading">
+                  <v-col
+                    v-for="i in 3"
+                    :key="`post-profile-saved-loading-${i}`"
+                    md="11"
+                    sm="12"
+                    cols="12"
+                    class="cloud"
+                  >
+                    <v-sheet
+                      :color="`grey ${theme.isDark ? 'darken-2' : 'lighten-4'}`"
+                    >
+                      <v-skeleton-loader
+                        class="mx-auto"
+                        type="card, list-item-two-line"
+                      ></v-skeleton-loader>
+                    </v-sheet>
+                  </v-col>
+                </template>
+
+                <template v-else-if="posts.length > 0">
                   <v-col
                     v-for="(post, index) in savedPosts"
-                    :key="`post-profile-${index}`"
+                    :key="`post-profile-saved-${index}`"
                     md="11"
                     sm="12"
                     cols="12"
@@ -130,6 +170,7 @@ interface Data {
   posts: TPost[] | TValidatedPost[];
   savedPosts: TPost[] | TValidatedPost[];
   backgroundPhotoLoaded: boolean;
+  loading: Boolean;
 };
 
 interface Methods {
@@ -156,6 +197,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     NoPostsAlert
   },
 
+  inject: {
+    theme: {
+      default: { isDark: false },
+    },
+  },
+
   data: () => ({
     id: '',
     pageUser: null,
@@ -166,6 +213,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     savedPosts: [],
     parallaxLoaded: false,
     backgroundPhotoLoaded: false,
+    loading: true,
   }),
 
   async mounted () {
@@ -186,6 +234,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     await this.fetchPosts();
     await this.fetchSavedPosts();
+
+    this.loading = false;
   },
 
   computed: {
