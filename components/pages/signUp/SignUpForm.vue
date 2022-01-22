@@ -1,7 +1,7 @@
 <template>
   <v-form class="signUpForm">
     <h1 class="passero-one mb-6 pageTitle">
-      Sign up to PontoBlog
+      Sign up to Daylog
     </h1>
 
     <v-btn color="error" block class="white--text mb-6">
