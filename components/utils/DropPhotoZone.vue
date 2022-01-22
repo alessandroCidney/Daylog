@@ -1,32 +1,39 @@
 <template>
-  <div
-    ref="photoDiv"
-    :class="{
-      'drop-photo-zone': true,
-      'd-flex': true,
-      'align-center': true,
-      'justify-center': true,
-      'cursor-pointer': true,
-      'bordered': !file
-    }"
-    @click="getFile"
-  >
+  <v-tooltip top>
+    <template v-slot:activator="{ on, attrs }">
+      <div
+        v-bind="attrs"
+        v-on="on"
+        ref="photoDiv"
+        :class="{
+          'drop-photo-zone': true,
+          'd-flex': true,
+          'align-center': true,
+          'justify-center': true,
+          'cursor-pointer': true,
+          'bordered': !file
+        }"
+        @click="getFile"
+      >
 
-    <v-icon
-      v-if="!file"
-      color="space"
-      size="40"
-    >
-      mdi-image-plus
-    </v-icon>
+        <v-icon
+          v-if="!file"
+          color="space"
+          size="40"
+        >
+          mdi-image-plus
+        </v-icon>
 
-    <input
-      ref="photoInput"
-      type="file"
-      class="dont-show"
-      @change="(e) => updatedFiles(e.target.files)"
-    />
-  </div>
+        <input
+          ref="photoInput"
+          type="file"
+          class="dont-show"
+          @change="(e) => updatedFiles(e.target.files)"
+        />
+      </div>
+    </template>
+    <span>Add an image</span>
+  </v-tooltip>
 </template>
 
 <script lang="ts">
