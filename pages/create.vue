@@ -19,7 +19,7 @@
                 <template v-slot:menuRightItems>
                   <IconButtonTooltip
                     icon="mdi-content-save-outline"
-                    text="Discard post"
+                    text="Save post"
                     :action="save"
                   />
 
