@@ -12,7 +12,7 @@
               </v-avatar>
             </v-col>
             <v-col cols="8" class="pl-0">
-              <div><strong>@cidn__</strong></div>
+              <div><strong>@{{ firestoreUserUsername }}</strong></div>
               <div><small>Iniciante</small></div>
             </v-col>
           </v-row>
@@ -55,7 +55,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 
 import PostsService, { IPostService } from '@/services/posts';
@@ -67,6 +67,7 @@ import { TPost, TValidatedPost } from '@/types/posts';
 import SpeedDial from '@/components/pages/home/SpeedDial.vue';
 import CreatePostButton from '@/components/pages/home/CreatePostButton.vue';
 import PostsList from '@/components/pages/home/PostsList.vue';
+import FirestoreUserData, { Computed } from '@/mixins/FirestoreUserData';
 
 interface Data {
   postsService: IPostService | null;
@@ -77,18 +78,19 @@ interface Data {
 
 interface Props {};
 
-interface Computed {
-  firestoreUser: FirestoreUser | null;
-};
-
 interface Methods {
-  like: () => Promise<void>;
-  save: () => Promise<void>;
+  like: (postKey: string) => Promise<void>;
+  save: (postKey: string) => Promise<void>;
   fetchPosts: () => Promise<void>;
   getCurrentFirestoreUser: () => Promise<void>;
 };
 
-export default Vue.extend<Data, Props, Computed, Methods>({
+export default (
+  Vue as VueConstructor<Vue & InstanceType<typeof FirestoreUserData>>
+).extend<Data, Methods, Computed, Props>({
+
+  mixins: [FirestoreUserData],
+
   components: {
     PostsList,
     SpeedDial,
@@ -115,10 +117,6 @@ export default Vue.extend<Data, Props, Computed, Methods>({
   async mounted () {
     await this.fetchPosts();
     this.loadingPosts = false;
-  },
-
-  computed: {
-    ...mapGetters(['firestoreUser']),
   },
 
   methods: {

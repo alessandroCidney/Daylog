@@ -5,7 +5,7 @@ import { FirestoreUser } from '@/types/users';
 interface Data {};
 interface Methods {};
 
-interface Computed {
+export interface Computed {
   firestoreUser: FirestoreUser | null;
   firestoreUserId: string;
   firestoreUserName: string;
