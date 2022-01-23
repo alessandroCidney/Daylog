@@ -1,6 +1,11 @@
 <template>
   <v-row align="center" justify="center" class="mt-16">
-      <PostActions v-if="post" :post="post" :update-page="updatePage" />
+      <PostActions
+        v-if="post"
+        :post="post"
+        :update-page="updatePage"
+        :toggle-textarea="toggleTextarea"
+      />
 
       <v-slide-y-transition hide-on-leave>
         <v-col

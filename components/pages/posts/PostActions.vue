@@ -2,7 +2,7 @@
   <v-col cols="12" class="d-flex align-center justify-center">
     <IconButtonTooltip
       :icon="postLiked ? 'mdi-heart' : 'mdi-heart-outline'"
-      text="Like"
+      :text="postLiked ? 'Remove like' : 'Like'"
       size="30"
       :action="toggleLike"
     />
@@ -44,6 +44,7 @@ interface Computed {
 interface Props {
   post: TPost;
   updatePage: () => Promise<void>;
+  toggleTextarea: () => void;
 };
 
 export default (
@@ -62,6 +63,7 @@ export default (
   props: {
     post: { type: Object, required: true },
     updatePage: { type: Function, required: true },
+    toggleTextarea: { type: Function, required: true },
   },
 
   data () {
