@@ -1,6 +1,6 @@
 <template>
   <v-row align="center" justify="center" class="mt-16">
-      <PostActions :post-id="postId" :update-page="updatePage" />
+      <PostActions v-if="post" :post="post" :update-page="updatePage" />
 
       <v-slide-y-transition hide-on-leave>
         <v-col
@@ -65,7 +65,7 @@ import Vue from 'vue';
 import { mapGetters } from 'vuex';
 
 import { FirestoreUser } from '@/types/users';
-import { TPostComment } from '@/types/posts';
+import { TPost, TPostComment } from '@/types/posts';
 
 import PostsService, { IPostService } from '@/services/posts';
 import Database, { IDatabase } from '@/services/database';
@@ -97,10 +97,11 @@ interface Methods {
 interface Computed {
   firestoreUser: FirestoreUser | null;
   darkerTheme: boolean;
+  postId: string;
 };
 
 interface Props {
-  postId: string;
+  post: TPost;
   comments: TPostComment[];
   updatePage: () => any;
 };
@@ -118,7 +119,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   props: {
-    postId: { type: String, required: true },
+    post: { type: Object, required: true },
     comments: { type: Array, required: false, default: () => [] },
     updatePage: { type: Function, required: false, default: () => {} },
   },
@@ -148,6 +149,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     darkerTheme () {
       return this.$vuetify.theme.dark;
     },
+
+    postId () {
+      return this.post.id;
+    }
   },
 
   methods: {

@@ -107,7 +107,8 @@
     </v-row>
 
     <ArticleInteractionsArea
-      :postId="id"
+      v-if="post"
+      :post="post"
       :comments="comments"
       :updatePage="fetchPostData"
     />
