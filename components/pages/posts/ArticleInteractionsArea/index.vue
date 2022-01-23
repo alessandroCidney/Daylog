@@ -1,27 +1,6 @@
 <template>
   <v-row align="center" justify="center" class="mt-16">
-      <v-col cols="12" class="d-flex align-center justify-center">
-        <IconButtonTooltip
-          icon="mdi-heart-outline"
-          text="Like"
-          size="30"
-          :action="() => {}"
-        />
-
-        <IconButtonTooltip
-          icon="mdi-comment-outline"
-          text="Comment"
-          size="30"
-          :action="toggleTextarea"
-        />
-
-        <IconButtonTooltip
-          icon="mdi-bookmark-outline"
-          text="Save"
-          size="30"
-          :action="() => {}"
-        />
-      </v-col>
+      <PostActions :post-id="postId" :update-page="updatePage" />
 
       <v-slide-y-transition hide-on-leave>
         <v-col
@@ -69,45 +48,12 @@
       <v-col md="5" sm="10" cols="10" class="d-flex align-center justify-center">
         
         <v-list two-line :class="`width100 ${darkerTheme ? 'base' : 'light'}`">
-          <div v-for="(comment, index) in viewComments" :key="`${postId}-comment-${index}`" :class="darkerTheme ? 'base' : 'light'">
-            <v-list-item>
-              <v-list-item-avatar class="align-self-start">
-                <v-avatar width="40px" height="40px">
-                  <v-img
-                    :src="comment.authorPhotoURL || require('@/assets/images/profile/user.jpg')"
-                    width="150px"
-                  />
-                </v-avatar>
-              </v-list-item-avatar>
-
-              <v-list-item-content class="maxWidth100 commentContent">
-                <v-list-item-title class="mb-0 pb-0">@{{ comment.authorUsername }}</v-list-item-title>
-                <v-list-item-subtitle>
-                  {{ comment.content }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
-
-              <v-list-item-action>
-
-                <v-list-item-action-text>
-                  {{ comment.created_at | dateDiff }}
-                </v-list-item-action-text>
-
-                <div>
-                  <v-btn icon small>
-                    <v-icon>mdi-heart-outline</v-icon>
-                  </v-btn>
-
-                  <v-btn icon small>
-                    <v-icon>mdi-delete-outline</v-icon>
-                  </v-btn>
-                </div>
-
-              </v-list-item-action>
-            </v-list-item>
-
-            <v-divider inset />
-          </div>
+          <Comment
+            v-for="(comment, index) in viewComments"
+            :key="`${postId}-comment-${index}`"
+            :comment="comment"
+            :darker-theme="darkerTheme"
+          />
         </v-list>
 
       </v-col>
@@ -117,11 +63,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
+
 import { FirestoreUser } from '@/types/users';
+import { TPostComment } from '@/types/posts';
+
 import PostsService, { IPostService } from '@/services/posts';
 import Database, { IDatabase } from '@/services/database';
-import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
-import { TPostComment } from '@/types/posts';
+
+import Comment from '../Comment.vue';
+import PostActions from '../PostActions.vue';
+
 import moment from 'moment';
 
 type ViewPostComment = TPostComment & {
@@ -162,7 +113,8 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   components: {
-    IconButtonTooltip
+    Comment,
+    PostActions,
   },
 
   props: {
