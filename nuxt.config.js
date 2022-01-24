@@ -1,5 +1,3 @@
-import colors from 'vuetify/es5/util/colors'
-
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
@@ -17,8 +15,8 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - nuxt-app',
-    title: 'nuxt-app',
+    titleTemplate: '%s - Daylog',
+    title: "What's being written",
     htmlAttrs: {
       lang: 'en'
     },

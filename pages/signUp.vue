@@ -25,6 +25,12 @@ export default Vue.extend({
   components: {
     BigImage,
     SignUpForm
+  },
+
+  head () {
+    return {
+      title: 'Sign up'
+    };
   }
 });
 </script>

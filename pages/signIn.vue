@@ -64,6 +64,12 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     LoginForm
   },
 
+  head () {
+    return {
+      title: 'Sign in'
+    };
+  },
+
   data: () => ({
     emailAuthLoading: false,
     showPassword: false,

@@ -212,6 +212,13 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     loading: true,
   }),
 
+  head () {
+    return {
+      title: this.firestoreUser?.username.replace(/^\w/, (c) => c.toUpperCase()),
+      titleTemplate: '%s on Daylog'
+    };
+  },
+
   async mounted () {
     this.id = this.$route.params.id;
     

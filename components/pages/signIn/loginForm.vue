@@ -1,7 +1,7 @@
 <template>
   <v-form class="signInForm">
     <h1 class="master-font mb-6 pageTitle">
-      Sign in to Daylog
+      Sign in to <span class="master-font font-weight-black">Daylog</span>
     </h1>
 
     <GoogleAuthButton text="Sign in with Google" />

@@ -192,6 +192,12 @@ export default (
     },
   }),
 
+  head () {
+    return {
+      title: 'Settings',
+    }
+  },
+
   created () {
     this.authenticationService = new Authentication();
     this.lightTheme = !this.$vuetify.theme.dark;

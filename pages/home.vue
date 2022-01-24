@@ -102,6 +102,12 @@ export default (
     SpeedDial,
     CreatePostButton
   },
+
+  head () {
+    return {
+      title: 'Home'
+    };
+  },
   
   data: () => ({
     postsService: null,
