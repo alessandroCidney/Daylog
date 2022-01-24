@@ -7,7 +7,7 @@
             <v-col cols="3">
               <v-avatar>
                 <v-img
-                  src="https://firebasestorage.googleapis.com/v0/b/ponto-blog.appspot.com/o/users%2F-MqMUvjKWgiphY9ihXod%2Fuser_profile_photo.jpeg?alt=media&token=3aa35ba5-4d91-48c4-ae19-da0d5b67af97"
+                  :src="firestoreUserProfilePhoto"
                 />
               </v-avatar>
             </v-col>
@@ -38,7 +38,7 @@
         </v-list>
       </v-col>
       <v-col cols="6">
-        <CreatePostButton />
+        <CreatePostButton :profilePhoto="firestoreUserProfilePhoto" />
 
         <PostsList
           :posts="posts"

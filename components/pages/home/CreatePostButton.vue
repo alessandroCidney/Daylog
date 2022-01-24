@@ -5,7 +5,7 @@
         <v-row>
           <v-avatar width="50px" height="50px" class="mt-3 ml-3">
             <v-img
-              src="https://firebasestorage.googleapis.com/v0/b/ponto-blog.appspot.com/o/users%2F-MqMUvjKWgiphY9ihXod%2Fuser_profile_photo.jpeg?alt=media&token=3aa35ba5-4d91-48c4-ae19-da0d5b67af97"
+              :src="profilePhoto"
             />
           </v-avatar>
           <v-col cols="10" class="pl-0 pt-0">
@@ -39,3 +39,13 @@
     </v-col>
   </v-row>
 </template>
+
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
+  props: {
+    profilePhoto: { type: String, required: true },
+  }
+});
+</script>
