@@ -1,6 +1,6 @@
 <template>
   <v-form class="signUpForm">
-    <h1 class="passero-one mb-6 pageTitle">
+    <h1 class="master-font mb-6 pageTitle">
       Sign up to Daylog
     </h1>
 

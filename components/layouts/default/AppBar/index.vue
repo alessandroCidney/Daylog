@@ -8,17 +8,17 @@
     clipped-left
   >
     <v-row>
-      <v-col cols="4" class=" d-none d-md-flex align-center justify-start">
+      <v-col cols="4" class=" d-none d-md-flex align-center justify-start pl-10">
         <nuxt-link to="/home">
           <v-img
             v-if="lightTheme"
-            max-width="147px"
+            width="100px"
             :src="require('@/assets/svg/logo_dark.svg')"
           />
 
           <v-img
             v-else
-            max-width="147px"
+            max-width="100px"
             :src="require('@/assets/svg/logo_white.svg')"
           />
         </nuxt-link>

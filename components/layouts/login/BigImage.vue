@@ -4,7 +4,7 @@
     class="bigImage"
     gradient="to top right, rgba(33, 33, 33, .6), rgba(33, 33, 33, .6)"
   >
-    <h3 class="passero-one white--text pt-10 ml-10" v-html="title" />
+    <h3 class="master-font white--text pt-10 ml-10" v-html="title" />
   </v-img>
 </template>
 

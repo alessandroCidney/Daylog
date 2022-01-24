@@ -1,8 +1,8 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="3" class="white">
-        <v-card flat class="mt-3 white rounded-lg">
+      <v-col cols="3">
+        <v-card flat class="mt-3 rounded-lg">
           <v-row align="center" justify="center" class="py-2">
             <v-col cols="3">
               <v-avatar>
@@ -18,7 +18,7 @@
           </v-row>
         </v-card>
 
-        <v-list class="mt-8 py-0 overflow-hidden white sidebarList">
+        <v-list class="mt-8 py-0 overflow-hidden sidebarList">
 
             <v-list-item to="/home" active-class="sidebarItemActive">
               <template v-slot:default="{ active }">

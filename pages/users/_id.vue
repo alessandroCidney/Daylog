@@ -23,125 +23,121 @@
           />
         </v-avatar>
 
-        <p class="master-title translated mt-3">
+        <p class="master-title master-font translated mt-3">
           @{{ username || '' }}
         </p>
       </v-col>
 
       <v-col md="8" sm="10" cols="10" class="py-16">
         <v-row align="center" justify="center">
-          <v-tabs color="space" background-color="base">
-            <v-tab>
+          <v-tabs color="space">
+            <v-tab class="base">
               <v-icon left>mdi-view-grid</v-icon>
               Posts
             </v-tab>
 
-            <v-tab v-if="pageUserIsLoggedUser">
+            <v-tab v-if="pageUserIsLoggedUser" class="base">
               <v-icon left>mdi-bookmark-multiple</v-icon>
               Saved
             </v-tab>
 
-              <v-tab-item class="base">
-                <template v-if="loading">
-                  <v-col
-                    v-for="i in 3"
-                    :key="`post-profile-loading-${i}`"
-                    md="11"
-                    sm="12"
-                    cols="12"
-                    class="cloud"
+            <v-tab-item class="base">
+              <template v-if="loading">
+                <v-col
+                  v-for="i in 3"
+                  :key="`post-profile-loading-${i}`"
+                  md="11"
+                  sm="12"
+                  cols="12"
+                >
+                  <v-sheet
+                    :color="`grey ${theme.isDark ? 'darken-2' : 'lighten-4'}`"
                   >
-                    <v-sheet
-                      :color="`grey ${theme.isDark ? 'darken-2' : 'lighten-4'}`"
-                    >
-                      <v-skeleton-loader
-                        class="mx-auto"
-                        type="card, list-item-two-line"
-                      ></v-skeleton-loader>
-                    </v-sheet>
-                  </v-col>
-                </template>
+                    <v-skeleton-loader
+                      class="mx-auto"
+                      type="card, list-item-two-line"
+                    ></v-skeleton-loader>
+                  </v-sheet>
+                </v-col>
+              </template>
 
-                <template v-else-if="posts.length > 0">
-                  <v-col
-                    v-for="(post, index) in posts"
-                    :key="`post-profile-${index}`"
-                    md="11"
-                    sm="12"
-                    cols="12"
-                    class="cloud"
+              <template v-else-if="posts.length > 0">
+                <v-col
+                  v-for="(post, index) in posts"
+                  :key="`post-profile-${index}`"
+                  md="11"
+                  sm="12"
+                  cols="12"
+                >
+                  <ArticleCard
+                    :id="post.id"
+                    :title="post.title"
+                    :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+                    :imageURL="post.thumbnail"
+                    :author="'@' + post.author"
+                    :authorPhotoURL="post.author_photo_url"
+                    :createdAt="post.created_at"
+                    :already-liked="post.alreadyLiked"
+                    :already-saved="post.alreadySaved"
+                    :like="() => like(post.id)"
+                    :save="() => save(post.id)"
+                  />
+                </v-col>
+              </template>
+
+              <template v-else>
+                <NoPostsAlert />
+              </template>
+            </v-tab-item>
+
+            <v-tab-item v-if="pageUserIsLoggedUser" class="base">
+              <template v-if="loading">
+                <v-col
+                  v-for="i in 3"
+                  :key="`post-profile-saved-loading-${i}`"
+                  md="11"
+                  sm="12"
+                  cols="12"
+                >
+                  <v-sheet
+                    :color="`grey ${theme.isDark ? 'darken-2' : 'lighten-4'}`"
                   >
-                    <ArticleCard
-                      :id="post.id"
-                      :title="post.title"
-                      :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-                      :imageURL="post.thumbnail"
-                      :author="'@' + post.author"
-                      :authorPhotoURL="post.author_photo_url"
-                      :createdAt="post.created_at"
-                      :already-liked="post.alreadyLiked"
-                      :already-saved="post.alreadySaved"
-                      :like="() => like(post.id)"
-                      :save="() => save(post.id)"
-                    />
-                  </v-col>
-                </template>
+                    <v-skeleton-loader
+                      class="mx-auto"
+                      type="card, list-item-two-line"
+                    ></v-skeleton-loader>
+                  </v-sheet>
+                </v-col>
+              </template>
 
-                <template v-else>
-                  <NoPostsAlert />
-                </template>
-              </v-tab-item>
+              <template v-else-if="posts.length > 0">
+                <v-col
+                  v-for="(post, index) in savedPosts"
+                  :key="`post-profile-saved-${index}`"
+                  md="11"
+                  sm="12"
+                  cols="12"
+                >
+                  <ArticleCard
+                    :id="post.id"
+                    :title="post.title"
+                    :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
+                    :imageURL="post.thumbnail"
+                    :author="'@' + post.author"
+                    :authorPhotoURL="post.author_photo_url"
+                    :createdAt="post.created_at"
+                    :already-liked="post.alreadyLiked"
+                    :already-saved="post.alreadySaved"
+                    :like="() => like(post.id)"
+                    :save="() => save(post.id)"
+                  />
+                </v-col>
+              </template>
 
-              <v-tab-item v-if="pageUserIsLoggedUser" class="base">
-                <template v-if="loading">
-                  <v-col
-                    v-for="i in 3"
-                    :key="`post-profile-saved-loading-${i}`"
-                    md="11"
-                    sm="12"
-                    cols="12"
-                    class="cloud"
-                  >
-                    <v-sheet
-                      :color="`grey ${theme.isDark ? 'darken-2' : 'lighten-4'}`"
-                    >
-                      <v-skeleton-loader
-                        class="mx-auto"
-                        type="card, list-item-two-line"
-                      ></v-skeleton-loader>
-                    </v-sheet>
-                  </v-col>
-                </template>
-
-                <template v-else-if="posts.length > 0">
-                  <v-col
-                    v-for="(post, index) in savedPosts"
-                    :key="`post-profile-saved-${index}`"
-                    md="11"
-                    sm="12"
-                    cols="12"
-                    class="cloud"
-                  >
-                    <ArticleCard
-                      :id="post.id"
-                      :title="post.title"
-                      :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-                      :imageURL="post.thumbnail"
-                      :author="'@' + post.author"
-                      :authorPhotoURL="post.author_photo_url"
-                      :createdAt="post.created_at"
-                      :already-liked="post.alreadyLiked"
-                      :already-saved="post.alreadySaved"
-                      :like="() => like(post.id)"
-                      :save="() => save(post.id)"
-                    />
-                  </v-col>
-                </template>
-
-                <template v-else>
-                  <NoPostsAlert />
-                </template>
-              </v-tab-item>
+              <template v-else>
+                <NoPostsAlert />
+              </template>
+            </v-tab-item>
           </v-tabs>
         </v-row>
       </v-col>
