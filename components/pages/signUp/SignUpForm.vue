@@ -1,16 +1,10 @@
 <template>
   <v-form class="signUpForm">
     <h1 class="master-font mb-6 pageTitle">
-      Sign up to Daylog
+      Sign up to <span class="master-font font-weight-black">Daylog</span>
     </h1>
 
-    <v-btn color="error" block class="white--text mb-6">
-      <v-icon left>
-        mdi-google
-      </v-icon>
-
-      Sign up with Google
-    </v-btn>
+    <GoogleAuthButton text="Sign up with Google" />
 
     <div class="d-flex align-center justify-center">
       <v-divider class="mb-6" />
@@ -65,6 +59,17 @@
     </p>
   </v-form>
 </template>
+
+<script lang="ts">
+import Vue from 'vue';
+import GoogleAuthButton from '../../layouts/login/GoogleAuthButton.vue';
+
+export default Vue.extend({
+  components: {
+    GoogleAuthButton
+  },
+});
+</script>
 
 <style lang="scss" scoped>
 .signUpForm {

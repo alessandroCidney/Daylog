@@ -16,9 +16,7 @@
       <v-col cols="10" sm="10" md="6" class="d-flex align-center justify-center formCol">
         <LoginForm
           :emailAuthLoading="emailAuthLoading"
-          :googleAuthLoading="googleAuthLoading"
           @emailAuthSubmit="handleSignInWithEmail"
-          @googleAuthSubmit="handleSignInWithGoogle"
         />
       </v-col>
     </v-row>
@@ -42,13 +40,11 @@ interface ILoginData {
 
 interface Data {
   emailAuthLoading: boolean;
-  googleAuthLoading: boolean;
   showPassword: boolean;
   authenticationService: IAuthentication | null;
 };
 
 interface Methods {
-  handleSignInWithGoogle: () => void;
   handleSignInWithEmail: (loginData: ILoginData) => Promise<void>;
   showAppMessage: (message: TApplicationMessage) => void;
 };
@@ -70,7 +66,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   data: () => ({
     emailAuthLoading: false,
-    googleAuthLoading: false,
     showPassword: false,
     authenticationService: null,
   }),
@@ -97,14 +92,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
   methods: {
     ...mapMutations(['showAppMessage']),
-
-    handleSignInWithGoogle () {
-      this.googleAuthLoading = true;
-      
-      setTimeout(() => {
-        this.authenticationService?.signInWithGoogle();
-      }, 1000);
-    },
 
     async handleSignInWithEmail (loginData: ILoginData) {
       this.emailAuthLoading = true;
