@@ -1,8 +1,8 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="3" class="cloud">
-        <v-card flat class="mt-3 light rounded-lg">
+      <v-col cols="3" class="white">
+        <v-card flat class="mt-3 white rounded-lg">
           <v-row align="center" justify="center" class="py-2">
             <v-col cols="3">
               <v-avatar>
@@ -18,21 +18,27 @@
           </v-row>
         </v-card>
 
-        <v-list class="mt-8 py-0 overflow-hidden rounded-lg light">
+        <v-list class="mt-8 py-0 overflow-hidden white sidebarList">
 
-            <v-list-item active-class="space--text" to="/home">
-              <v-list-item-icon><v-icon>mdi-home-variant</v-icon></v-list-item-icon>
-              <v-list-item-title>Home</v-list-item-title>
+            <v-list-item to="/home" active-class="sidebarItemActive">
+              <template v-slot:default="{ active }">
+                <v-list-item-icon><v-icon>{{ active ? 'mdi-home' : 'mdi-home-outline' }}</v-icon></v-list-item-icon>
+                <v-list-item-title>Home</v-list-item-title>
+              </template>
             </v-list-item>
 
-            <v-list-item active-class="space--text" :to="'/users/' + firestoreUser.id">
-              <v-list-item-icon><v-icon>mdi-account-circle</v-icon></v-list-item-icon>
-              <v-list-item-title>Profile</v-list-item-title>
+            <v-list-item :to="'/users/' + firestoreUser.id" active-class="sidebarItemActive">
+              <template v-slot:default="{ active }">
+                <v-list-item-icon><v-icon>{{ active ? 'mdi-account' : 'mdi-account-outline' }}</v-icon></v-list-item-icon>
+                <v-list-item-title>Profile</v-list-item-title>
+              </template>
             </v-list-item>
 
-            <v-list-item active-class="space--text" to="/settings">
-              <v-list-item-icon><v-icon>mdi-cog</v-icon></v-list-item-icon>
-              <v-list-item-title>Settings</v-list-item-title>
+            <v-list-item to="/settings" active-class="sidebarItemActive">
+              <template v-slot:default="{ active }">
+                <v-list-item-icon><v-icon>{{ active ? 'mdi-cog' : 'mdi-cog-outline' }}</v-icon></v-list-item-icon>
+                <v-list-item-title>Settings</v-list-item-title>
+              </template>
             </v-list-item>
 
         </v-list>
@@ -167,3 +173,33 @@ export default (
   }
 });
 </script>
+
+<style lang="scss">
+.sidebarList {
+  .v-list-item {
+    div {
+      color: var(--v-space-base) !important;
+
+      i {
+        color: var(--v-space-base) !important;
+      }
+    }
+  }
+  
+  .v-list-item--active {
+    div {
+      color: rgba(0,0,0,.87) !important;
+    }
+  }
+}
+
+.sidebarItemActive {
+  font-weight: 700;
+
+  &::before {
+    background: #FFF;
+    border: 2px solid var(--v-space-base);
+    border-radius: 8px;
+  }
+}
+</style>

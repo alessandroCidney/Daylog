@@ -50,6 +50,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 }
 
 .defaultContainer {
-  background-color: var(--v-cloud-base) !important;
+  background-color: var(--v-white-base) !important;
 }
 </style>
