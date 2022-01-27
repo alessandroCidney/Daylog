@@ -51,7 +51,7 @@ import { FirestoreUser } from '~/types/users';
 import PostsService, { IPostService } from '@/services/posts';
 import Users, { IUsers } from '~/services/users';
 
-import FirestoreUserData from '~/mixins/FirestoreUserData';
+import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
 
 import SpeedDial from '@/components/pages/home/SpeedDial.vue';
 import CreatePostButton from '@/components/pages/home/CreatePostButton.vue';
@@ -61,7 +61,7 @@ import SidebarListItem from '@/components/pages/home/SidebarListItem.vue';
 @Component({
   components: { SpeedDial, CreatePostButton, PostsList, SidebarListItem }
 })
-export default class Home extends Mixins(FirestoreUserData) {
+export default class Home extends Mixins(OnFirestoreUserData) {
   postsService: IPostService = new PostsService();
   usersService: IUsers | null = null;
   posts: TPost[] | TValidatedPost[] = [];

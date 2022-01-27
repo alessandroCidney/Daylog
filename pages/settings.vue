@@ -138,7 +138,7 @@ import { mapGetters, mapActions } from 'vuex';
 import Authentication, { IAuthentication } from '@/services/authentication';
 import Users, { IUsers } from '@/services/users';
 import { StoreUser } from '@/types/users';
-import FirestoreUserData from '@/mixins/FirestoreUserData';
+import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
 
 type TProfileChanges = {
   profilePhoto: File | null;
@@ -172,9 +172,9 @@ interface Computed {
 interface Props {};
 
 export default (
-  Vue as VueConstructor<Vue & InstanceType<typeof FirestoreUserData>>
+  Vue as VueConstructor<Vue & InstanceType<typeof OnFirestoreUserData>>
 ).extend<Data, Methods, Computed, Props>({
-  mixins: [FirestoreUserData],
+  mixins: [OnFirestoreUserData],
   
   data: () => ({
     authenticationService: null,

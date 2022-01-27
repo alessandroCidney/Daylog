@@ -28,7 +28,7 @@ import Vue, { VueConstructor, PropOptions } from 'vue';
 
 import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
 import PostsService, { IPostService } from '~/services/posts';
-import FirestoreUserData from '~/mixins/FirestoreUserData';
+import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
 import { TPost } from '~/types/posts';
 
 interface Data {
@@ -50,11 +50,11 @@ interface Props {
 export default (
   Vue as VueConstructor<
     Vue & InstanceType<
-      typeof FirestoreUserData
+      typeof OnFirestoreUserData
     >
   >
 ).extend<Data, Methods, Computed, Props>({
-  mixins: [FirestoreUserData],
+  mixins: [OnFirestoreUserData],
 
   components: {
     IconButtonTooltip,
