@@ -1,48 +1,32 @@
-import Vue from 'vue';
-import { mapGetters } from 'vuex';
-import { FirestoreUser } from '@/types/users';
+import { Vue, Component } from 'vue-property-decorator';
+import { Getter } from 'vuex-class';
+import { FirestoreUser } from '~/types/users';
 
-interface Data {};
-interface Methods {};
+@Component
+export default class FirestoreUserData extends Vue {
+  @Getter firestoreUser!: FirestoreUser | undefined;
 
-export interface Computed {
-  firestoreUser: FirestoreUser | null;
-  firestoreUserId: string;
-  firestoreUserName: string;
-  firestoreUserEmail: string;
-  firestoreUserProfilePhoto: string;
-  firestoreUserProfileBackground: string;
-  firestoreUserUsername: string;
+  get firestoreUserId () {
+    return this.firestoreUser?.id || '';
+  };
+
+  get firestoreUserName () {
+    return this.firestoreUser?.name || '';
+  };
+
+  get firestoreUserEmail () {
+    return this.firestoreUser?.email || '';
+  };
+
+  get firestoreUserProfilePhoto () {
+    return this.firestoreUser?.profile_photo || '';
+  };
+
+  get firestoreUserProfileBackground () {
+    return this.firestoreUser?.profile_background || '';
+  };
+
+  get firestoreUserUsername () {
+    return this.firestoreUser?.username || '';
+  };
 };
-
-interface Props {};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  computed: {
-    ...mapGetters(['firestoreUser']),
-
-    firestoreUserId () {
-      return this.firestoreUser?.id || '';
-    },
-
-    firestoreUserName () {
-      return this.firestoreUser?.name || '';
-    },
-
-    firestoreUserEmail () {
-      return this.firestoreUser?.email || '';
-    },
-
-    firestoreUserProfilePhoto () {
-      return this.firestoreUser?.profile_photo || '';
-    },
-
-    firestoreUserProfileBackground () {
-      return this.firestoreUser?.profile_background || '';
-    },
-
-    firestoreUserUsername () {
-      return this.firestoreUser?.username || '';
-    }
-  }
-});
