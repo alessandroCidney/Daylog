@@ -21,7 +21,9 @@
     "moment": "^2.29.1",
     "nuxt": "^2.15.7",
     "uuid": "^8.3.2",
-    "vuetify": "^2.5.5"
+    "vue-property-decorator": "^9.1.2",
+    "vuetify": "^2.5.5",
+    "vuex-class": "^0.3.2"
   },
   "devDependencies": {
     "@nuxt/types": "^2.15.7",

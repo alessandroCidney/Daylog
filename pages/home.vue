@@ -19,28 +19,9 @@
         </v-card>
 
         <v-list class="mt-8 py-0 overflow-hidden sidebarList">
-
-            <v-list-item to="/home" active-class="sidebarItemActive">
-              <template v-slot:default="{ active }">
-                <v-list-item-icon><v-icon>{{ active ? 'mdi-home' : 'mdi-home-outline' }}</v-icon></v-list-item-icon>
-                <v-list-item-title>Home</v-list-item-title>
-              </template>
-            </v-list-item>
-
-            <v-list-item :to="'/users/' + firestoreUser.id" active-class="sidebarItemActive">
-              <template v-slot:default="{ active }">
-                <v-list-item-icon><v-icon>{{ active ? 'mdi-account' : 'mdi-account-outline' }}</v-icon></v-list-item-icon>
-                <v-list-item-title>Profile</v-list-item-title>
-              </template>
-            </v-list-item>
-
-            <v-list-item to="/settings" active-class="sidebarItemActive">
-              <template v-slot:default="{ active }">
-                <v-list-item-icon><v-icon>{{ active ? 'mdi-cog' : 'mdi-cog-outline' }}</v-icon></v-list-item-icon>
-                <v-list-item-title>Settings</v-list-item-title>
-              </template>
-            </v-list-item>
-
+          <SidebarListItem title="Home" to="/home" icon="mdi-home" />
+          <SidebarListItem title="Profile" :to="'/users/' + firestoreUser.id" icon="mdi-account" />
+          <SidebarListItem title="Settings" to="/settings" icon="mdi-cog" />
         </v-list>
       </v-col>
       <v-col cols="6">
@@ -61,123 +42,93 @@
 </template>
 
 <script lang="ts">
-import Vue, { VueConstructor } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { Component, Mixins } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+
+import { TPost, TValidatedPost } from '~/types/posts';
+import { FirestoreUser } from '~/types/users';
 
 import PostsService, { IPostService } from '@/services/posts';
-import Users, { IUsers } from '@/services/users';
+import Users, { IUsers } from '~/services/users';
 
-import { FirestoreUser } from '@/types/users';
-import { TPost, TValidatedPost } from '@/types/posts';
+import FirestoreUserData from '~/mixins/FirestoreUserData';
 
 import SpeedDial from '@/components/pages/home/SpeedDial.vue';
 import CreatePostButton from '@/components/pages/home/CreatePostButton.vue';
 import PostsList from '@/components/pages/home/PostsList.vue';
-import FirestoreUserData, { Computed } from '@/mixins/FirestoreUserData';
+import SidebarListItem from '@/components/pages/home/SidebarListItem.vue';
 
-interface Data {
-  postsService: IPostService | null;
-  usersService: IUsers | null;
-  posts: TPost[] | TValidatedPost[];
-  loadingPosts: boolean;
-};
+@Component({
+  components: { SpeedDial, CreatePostButton, PostsList, SidebarListItem }
+})
+export default class Home extends Mixins(FirestoreUserData) {
+  postsService: IPostService = new PostsService();
+  usersService: IUsers | null = null;
+  posts: TPost[] | TValidatedPost[] = [];
+  loadingPosts = true;
 
-interface Props {};
-
-interface Methods {
-  like: (postKey: string) => Promise<void>;
-  save: (postKey: string) => Promise<void>;
-  fetchPosts: () => Promise<void>;
-  getCurrentFirestoreUser: () => Promise<void>;
-};
-
-export default (
-  Vue as VueConstructor<Vue & InstanceType<typeof FirestoreUserData>>
-).extend<Data, Methods, Computed, Props>({
-
-  mixins: [FirestoreUserData],
-
-  components: {
-    PostsList,
-    SpeedDial,
-    CreatePostButton
-  },
-
-  head () {
-    return {
-      title: 'Home'
-    };
-  },
-  
-  data: () => ({
-    postsService: null,
-    usersService: null,
-    posts: [],
-    loadingPosts: true,
-  }),
+  @Action getCurrentFirestoreUser!: () => Promise<void>
 
   created () {
-    this.postsService = new PostsService();
-    
-    const userId = this.firestoreUser?.id;
+    const userId = this.firestoreUserId;
 
     if (userId) {
       this.usersService = new Users(userId);
     };
-  },
+  };
 
   async mounted () {
     await this.fetchPosts();
     this.loadingPosts = false;
-  },
+  };
 
-  methods: {
-    ...mapActions(['getCurrentFirestoreUser']),
+  async fetchPosts () {
+    const user = this.firestoreUser;
 
-    async fetchPosts () {
-      const user = this.firestoreUser;
+    if (!user) return;
 
-      if (!this.postsService || !user) {
-        return;
-      };
+    const posts = await this.postsService.fetchPosts();
 
-      const posts = await this.postsService.fetchPosts();
+    function alreadyLiked (post: TPost, user: FirestoreUser) {
+      return post.likes && post.likes.findIndex(like => like.author_id === user.id) !== -1;
+    };
 
-      this.posts = posts.map(post => ({
-        ...post,
-        alreadyLiked: post.likes &&
-          post.likes.findIndex(like => like.author_id === user.id) !== -1,
-        alreadySaved: user.savedPosts &&
-          user.savedPosts.indexOf(post.id) !== -1
-      }));
-    },
+    function alreadySaved (post: TPost, user: FirestoreUser) {
+      return user.savedPosts && user.savedPosts.indexOf(post.id) !== -1;
+    };
 
-    async like (postKey: string) {
-      if (!this.postsService || !this.firestoreUser) {
-        return;
-      };
+    console.log('Fetch')
 
-      const success = await this.postsService.toggleLike(postKey, this.firestoreUser.id);
-      
-      if (success) {
-        await this.fetchPosts();
-      };
-    },
+    this.posts = posts.map(post => ({
+      ...post,
+      alreadyLiked: alreadyLiked(post, user),
+      alreadySaved: alreadySaved(post, user)
+    }));
+  };
 
-    async save (postKey: string) {
-      if (!this.usersService || !this.firestoreUser) {
-        return;
-      };
+  async like (postKey: string) {
+    const user = this.firestoreUser;
 
-      const success = await this.usersService.toggleSavedPost(postKey);
+    if (!user) return;
 
-      if (success) {
-        await this.getCurrentFirestoreUser();
-        await this.fetchPosts();
-      };
-    }
-  }
-});
+    const success = await this.postsService.toggleLike(postKey, user.id);
+
+    if (success) await this.fetchPosts();
+  };
+
+  async save (postKey: string) {
+    const user = this.firestoreUser;
+
+    if (!user) return;
+
+    const success = await this.usersService?.toggleSavedPost(postKey);
+
+    if (success) {
+      await this.getCurrentFirestoreUser();
+      await this.fetchPosts();
+    };
+  };
+};
 </script>
 
 <style lang="scss">
@@ -196,16 +147,6 @@ export default (
     div {
       color: rgba(0,0,0,.87) !important;
     }
-  }
-}
-
-.sidebarItemActive {
-  font-weight: 700;
-
-  &::before {
-    background: #FFF;
-    border: 2px solid var(--v-space-base);
-    border-radius: 8px;
   }
 }
 </style>
