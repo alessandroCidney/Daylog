@@ -11,14 +11,14 @@
         cols="10"
         class="pb-0"
       >
-        {{ createdAt }}
+        {{ postCreatedAt | formattedCreatedAt }}
         <v-icon color="space">mdi-circle-small</v-icon>
         <nuxt-link
           v-if="postAuthorId"
           :to="`/users/${postAuthorId}`"
           class="text-decoration-none font-weight-bold space--text"
         >
-          @{{ author }}
+          @{{ postAuthor }}
         </nuxt-link>
       </v-col>
 
@@ -32,10 +32,10 @@
           'mt-10': breakpoint === 'sm'
         }"
         >
-          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
-          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
-          <v-skeleton-loader v-if="!title" type="text" class="post-title" />
-          <h1 class="post-title">{{ title }}</h1>
+          <v-skeleton-loader v-if="!postTitle" type="text" class="post-title" />
+          <v-skeleton-loader v-if="!postTitle" type="text" class="post-title" />
+          <v-skeleton-loader v-if="!postTitle" type="text" class="post-title" />
+          <h1 class="post-title">{{ postTitle }}</h1>
 
         <div v-if="viewerIsTheAuthor">
           <v-btn icon color="space">
@@ -62,8 +62,8 @@
         <v-img
           :min-width="thumbLoaded ? '100%' : '0'"
           :height="thumbLoaded ? '400px' : '0'"
-          :src="thumbnail"
-          :alt="'Imagem do post ' + title"
+          :src="postThumbnail"
+          :alt="'Imagem do post ' + (postTitle || '')"
           @load="thumbLoaded = true"
         />
 
@@ -77,7 +77,7 @@
 
     <v-row align="center" justify="center" class="mt-10">
       <v-col md="8" sm="10" cols="10" class="pa-0 mr-2">
-        <v-card flat :class="darkerTheme ? 'base' : 'light'">
+        <v-card flat :class="theme.isDark ? 'base' : 'light'">
           <div
             class="post-content"
             v-html="postContent"
@@ -92,7 +92,7 @@
           <v-col md="2" sm="3" cols="3" class="d-flex align-center justify-center">
             <v-avatar width="70px" height="70px">
               <v-img
-                :src="authorPhotoURL || require('@/assets/images/profile/user.jpg')"
+                :src="postAuthorPhotoURL || require('@/assets/images/profile/user.jpg')"
                 width="150px"
               />
             </v-avatar>
@@ -100,10 +100,10 @@
 
           <v-col md="3" sm="6" cols="6" class="d-flex align-start justify-center flex-column">
             <p class="text-left mb-0">
-              Created by <span class="font-weight-bold">@{{ author }}</span>
+              Created by <span class="font-weight-bold">@{{ postAuthor || '' }}</span>
             </p>
             <p class="text-left mb-0">
-              <small>on {{ createdAt }}</small>
+              <small>on {{ postCreatedAt | formattedCreatedAt }}</small>
             </p>
           </v-col>
         </v-row>
@@ -120,10 +120,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Mixins } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
-
-import { FirestoreUser } from '~/types/users';
+import { Component, Mixins, Inject } from 'vue-property-decorator';
 
 import PostData from '@/mixins/OnPostData';
 
@@ -133,14 +130,36 @@ import ArticleInteractionsArea from '@/components/pages/posts/ArticleInteraction
 import PostsService from '~/services/posts';
 
 @Component({
-  components: { IconButtonTooltip, ArticleInteractionsArea }
+  components: { IconButtonTooltip, ArticleInteractionsArea },
+  filters: {
+    formattedCreatedAt (value: number | null) {
+      if (!value) return;
+
+      const date = new Date(value);
+
+      const dateString = date.toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      return dateString;
+    }
+  }
 })
 export default class PostPage extends Mixins(PostData) {
   id: string = this.$route.params.id;
   postsService = new PostsService();
+  thumbLoaded = false;
+
+  @Inject({ default: { isDark: false } }) readonly theme!: boolean;
 
   async created () {
     await this.fetchPostData();
+  };
+
+  get breakpoint () {
+    return this.$vuetify.breakpoint.name;
   };
 
   async fetchPostData () {
@@ -158,174 +177,20 @@ export default class PostPage extends Mixins(PostData) {
 
     this.post = post;
   };
+
+  async handleDeletePost () {
+    this.$nuxt.$loading.start();
+
+    if (!this.viewerIsTheAuthor || !this.postId) {
+      return;
+    };
+
+    await this.postsService.deletePostsWhere('id', this.postId);
+
+    this.$nuxt.$loading.finish();
+    this.$router.push('/home');
+  };
 };
-
-/*
-import Vue from 'vue';
-import { mapGetters } from 'vuex';
-import { TPost, TPostComment } from '@/types/posts';
-import { FirestoreUser, StoreUser } from '@/types/users';
-import PostsService, { IPostService } from '@/services/posts';
-import Database, { IDatabase } from '@/services/database';
-import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
-import ArticleInteractionsArea from '@/components/pages/posts/ArticleInteractionsArea/index.vue';
-
-interface Data {
-  post: TPost | null;
-  postsService: IPostService | null;
-  usersDatabase: IDatabase | null;
-  id: string;
-  authorId: string;
-  thumbLoaded: boolean;
-  comments: TPostComment[];
-};
-
-interface Methods {
-  handleDeletePost: () => Promise<void>;
-  fetchPostData: () => Promise<void>;
-};
-
-interface Props {};
-
-interface Computed {
-  user: StoreUser | null;
-  thumbnail: string;
-  title: string;
-  content: string;
-  author: string;
-  breakpoint: string;
-  viewerIsTheAuthor: boolean;
-  authorPhotoURL: string;
-  createdAt: string;
-  darkerTheme: boolean;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  components: {
-    IconButtonTooltip,
-    ArticleInteractionsArea
-  },
-
-  data: () => ({
-    post: null,
-    postsService: null,
-    usersDatabase: null,
-    id: '',
-    authorId: '',
-    thumbLoaded: false,
-    comments: [],
-  }),
-
-  async created () {
-    this.id = this.$route.params.id;
-
-    await this.fetchPostData();
-  },
-
-  computed: {
-    ...mapGetters(['user']),
-
-    thumbnail () {
-      return (this.post && this.post.thumbnail) ? this.post.thumbnail : '';
-    },
-
-    title () {
-      return (this.post && this.post.title) ? this.post.title : '';
-    },
-
-    content () {
-      return (this.post && this.post.content) ? this.post.content : '';
-    },
-
-    author () {
-      return (this.post && this.post.author) ? this.post.author : '';
-    },
-
-    authorPhotoURL () {
-      return (this.post && this.post.author_photo_url) ? this.post.author_photo_url : '';
-    },
-
-    createdAt () {
-      if (!this.post) {
-        return '';
-      };
-
-      const createdAt = this.post.created_at;
-      const date = new Date(createdAt);
-
-      const dateString = date.toLocaleDateString('en-US', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
-
-      return dateString;
-    },
-
-    breakpoint () {
-      return this.$vuetify.breakpoint.name;
-    },
-
-    viewerIsTheAuthor () {
-      if (this.user?.firestoreUser.email === this.post?.author_email) {
-        return true;
-      };
-
-      return false;
-    },
-
-    darkerTheme () {
-      return this.$vuetify.theme.dark;
-    },
-  },
-
-  methods: {
-    async handleDeletePost () {
-      this.$nuxt.$loading.start();
-      
-      if (!this.viewerIsTheAuthor || !this.post) {
-        return;
-      };
-
-      await this.postsService?.deletePostsWhere('id', this.post.id);
-
-      this.$nuxt.$loading.finish();
-      this.$router.push('/home');
-    },
-
-    async fetchPostData () {
-      if (!this.id) {
-        this.$router.push('/home');
-        return;
-      };
-
-      this.postsService = new PostsService();
-      const post = await this.postsService.fetchPost(this.id);
-
-      if (!post) {
-        this.$router.push('/home');
-        return;
-      };
-
-      this.post = post;
-
-      this.usersDatabase = new Database('users');
-      
-      const author = await this.usersDatabase.getWhere(
-        'email',
-        this.post.author_email
-      ) as Record<string, FirestoreUser> | null;
-
-      if (!author) {
-        return;
-      };
-
-      this.authorId = Object.keys(author)[0];
-      this.comments = this.post.comments || [];
-    }
-  },
-});
-*/
 </script>
 
 <style lang="scss">

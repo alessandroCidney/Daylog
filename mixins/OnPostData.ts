@@ -1,4 +1,5 @@
 import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Getter } from 'vuex-class';
 
 import Database from '~/services/database';
 
@@ -13,6 +14,8 @@ export default class PostData extends Vue {
   author: FirestoreUser | null = null;
   postAuthorId: string | null = null;
   usersDatabase = new Database('users');
+
+  @Getter firestoreUser!: FirestoreUser | undefined;
 
   @Watch('post')
   async onPostChanged (post: TPost) {
@@ -73,5 +76,13 @@ export default class PostData extends Vue {
 
   get postComments () {
     return this.post && this.post.comments;
+  };
+
+  get viewerIsTheAuthor () {
+    if (this.firestoreUser?.email === this.post?.author_email) {
+      return true;
+    };
+
+    return false;
   };
 };
