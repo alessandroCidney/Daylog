@@ -146,6 +146,10 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   async mounted () {
     this.postsService = new PostsService();
     this.usersDatabase = new Database('users');
+
+    if (this.comments) {
+      await this.fetchData();
+    }
   },
 
   computed: {
