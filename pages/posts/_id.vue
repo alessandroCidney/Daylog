@@ -13,7 +13,11 @@
       >
         {{ createdAt }}
         <v-icon color="space">mdi-circle-small</v-icon>
-        <nuxt-link :to="`/users/${authorId}`" class="text-decoration-none font-weight-bold space--text">
+        <nuxt-link
+          v-if="postAuthorId"
+          :to="`/users/${postAuthorId}`"
+          class="text-decoration-none font-weight-bold space--text"
+        >
           @{{ author }}
         </nuxt-link>
       </v-col>
@@ -76,7 +80,7 @@
         <v-card flat :class="darkerTheme ? 'base' : 'light'">
           <div
             class="post-content"
-            v-html="content"
+            v-html="postContent"
           />
         </v-card>
       </v-col>
@@ -109,13 +113,54 @@
     <ArticleInteractionsArea
       v-if="post"
       :post="post"
-      :comments="comments"
+      :comments="postComments || []"
       :updatePage="fetchPostData"
     />
   </v-container>
 </template>
 
 <script lang="ts">
+import { Vue, Component, Mixins } from 'vue-property-decorator';
+import { Getter } from 'vuex-class';
+
+import { FirestoreUser } from '~/types/users';
+
+import PostData from '@/mixins/OnPostData';
+
+import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
+import ArticleInteractionsArea from '@/components/pages/posts/ArticleInteractionsArea/index.vue';
+
+import PostsService from '~/services/posts';
+
+@Component({
+  components: { IconButtonTooltip, ArticleInteractionsArea }
+})
+export default class PostPage extends Mixins(PostData) {
+  id: string = this.$route.params.id;
+  postsService = new PostsService();
+
+  async created () {
+    await this.fetchPostData();
+  };
+
+  async fetchPostData () {
+    if (!this.id) {
+      this.$router.push('/home');
+      return;
+    };
+
+    const post = await this.postsService.fetchPost(this.id);
+
+    if (!post) {
+      this.$router.push('/home');
+      return;
+    }
+
+    this.post = post;
+  };
+};
+
+/*
 import Vue from 'vue';
 import { mapGetters } from 'vuex';
 import { TPost, TPostComment } from '@/types/posts';
@@ -280,6 +325,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     }
   },
 });
+*/
 </script>
 
 <style lang="scss">

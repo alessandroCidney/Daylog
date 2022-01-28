@@ -1,51 +1,77 @@
-import { Vue, Component } from 'vue-property-decorator';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+
+import Database from '~/services/database';
+
 import { TPost } from '~/types/posts';
+import { FirestoreUser } from '~/types/users';
+
+type TFetchAuthorResponse = Record<string, FirestoreUser>;
 
 @Component
 export default class PostData extends Vue {
   post: TPost | null = null;
+  author: FirestoreUser | null = null;
+  postAuthorId: string | null = null;
+  usersDatabase = new Database('users');
+
+  @Watch('post')
+  async onPostChanged (post: TPost) {
+    if (!!post) {
+      const response: TFetchAuthorResponse = await this.usersDatabase.getWhere('email', this.postAuthorEmail);
+
+      if (!response) return;
+
+      this.postAuthorId = Object.keys(response)[0];
+
+      const author = Object.values(response)[0];
+
+      if (!author) return;
+
+      this.author = author;
+    };
+  };
 
   get postId () {
-    return (this.post && this.post.id) ? this.post.id : '';
+    return this.post && this.post.id;
   };
 
   get postAuthor () {
-    return (this.post && this.post.author) ? this.post.author : '';
+    return this.post && this.post.author;
   };
 
   get postAuthorEmail () {
-    return (this.post && this.post.author_email) ? this.post.author_email : '';
+    return this.post && this.post.author_email;
   };
 
   get postAuthorPhotoURL () {
-    return (this.post && this.post.author_photo_url) ? this.post.author_photo_url : '';
+    return this.author && this.author.profile_photo;
   };
 
   get postContent () {
-    return (this.post && this.post.content) ? this.post.content : '';
+    return this.post && this.post.content;
   };
 
   get postTitle () {
-    return (this.post && this.post.title) ? this.post.title : '';
+    return this.post && this.post.title;
   };
 
   get postFormattedTitle () {
-    return (this.post && this.post.formatted_title) ? this.post.formatted_title : '';
+    return this.post && this.post.formatted_title;
   };
 
   get postThumbnail () {
-    return (this.post && this.post.thumbnail) ? this.post.thumbnail : '';
+    return this.post && this.post.thumbnail;
   };
 
   get postCreatedAt () {
-    return (this.post && this.post.created_at) ? this.post.created_at : undefined;
+    return this.post && this.post.created_at;
   };
 
   get postLikes () {
-    return (this.post && this.post.likes) ? this.post.likes : [];
+    return this.post && this.post.likes;
   };
 
   get postComments () {
-    return (this.post && this.post.comments) ? this.post.comments : [];
+    return this.post && this.post.comments;
   };
 };
