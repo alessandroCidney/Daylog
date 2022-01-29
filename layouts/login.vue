@@ -11,19 +11,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component } from 'vue-property-decorator';
 import AppMessage from '@/components/layouts/AppMessage.vue';
 
-interface Data {};
-interface Methods {};
-interface Computed {};
-interface Props {};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
+@Component({
   middleware: 'authentication',
-
-  components: {
-    AppMessage
-  }
-});
+  components: { AppMessage }
+})
+export default class LoginLayout extends Vue {};
 </script>

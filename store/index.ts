@@ -32,6 +32,10 @@ const createStore = () => new Vuex.Store({
       return !!state.user;
     },
 
+    usernameIsSet (state) {
+      return !!state.user?.firestoreUser.username;
+    },
+
     appMessage (state) {
       return state.appMessage;
     },

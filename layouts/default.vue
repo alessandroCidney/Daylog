@@ -11,25 +11,16 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component } from 'vue-property-decorator';
 import AppBar from '@/components/layouts/default/AppBar/index.vue';
 import AppMessage from '@/components/layouts/AppMessage.vue';
 
-interface Data {};
-interface Methods {};
-interface Computed {};
-interface Props {};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
+@Component({
   name: 'default',
-  
-  middleware: ['authentication', 'theme'],
-
-  components: {
-    AppBar,
-    AppMessage
-  },
-});
+  components: { AppBar, AppMessage },
+  middleware: ['authentication', 'theme']
+})
+export default class DefaultLayout extends Vue {};
 </script>
 
 <style lang="scss">
