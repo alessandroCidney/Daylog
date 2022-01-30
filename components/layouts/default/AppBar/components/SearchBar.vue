@@ -1,117 +1,91 @@
 <template>
-  <v-autocomplete
-    v-model="selectedPost"
-    class="app-bar-search"
-    dense
-    solo
-    color="space"
-    placeholder="Search"
-    hide-details
-    hide-no-data
-    :items="posts"
-    item-text="title"
-    item-value="id"
-    :loading="loading"
-    :search-input.sync="search"
-    @input="redirectToPostPage"
-  >
-    <template slot="prepend-inner">
-      <v-btn
-        icon
-        small
+  <div class="d-flex">
+    <v-btn icon @click="showAutocomplete = !showAutocomplete">
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
+
+    <v-slide-x-reverse-transition hide-on-leave>
+      <v-autocomplete
+        v-if="showAutocomplete"
+        v-model="selectedPost"
+        class="appBarSearch align-center"
+        dense
+        solo
         color="space"
-        @click="redirectToPostPage"
+        placeholder="Search a post"
+        hide-details
+        hide-no-data
+        :items="posts"
+        item-text="title"
+        item-value="id"
+        :loading="loading"
+        :search-input.sync="search"
+        @input="redirectToPostPage"
       >
-        <v-icon>
-          mdi-magnify
-        </v-icon>
-      </v-btn>
-    </template>
+        <template slot="append">
+          <v-icon />
+        </template>
 
-    <template v-slot:item="data">
-      <v-list-item-icon>
-        <v-icon>mdi-application-edit</v-icon>
-      </v-list-item-icon>
+        <template v-slot:item="data">
+          <v-list-item-icon>
+            <v-icon>mdi-application-edit</v-icon>
+          </v-list-item-icon>
 
-      <v-list-item-content>
-        <v-list-item-title>
-          {{ data.item.title }}
-        </v-list-item-title>
+          <v-list-item-content>
+            <v-list-item-title>
+              {{ data.item.title }}
+            </v-list-item-title>
 
-        <v-list-item-subtitle>
-          Created by @{{ data.item.author }}
-        </v-list-item-subtitle>
-      </v-list-item-content>
-    </template>
-  </v-autocomplete>
+            <v-list-item-subtitle>
+              Created by @{{ data.item.author }}
+            </v-list-item-subtitle>
+          </v-list-item-content>
+        </template>
+      </v-autocomplete>
+    </v-slide-x-reverse-transition>
+  </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 
-import PostsService, { IPostService } from '@/services/posts';
+import PostsService from '@/services/posts';
+
 import { TPost } from '@/types/posts';
 
-interface Data {
-  postsService: IPostService | null;
-  posts: TPost[];
-  selectedPost: TPost | null;
-  loading: boolean;
-  search: string;
-};
-
-interface Methods {
-  redirectToPostPage: () => void;
-};
-
-interface Computed {};
-interface Props {};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
+@Component({
   filters: {
     withoutHTMLTags (str: string) {
       return str.replace(/<.+?>/g, ' ');
-    },
-  },
-
-  data: () => ({
-    postsService: null,
-    posts: [],
-    selectedPost: null,
-    loading: false,
-    search: '',
-  }),
-
-  created () {
-    this.postsService = new PostsService();
-  },
-
-  watch: {
-    async search (searchString: string) {
-      if (!this.postsService) {
-        return;
-      };
-
-      if (!this.search) {
-        return;
-      };
-      
-      this.loading = true;
-
-      this.posts = await this.postsService.searchPosts(searchString);
-      
-      this.loading = false;
     }
-  },
-
-  methods: {
-    redirectToPostPage () {
-      if (this.selectedPost) {
-        this.$router.push(`/posts/${this.selectedPost}`);
-      };
-    },
   }
-});
+})
+export default class SearchBar extends Vue {
+  postsService = new PostsService();
+  posts: TPost[] = [];
+  selectedPost: TPost | null = null;
+  loading = false;
+  showAutocomplete = false;
+
+  search = '';
+
+  @Watch('search')
+  async onSearchChanged (searchString: string) {
+    if (!this.search) return;
+
+    this.loading = true;
+
+    this.posts = await this.postsService.searchPosts(searchString);
+
+    this.loading = false;
+  };
+
+  redirectToPostPage () {
+    if (this.selectedPost) {
+      this.$router.push(`/posts/${this.selectedPost}`);
+    };
+  };
+};
 </script>
 
 <style lang="scss" scoped>
@@ -119,5 +93,15 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   width: 100px !important;
   overflow: hidden !important;
   text-overflow: ellipsis;
+}
+</style>
+
+<style lang="scss">
+.appBarSearch {
+  max-width: 417px;
+
+  .v-input__slot {
+    box-shadow: none !important;
+  }
 }
 </style>

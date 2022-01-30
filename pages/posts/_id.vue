@@ -129,6 +129,10 @@ import ArticleInteractionsArea from '@/components/pages/posts/ArticleInteraction
 
 import PostsService from '~/services/posts';
 
+type TInjectedTheme = {
+  isDark: boolean;
+};
+
 @Component({
   components: { IconButtonTooltip, ArticleInteractionsArea },
   filters: {
@@ -152,7 +156,7 @@ export default class PostPage extends Mixins(PostData) {
   postsService = new PostsService();
   thumbLoaded = false;
 
-  @Inject({ default: { isDark: false } }) readonly theme!: boolean;
+  @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
 
   async created () {
     await this.fetchPostData();

@@ -5,10 +5,6 @@ const authentication: Middleware = async ({ store, redirect, route }) => {
   const authenticated = store.getters.isAuthenticated;
   const loginOrSignUp = route.name === 'signIn' || route.name === 'signUp'
 
-  if (authenticated && !store.getters.usernameIsSet) {
-    return redirect('/set/username');
-  };
-
   if (loginOrSignUp && authenticated) {
     const auth = new Authentication();
     await auth.checkGoogleAuthResults();

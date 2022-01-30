@@ -24,22 +24,6 @@ export default class DefaultLayout extends Vue {};
 </script>
 
 <style lang="scss">
-.app-bar-search {
-  max-width: 417px;
-
-  .v-input__prepend-inner {
-    margin-top: 0 !important;
-
-    height: 40px !important;
-
-    align-items: center !important;
-  }
-}
-
-.main-app-bar {
-  z-index: 10;
-}
-
 .defaultContainer {
   background-color: var(--v-white-base) !important;
 }
