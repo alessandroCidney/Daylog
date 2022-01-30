@@ -20,6 +20,7 @@
     "firebase": "^9.5.0",
     "moment": "^2.29.1",
     "nuxt": "^2.15.7",
+    "nuxt-property-decorator": "^2.9.1",
     "uuid": "^8.3.2",
     "vue-property-decorator": "^9.1.2",
     "vuetify": "^2.5.5",

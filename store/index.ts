@@ -1,89 +1,64 @@
-import { StoreUser, FirestoreUser } from '@/types/users';
-import { auth } from '@/plugins/firebase';
+import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators';
 
 import Database from '@/services/database';
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { TApplicationMessage, TSnackbarMessage } from '~/types/messages';
+import { StoreUser, FirestoreUser } from '@/types/users';
 
-Vue.use(Vuex);
+type TFetchUserPayload = Record<string, FirestoreUser> | undefined | null;
 
-const createStore = () => new Vuex.Store({
-  state: () => ({
-    user: null as StoreUser | null,
+@Module
+export default class IndexModule extends VuexModule {
+  user: StoreUser | null = null;
+  appMessage: TSnackbarMessage = {
+    active: false,
+    status: 'none',
+    message: 'Potato',
+  };
 
-    appMessage: {
-      active: false,
-      status: 'none',
-      message: 'Potato',
-    }
-  }),
+  get firestoreUser () {
+    return this.user?.firestoreUser;
+  };
 
-  getters: {
-    user (state): StoreUser | null {
-      return state.user;
-    },
+  get isAuthenticated () {
+    return !!this.user;
+  };
 
-    firestoreUser (state): FirestoreUser | undefined {
-      return state.user?.firestoreUser
-    },
+  get usernameIsSet () {
+    return !!this.user?.firestoreUser.username;
+  };
 
-    isAuthenticated (state): boolean {
-      return !!state.user;
-    },
+  @Mutation
+  setUser (payload: StoreUser | null) {
+    this.user = payload;
+  };
 
-    usernameIsSet (state) {
-      return !!state.user?.firestoreUser.username;
-    },
+  @Mutation
+  setAppMessage (payload: TSnackbarMessage) {
+    this.appMessage = payload;
+  };
 
-    appMessage (state) {
-      return state.appMessage;
-    },
-  },
+  @Mutation
+  showAppMessage (payload: TApplicationMessage | TSnackbarMessage) {
+    const message = { ...payload, active: true };
 
-  mutations: {
-    setUser (state, payload: StoreUser | null) {
-      Vue.set(state, 'user', payload);
-    },
+    this.appMessage = message;
+  };
 
-    setAppMessage (state, payload) {
-      Vue.set(state, 'appMessage', payload);
-    },
+  @Action({ commit: 'setUser' })
+  async getCurrentFirestoreUser () {
+    if (!this.user) return;
 
-    showAppMessage (state, payload) {
-      const message = {
-        ...payload,
-        active: true
-      };
+    const usersDatabase = new Database('users');
+    const results = await usersDatabase.getWhere('email', this.user.firestoreUser.email) as TFetchUserPayload;
+    
+    if (!results) return;
 
-      Vue.set(state, 'appMessage', message);
-    }
-  },
+    const user = Object.values(results)[0];
 
-  actions: {
-    async getCurrentFirestoreUser ({ state, commit }): Promise<void> {
-      if (!state.user) {
-        return;
-      };
-
-      const usersDatabase = new Database('users');
-      const results = await usersDatabase.getWhere(
-        'email',
-        state.user.firestoreUser.email
-      ) as Record<string, FirestoreUser>;
-
-      if (!results) {
-        return;
-      };
-
-      const user = Object.values(results)[0];
-
-      commit('setUser', {
-        ...state.user,
-        firestoreUser: user
-      });
-    }
-  }
-});
-
-export default createStore;
+    return {
+      ...this.user,
+      firestoreUser: user
+    };
+  };
+};
