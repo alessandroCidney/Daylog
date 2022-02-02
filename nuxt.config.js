@@ -4,6 +4,8 @@ export default {
 
   ssr: false,
 
+  srcDir: 'src/',
+
   env: {
     ...process.env
   },
