@@ -20,7 +20,7 @@ import BigImage from '@/components/layouts/login/BigImage.vue';
 import SignUpForm from '@/components/pages/signUp/SignUpForm.vue';
 
 export default Vue.extend({
-  layout: 'login',
+  layout: 'clear',
 
   components: {
     BigImage,

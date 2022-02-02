@@ -206,7 +206,7 @@ interface Computed {
 interface Props {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
-  layout: 'login',
+  layout: 'clear',
 
   data: () => ({
     step: "1",

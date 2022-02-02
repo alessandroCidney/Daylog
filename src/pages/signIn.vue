@@ -57,7 +57,7 @@ interface Computed {
 };
 
 export default Vue.extend<Data, Methods, Computed, Props>({
-  layout: 'login',
+  layout: 'clear',
 
   components: {
     BigImage,
