@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters, mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { TSnackbarMessage } from '@/types/messages';
 
 interface Data {
@@ -42,7 +42,7 @@ interface Props {};
 
 export default Vue.extend<Data, Methods, Computed, Props>({
   computed: {
-    ...mapGetters(['appMessage']),
+    ...mapState(['appMessage']),
 
     appMessageActive: {
       get () {

@@ -91,7 +91,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { StoreUser, FirestoreUser } from '@/types/users';
 
 import Authentication, { IAuthentication } from '@/services/authentication';
@@ -144,7 +144,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
-    ...mapGetters(['user']),
+    ...mapState(['user']),
 
     username () {
       return this.user?.firestoreUser.username || '';

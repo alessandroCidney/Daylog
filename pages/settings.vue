@@ -134,7 +134,7 @@
 
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue';
-import { mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import Authentication, { IAuthentication } from '@/services/authentication';
 import Users, { IUsers } from '@/services/users';
 import { StoreUser } from '@/types/users';
@@ -210,7 +210,7 @@ export default (
   },
 
   computed: {
-    ...mapGetters(['user']),
+    ...mapState(['user']),
 
     userId () {
       return this.user?.firestoreUser.id || '';

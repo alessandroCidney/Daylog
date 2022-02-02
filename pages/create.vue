@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { mapState } from 'vuex';
 import { StoreUser } from '@/types/users';
 import PostsService, { IPostService } from '@/services/posts';
 import Editor from '~/components/pages/create/Editor/index.vue';
@@ -113,7 +113,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   },
 
   computed: {
-    ...mapGetters(['user']),
+    ...mapState(['user']),
 
     darkerTheme () {
       return this.$vuetify.theme.dark;
