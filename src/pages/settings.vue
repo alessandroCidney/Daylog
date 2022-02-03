@@ -126,19 +126,20 @@
             </v-btn>
           </v-col>
         </v-row>
-      </v-col>
-      
+      </v-col>  
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import Vue, { VueConstructor } from 'vue';
-import { mapState, mapActions } from 'vuex';
-import Authentication, { IAuthentication } from '@/services/authentication';
+import { Component, Mixins, Watch } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+
+import Authentication from '@/services/authentication';
+
+import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
+
 import Users, { IUsers } from '@/services/users';
-import { StoreUser } from '@/types/users';
-import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
 
 type TProfileChanges = {
   profilePhoto: File | null;
@@ -146,142 +147,85 @@ type TProfileChanges = {
   username: string | null;
 };
 
-interface Data {
-  authenticationService: IAuthentication | null;
-  usersService: IUsers | null;
-  allowEdit: boolean;
-  lightTheme: boolean;
-  changes: TProfileChanges;
-  saveChangesLoading: boolean;
-  deleteAccountLoading: boolean;
-  backgroundPhotoLoaded: boolean;
-  profilePhotoLoaded: boolean;
-};
+@Component
+export default class SettingsPage extends Mixins(OnFirestoreUserData) {
+  authenticationService = new Authentication();
+  usersService: IUsers | null = null;
+  allowEdit = false;
+  lightTheme = false;
+  backgroundPhotoLoaded = false;
+  profilePhotoLoaded = false;
+  saveChangesLoading = false;
+  deleteAccountLoading = false;
+  changes: TProfileChanges = {
+    username: null,
+    profilePhoto: null,
+    profileBackgroundPhoto: null
+  };
 
-interface Methods {
-  handleDeleteAccount: () => Promise<void>;
-  handleSaveChanges: () => Promise<void>;
-  getCurrentFirestoreUser: () => Promise<void>;
-};
-
-interface Computed {
-  userId: string;
-  user: StoreUser | null;
-};
-
-interface Props {};
-
-export default (
-  Vue as VueConstructor<Vue & InstanceType<typeof OnFirestoreUserData>>
-).extend<Data, Methods, Computed, Props>({
-  mixins: [OnFirestoreUserData],
-  
-  data: () => ({
-    authenticationService: null,
-    usersService: null,
-    allowEdit: false,
-    lightTheme: true,
-    backgroundPhotoLoaded: false,
-    profilePhotoLoaded: false,
-    saveChangesLoading: false,
-    deleteAccountLoading: false,
-    changes: {
-      username: null,
-      profilePhoto: null,
-      profileBackgroundPhoto: null
-    },
-  }),
-
-  head () {
-    return {
-      title: 'Settings',
-    }
-  },
+  @Action getCurrentFirestoreUser!: () => Promise<void>;
 
   created () {
-    this.authenticationService = new Authentication();
     this.lightTheme = !this.$vuetify.theme.dark;
 
-    if (!!this.userId) {
-      this.usersService = new Users(this.userId);
+    if (this.firestoreUserId) this.usersService = new Users(this.firestoreUserId);
+    
+    this.changes.username = this.firestoreUserUsername;
+  };
+
+  @Watch('lightTheme')
+  async onLightThemeChanged (activeLightTheme: boolean) {
+    this.$vuetify.theme.dark = !activeLightTheme;
+    await this.usersService?.changeTheme(!activeLightTheme);
+    await this.getCurrentFirestoreUser();
+  };
+
+  async handleDeleteAccount () {
+    this.deleteAccountLoading = true;
+
+    if (!this.firestoreUserId || !this.firestoreUserEmail) return;
+
+    await this.authenticationService.deleteAccount(
+      this.firestoreUserId,
+      this.firestoreUserEmail
+    );
+
+    this.deleteAccountLoading = false;
+    this.$router.push('/');
+  };
+
+  async handleSaveChanges () {
+    this.$nuxt.$loading.start();
+    this.saveChangesLoading = true;
+
+    if (this.changes.username && this.changes.username !== this.firestoreUserUsername) {
+      await this.usersService?.changeUsername(
+        this.changes.username
+      );
     };
 
-    this.changes.username = this.firestoreUserUsername;
-  },
-
-  computed: {
-    ...mapState(['user']),
-
-    userId () {
-      return this.user?.firestoreUser.id || '';
-    },
-  },
-
-  watch: {
-    async lightTheme (activeLightTheme: boolean) {
-      this.$vuetify.theme.dark = !activeLightTheme;
-      await this.usersService?.changeTheme(!activeLightTheme);
-      await this.getCurrentFirestoreUser();
-    },
-  },
-
-  methods: {
-    ...mapActions(['getCurrentFirestoreUser']),
-
-    async handleDeleteAccount () {
-      if (!this.firestoreUser || !this.firestoreUser.id || !this.firestoreUser.email) {
-        return;
-      };
-
-      this.deleteAccountLoading = true;
-      
-      await this.authenticationService?.deleteAccount(
-        this.firestoreUser.id,
-        this.firestoreUser.email
+    if (this.changes.profilePhoto) {
+      await this.usersService?.changeProfilePhoto(
+        this.changes.profilePhoto
       );
-      
-      this.deleteAccountLoading = false;
-      
-      this.$router.push('/');
-    },
+    };
 
-    async handleSaveChanges () {
-      this.$nuxt.$loading.start();
-      this.saveChangesLoading = true;
+    if (this.changes.profileBackgroundPhoto) {
+      await this.usersService?.changeProfileBackgroundPhoto(
+        this.changes.profileBackgroundPhoto
+      );
+    };
 
-      if (!this.usersService) {
-        return;
-      };
+    if (Object.values(this.changes).find(change => !!change)) {
+      await this.getCurrentFirestoreUser();
+    };
 
-      if (this.changes.username && this.changes.username !== this.firestoreUserUsername) {
-        await this.usersService.changeUsername(
-          this.changes.username
-        );
-      };
+    this.$nuxt.$loading.finish();
+    this.saveChangesLoading = false;
 
-      if (this.changes.profilePhoto) {
-        await this.usersService.changeProfilePhoto(
-          this.changes.profilePhoto
-        );
-      };
-
-      if (this.changes.profileBackgroundPhoto) {
-        await this.usersService.changeProfileBackgroundPhoto(
-          this.changes.profileBackgroundPhoto
-        );
-      };
-
-      if (Object.values(this.changes).find(change => !!change)) {
-        await this.getCurrentFirestoreUser();
-      }
-
-      this.$nuxt.$loading.finish();
-      this.saveChangesLoading = false;
-
-      this.$router.push(`/users/${this.userId}`);
-    }
-  }
-});
+    this.$router.push(`/users/${this.firestoreUserId}`);
+  };
+};
 </script>
 
 <style lang="scss">

@@ -41,7 +41,5 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   layout: 'clear'
 })
-export default class SetUsername extends Vue {
-
-};
+export default class SetUsernamePage extends Vue {};
 </script>

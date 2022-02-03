@@ -67,7 +67,7 @@ export default class Home extends Mixins(OnFirestoreUserData) {
   posts: TPost[] | TValidatedPost[] = [];
   loadingPosts = true;
 
-  @Action getCurrentFirestoreUser!: () => Promise<void>
+  @Action getCurrentFirestoreUser!: () => Promise<void>;
 
   created () {
     const userId = this.firestoreUserId;
