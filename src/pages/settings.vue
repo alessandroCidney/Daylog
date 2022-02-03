@@ -157,6 +157,7 @@ export default class SettingsPage extends Mixins(OnFirestoreUserData) {
   profilePhotoLoaded = false;
   saveChangesLoading = false;
   deleteAccountLoading = false;
+  watchThemeChanges = false;
   changes: TProfileChanges = {
     username: null,
     profilePhoto: null,
@@ -167,6 +168,7 @@ export default class SettingsPage extends Mixins(OnFirestoreUserData) {
 
   created () {
     this.lightTheme = !this.$vuetify.theme.dark;
+    this.watchThemeChanges = true;
 
     if (this.firestoreUserId) this.usersService = new Users(this.firestoreUserId);
     
@@ -175,6 +177,8 @@ export default class SettingsPage extends Mixins(OnFirestoreUserData) {
 
   @Watch('lightTheme')
   async onLightThemeChanged (activeLightTheme: boolean) {
+    if (!this.watchThemeChanges) return;
+
     this.$vuetify.theme.dark = !activeLightTheme;
     await this.usersService?.changeTheme(!activeLightTheme);
     await this.getCurrentFirestoreUser();

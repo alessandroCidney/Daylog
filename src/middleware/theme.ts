@@ -1,5 +1,9 @@
 import { Middleware } from '@nuxt/types';
-import { StoreUser } from '@/types/users';
+import { FirestoreUser } from '@/types/users';
+
+type TGetters = {
+  firestoreUser: FirestoreUser | undefined;
+};
 
 const theme: Middleware = ({ store, app }) => {
   function setTheme (option: 'light' | 'dark' | undefined) {
@@ -14,13 +18,13 @@ const theme: Middleware = ({ store, app }) => {
     };
   };
   
-  const user = store.getters.user as StoreUser | null;
+  const { firestoreUser } = store.getters as TGetters;
 
-  if (!user) {
+  if (!firestoreUser) {
     return;
   };
 
-  const userTheme = user.firestoreUser.theme;
+  const userTheme = firestoreUser.theme;
   setTheme(userTheme);
 };
 
