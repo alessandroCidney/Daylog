@@ -1,7 +1,7 @@
 import { Component, Mixins } from 'vue-property-decorator';
 import { Action } from 'vuex-class';
 import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
-import { IUsers } from '~/services/users';
+import Users, { IUsers } from '~/services/users';
 
 type TProfileChanges = {
   profilePhoto: File | null;
@@ -20,6 +20,10 @@ export default class OnSetUserData extends Mixins(OnFirestoreUserData) {
   };
   
   @Action getCurrentFirestoreUser!: () => Promise<void>;
+
+  created () {
+    if (this.firestoreUserId) this.usersService = new Users(this.firestoreUserId);
+  };
 
   async handleSaveChanges () {
     this.$nuxt.$loading.start();

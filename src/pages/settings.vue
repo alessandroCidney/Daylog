@@ -110,7 +110,7 @@
               :loading="saveChangesLoading"
               @click="handleSaveChanges"
             >
-              Salvar alterações
+              Save changes
             </v-btn>
           </v-col>
           
@@ -122,7 +122,7 @@
               :loading="deleteAccountLoading"
               @click="handleDeleteAccount"
             >
-              Excluir minha conta
+              Delete my account
             </v-btn>
           </v-col>
         </v-row>
@@ -149,8 +149,6 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   deleteAccountLoading = false;
 
   created () {
-    if (this.firestoreUserId) this.usersService = new Users(this.firestoreUserId);
-    
     this.changes.username = this.firestoreUserUsername;
   };
 
