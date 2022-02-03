@@ -133,37 +133,20 @@
 
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
 
 import Authentication from '@/services/authentication';
-
-import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
+import OnSetUserData from '@/mixins/OnSetUserData';
 
 import Users, { IUsers } from '@/services/users';
 
-type TProfileChanges = {
-  profilePhoto: File | null;
-  profileBackgroundPhoto: File | null;
-  username: string | null;
-};
-
 @Component
-export default class SettingsPage extends Mixins(OnFirestoreUserData) {
+export default class SettingsPage extends Mixins(OnSetUserData) {
   authenticationService = new Authentication();
-  usersService: IUsers | null = null;
   allowEdit = false;
   lightTheme = !this.$vuetify.theme.dark;
   backgroundPhotoLoaded = false;
   profilePhotoLoaded = false;
-  saveChangesLoading = false;
   deleteAccountLoading = false;
-  changes: TProfileChanges = {
-    username: null,
-    profilePhoto: null,
-    profileBackgroundPhoto: null
-  };
-
-  @Action getCurrentFirestoreUser!: () => Promise<void>;
 
   created () {
     if (this.firestoreUserId) this.usersService = new Users(this.firestoreUserId);
@@ -190,38 +173,6 @@ export default class SettingsPage extends Mixins(OnFirestoreUserData) {
 
     this.deleteAccountLoading = false;
     this.$router.push('/');
-  };
-
-  async handleSaveChanges () {
-    this.$nuxt.$loading.start();
-    this.saveChangesLoading = true;
-
-    if (this.changes.username && this.changes.username !== this.firestoreUserUsername) {
-      await this.usersService?.changeUsername(
-        this.changes.username
-      );
-    };
-
-    if (this.changes.profilePhoto) {
-      await this.usersService?.changeProfilePhoto(
-        this.changes.profilePhoto
-      );
-    };
-
-    if (this.changes.profileBackgroundPhoto) {
-      await this.usersService?.changeProfileBackgroundPhoto(
-        this.changes.profileBackgroundPhoto
-      );
-    };
-
-    if (Object.values(this.changes).find(change => !!change)) {
-      await this.getCurrentFirestoreUser();
-    };
-
-    this.$nuxt.$loading.finish();
-    this.saveChangesLoading = false;
-
-    this.$router.push(`/users/${this.firestoreUserId}`);
   };
 };
 </script>
