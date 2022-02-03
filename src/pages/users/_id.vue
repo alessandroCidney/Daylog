@@ -110,7 +110,7 @@
                 </v-col>
               </template>
 
-              <template v-else-if="posts.length > 0">
+              <template v-else-if="savedPosts.length > 0">
                 <v-col
                   v-for="(post, index) in savedPosts"
                   :key="`post-profile-saved-${index}`"
