@@ -77,22 +77,15 @@ import PostActions from '../PostActions.vue';
 import { TPost, TPostComment } from '@/types/posts';
 import { FirestoreUser } from '@/types/users';
 
-import moment from 'moment';
-
 type TInjectedTheme = { isDark: boolean; };
 
-type ViewPostComment = TPostComment & {
+export type ViewPostComment = TPostComment & {
   authorUsername: string;
   authorPhotoURL: string;
 };
 
 @Component({
   components: { Comment, PostActions },
-  filters: {
-    dateDiff (time: string) {
-      return moment(new Date(time)).fromNow();
-    }
-  }
 })
 export default class ArticleInteractionsAreaComponent extends Mixins(OnFirestoreUserData) {
   showCommentMainTextarea = false;

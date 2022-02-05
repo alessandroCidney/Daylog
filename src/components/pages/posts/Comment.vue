@@ -41,22 +41,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { TPostComment } from '~/types/posts';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
-interface Data {};
-interface Methods {};
-interface Computed {};
+import { ViewPostComment } from './ArticleInteractionsArea/index.vue';
 
-interface Props {
-  comment: TPostComment;
-  darkerTheme: boolean;
+import moment from 'moment';
+
+@Component({
+  filters: {
+    dateDiff (time: string) {
+      return moment(new Date(time)).fromNow();
+    }
+  }
+})
+export default class CommentComponent extends Vue {
+  @Prop(Object) readonly comment!: ViewPostComment;
+  @Prop(Boolean) readonly darkerTheme !: boolean;
 };
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  props: {
-    comment: { type: Object, required: true },
-    darkerTheme: Boolean,
-  },
-});
 </script>
