@@ -11,7 +11,7 @@
           'align-center': true,
           'justify-center': true,
           'cursor-pointer': true,
-          'withFile': file
+          'withFile': !!file
         }"
         @click="getFile"
       >
@@ -32,64 +32,46 @@
         />
       </div>
     </template>
-    <span>{{ file ? 'Change image' : 'Add an image' }}</span>
+    <span>{{ !!file ? 'Change image' : 'Add an image' }}</span>
   </v-tooltip>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 
-interface Data {
-  file: File | undefined;
-};
+@Component
+export default class DropPhotoZoneComponent extends Vue {
+  file: File | null = null;
 
-interface Props {};
-interface Computed {};
+  @Watch('file')
+  onFileChanged (f: File | null) {
+    if (!!f) {
+      this.updateImage(f);
+    };
+  };
 
-interface Methods {
-  updateImage: (file: File) => void;
-  getFile: () => void;
-  updatedFiles: (files: FileList) => void;
-};
+  updateImage (file: File): void {
+    const reader = new FileReader();
+    const divRef = this.$refs.photoDiv;
 
-export default Vue.extend<Data, Methods, Computed, Props>({
+    reader.readAsDataURL(file);
 
-  data: () => ({
-    file: undefined,
-  }),
+    reader.onload = () => {
+      if (divRef) (divRef as HTMLDivElement).style.backgroundImage = `url('${reader.result}')`;
+    };
+  };
 
-  watch: {
-    file (f: File | undefined) {
-      if (!!f) {
-        this.updateImage(f);
-      }
-    }
-  },
+  getFile (): void {
+    const inputRef = this.$refs.photoInput;
+    
+    if (inputRef) (inputRef as HTMLInputElement).click();
+  };
 
-  methods: {
-    updatedFiles (files: FileList) {
-      this.file = files[0];
-      this.$emit('input', this.file);
-    },
-
-    updateImage (file: File): void {
-      const reader = new FileReader();
-      const divRef = this.$refs.photoDiv;
-
-      reader.readAsDataURL(file);
-
-      reader.onload = () => {
-        if (divRef) (divRef as HTMLDivElement).style.backgroundImage = `url('${reader.result}')`;
-      };
-    },
-
-    getFile (): void {
-      const inputRef = this.$refs.photoInput;
-      
-      if (inputRef) (inputRef as HTMLInputElement).click();
-    }
-  }  
-});
+  updatedFiles (files: FileList) {
+    this.file = files[0];
+    this.$emit('input', this.file);
+  };
+}; 
 </script>
 
 <style lang="scss" scoped>
