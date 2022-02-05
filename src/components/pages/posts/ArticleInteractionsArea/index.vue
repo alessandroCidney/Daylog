@@ -51,7 +51,6 @@
       </v-slide-y-transition>
 
       <v-col md="5" sm="10" cols="10" class="d-flex align-center justify-center">
-        
         <v-list two-line :class="`width100 ${theme.isDark ? 'base' : 'light'}`">
           <Comment
             v-for="(comment, index) in viewComments"
@@ -60,7 +59,6 @@
             :darker-theme="theme.isDark"
           />
         </v-list>
-
       </v-col>
     </v-row>
 </template>

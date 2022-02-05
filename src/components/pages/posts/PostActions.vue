@@ -24,77 +24,36 @@
 </template>
 
 <script lang="ts">
-import Vue, { VueConstructor, PropOptions } from 'vue';
+import { Mixins, Component, Prop } from 'vue-property-decorator';
+
+import PostsService from '@/services/posts';
 
 import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
-import PostsService, { IPostService } from '~/services/posts';
-import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
-import { TPost } from '~/types/posts';
 
-interface Data {
-  postsService: IPostService | null;
+import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
+
+import { TPost } from '@/types/posts';
+
+@Component({
+  components: { IconButtonTooltip }
+})
+export default class PostActionsComponent extends Mixins(OnFirestoreUserData) {
+  postsService = new PostsService();
+
+  @Prop(Object) readonly post!: TPost;
+  @Prop(Function) readonly updatePage!: () => Promise<void>;
+  @Prop(Function) readonly toggleTextarea!: () => void;
+
+  get postLiked () {
+    if (!this.post.likes) return false;
+
+    return this.post.likes.findIndex(like => like.author_id === this.firestoreUserId) !== -1;
+  };
+
+  async toggleLike () {
+    const success = await this.postsService.toggleLike(this.post.id, this.firestoreUserId);
+
+    if (success) await this.updatePage();
+  };
 };
-
-interface Methods {};
-
-interface Computed {
-  postLiked: boolean;
-};
-
-interface Props {
-  post: TPost;
-  updatePage: () => Promise<void>;
-  toggleTextarea: () => void;
-};
-
-export default (
-  Vue as VueConstructor<
-    Vue & InstanceType<
-      typeof OnFirestoreUserData
-    >
-  >
-).extend<Data, Methods, Computed, Props>({
-  mixins: [OnFirestoreUserData],
-
-  components: {
-    IconButtonTooltip,
-  },
-
-  props: {
-    post: { type: Object, required: true },
-    updatePage: { type: Function, required: true },
-    toggleTextarea: { type: Function, required: true },
-  },
-
-  data () {
-    return {
-      postsService: null,
-    }
-  },
-
-  created () {
-    this.postsService = new PostsService();
-  },
-
-  computed: {
-    postLiked () {
-      if (!this.post.likes) return false;
-
-      return this.post.likes.findIndex(like => like.author_id === this.firestoreUserId) !== -1;
-    }
-  },
-
-  methods: {
-    async toggleLike () {
-      if (!this.postsService) return;
-
-      const success = await this.postsService.toggleLike(this.post.id, this.firestoreUserId);
-
-      if (success) {
-        await this.updatePage();
-      };
-    }
-  }
-
-});
 </script>
