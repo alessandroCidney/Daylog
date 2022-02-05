@@ -18,7 +18,7 @@ import AppMessage from '@/components/layouts/AppMessage.vue';
 @Component({
   name: 'default',
   components: { AppBar, AppMessage },
-  middleware: ['authentication', 'theme']
+  middleware: ['authentication', 'theme', 'definedUsername']
 })
 export default class DefaultLayout extends Vue {};
 </script>
