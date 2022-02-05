@@ -52,12 +52,12 @@
 
       <v-col md="5" sm="10" cols="10" class="d-flex align-center justify-center">
         
-        <v-list two-line :class="`width100 ${darkerTheme ? 'base' : 'light'}`">
+        <v-list two-line :class="`width100 ${theme.isDark ? 'base' : 'light'}`">
           <Comment
             v-for="(comment, index) in viewComments"
             :key="`${postId}-comment-${index}`"
             :comment="comment"
-            :darker-theme="darkerTheme"
+            :darker-theme="theme.isDark"
           />
         </v-list>
 
@@ -66,153 +66,102 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { mapGetters } from 'vuex';
+import { Mixins, Component, Prop, Watch, Inject } from 'vue-property-decorator';
 
-import { FirestoreUser } from '@/types/users';
-import { TPost, TPostComment } from '@/types/posts';
+import PostsService from '@/services/posts';
+import Database from '@/services/database';
 
-import PostsService, { IPostService } from '@/services/posts';
-import Database, { IDatabase } from '@/services/database';
+import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
 
 import Comment from '../Comment.vue';
 import PostActions from '../PostActions.vue';
 
+import { TPost, TPostComment } from '@/types/posts';
+import { FirestoreUser } from '@/types/users';
+
 import moment from 'moment';
+
+type TInjectedTheme = { isDark: boolean; };
 
 type ViewPostComment = TPostComment & {
   authorUsername: string;
   authorPhotoURL: string;
 };
 
-interface Data {
-  showCommentMainTextarea: boolean;
-  postsService: IPostService | null;
-  usersDatabase: IDatabase | null;
-  commentText: string;
-  viewComments: ViewPostComment[];
-};
-
-interface Methods {
-  toggleTextarea: () => void;
-  sendComment: () => Promise<void>;
-  fetchData: () => Promise<void>;
-};
-
-interface Computed {
-  firestoreUser: FirestoreUser | null;
-  darkerTheme: boolean;
-  postId: string;
-};
-
-interface Props {
-  post: TPost;
-  comments: TPostComment[];
-  updatePage: () => any;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
+@Component({
+  components: { Comment, PostActions },
   filters: {
     dateDiff (time: string) {
       return moment(new Date(time)).fromNow();
     }
-  },
+  }
+})
+export default class ArticleInteractionsAreaComponent extends Mixins(OnFirestoreUserData) {
+  showCommentMainTextarea = false;
+  postsService = new PostsService();
+  usersDatabase = new Database('users');
+  commentText = '';
+  viewComments: ViewPostComment[] = [];
 
-  components: {
-    Comment,
-    PostActions,
-  },
+  @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
 
-  props: {
-    post: { type: Object, required: true },
-    comments: { type: Array, required: false, default: () => [] },
-    updatePage: { type: Function, required: false, default: () => {} },
-  },
+  @Prop(Object) readonly post!: TPost;
+  @Prop({ type: Array, default: () => [] }) readonly comments!: TPostComment[];
+  @Prop({ type: Function, default: () => {} }) readonly updatePage!: () => Promise<void>;
 
-  data: () => ({
-    showCommentMainTextarea: false,
-    postsService: null,
-    commentText: '',
-    viewComments: [],
-    usersDatabase: null,
-  }),
-
-  watch: {
-    comments () {
-      this.fetchData();
-    }
-  },
+  @Watch('comments')
+  onCommentsChanged () {
+    this.fetchData();
+  };
 
   async mounted () {
-    this.postsService = new PostsService();
-    this.usersDatabase = new Database('users');
-
     if (this.comments) {
       await this.fetchData();
-    }
-  },
+    };
+  };
 
-  computed: {
-    ...mapGetters(['firestoreUser']),
+  get postId () {
+    return this.post.id;
+  };
 
-    darkerTheme () {
-      return this.$vuetify.theme.dark;
-    },
+  toggleTextarea () {
+    this.showCommentMainTextarea = !this.showCommentMainTextarea;
+  };
 
-    postId () {
-      return this.post.id;
-    }
-  },
+  async sendComment () {
+    if (!this.firestoreUser) return;
 
-  methods: {
-    toggleTextarea () {
-      this.showCommentMainTextarea = !this.showCommentMainTextarea;
-    },
+    await this.postsService.sendComment(
+      this.postId,
+      {
+        created_at: (new Date()).getTime(),
+        content: this.commentText,
+        author_id: this.firestoreUserId,
+        likes: []
+      }
+    );
 
-    async sendComment () {
-      if (!this.firestoreUser || !this.postsService) {
-        return;
-      };
+    await this.updatePage();
+  };
 
-      await this.postsService.sendComment(
-        this.postId,
-        {
-          created_at: (new Date()).getTime(),
-          content: this.commentText,
-          author_id: this.firestoreUser.id,
-          likes: []
-        }
-      );
+  async fetchData () {
+    const fetchCommentData = async (comment: TPostComment): Promise<ViewPostComment | undefined> => {
+      const authorData: FirestoreUser | null | undefined  = await this.usersDatabase.get(comment.author_id);
 
-      await this.updatePage();
-    },
+      if (!authorData) return undefined;
 
-    async fetchData () {
-      const usersDB = this.usersDatabase;
+      return ({
+        ...comment,
+        authorUsername: authorData.username,
+        authorPhotoURL: authorData.profile_photo
+      });
+    };
 
-      if (!usersDB) {
-        return;
-      };
+    const formattedComments: (ViewPostComment | undefined)[] = await Promise.all(
+      this.comments.map((comment) => fetchCommentData(comment))
+    );
 
-      const formattedComments: (ViewPostComment | undefined)[] = await Promise.all(
-        this.comments.map(async (comment) => {
-        const authorData: FirestoreUser | null | undefined  = await usersDB.get(comment.author_id);
-
-        if (!authorData) {
-          return undefined;
-        };
-
-        return ({
-          ...comment,
-          authorUsername: authorData.username,
-          authorPhotoURL: authorData.profile_photo
-        });
-      }));
-
-      this.viewComments = formattedComments.filter(
-        formattedComment => !!formattedComment
-      ) as ViewPostComment[];
-    }
-  }
-});
+    this.viewComments = formattedComments.filter(comment => !!comment) as ViewPostComment[];
+  };
+};
 </script>

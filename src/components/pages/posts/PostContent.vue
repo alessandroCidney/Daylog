@@ -14,9 +14,7 @@
 <script lang="ts">
 import { Vue, Component, Inject, Prop } from 'vue-property-decorator';
 
-type TInjectedTheme = {
-  isDark: boolean;
-};
+type TInjectedTheme = { isDark: boolean; };
 
 @Component
 export default class PostContentComponent extends Vue {
