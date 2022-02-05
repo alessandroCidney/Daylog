@@ -13,7 +13,7 @@
             </v-col>
             <v-col cols="8" class="pl-0">
               <div><strong>@{{ firestoreUserUsername }}</strong></div>
-              <div><small>Iniciante</small></div>
+              <div><small>Beginner</small></div>
             </v-col>
           </v-row>
         </v-card>

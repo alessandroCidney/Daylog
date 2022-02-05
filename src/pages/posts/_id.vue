@@ -75,16 +75,7 @@
       </v-col>
     </v-row>
 
-    <v-row align="center" justify="center" class="mt-10">
-      <v-col md="8" sm="10" cols="10" class="pa-0 mr-2">
-        <v-card flat :class="theme.isDark ? 'base' : 'light'">
-          <div
-            class="post-content"
-            v-html="postContent"
-          />
-        </v-card>
-      </v-col>
-    </v-row>
+    <PostContent :content="postContent" />
 
     <v-row align="center" justify="center" class="mt-16">
       <v-col md="8" sm="10">
@@ -120,21 +111,18 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins, Inject } from 'vue-property-decorator';
+import { Component, Mixins } from 'vue-property-decorator';
 
 import PostData from '@/mixins/OnPostData';
 
 import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
 import ArticleInteractionsArea from '@/components/pages/posts/ArticleInteractionsArea/index.vue';
+import PostContent from '@/components/pages/posts/PostContent.vue';
 
 import PostsService from '~/services/posts';
 
-type TInjectedTheme = {
-  isDark: boolean;
-};
-
 @Component({
-  components: { IconButtonTooltip, ArticleInteractionsArea },
+  components: { IconButtonTooltip, ArticleInteractionsArea, PostContent },
   filters: {
     formattedCreatedAt (value: number | null) {
       if (!value) return;
@@ -155,8 +143,6 @@ export default class PostPage extends Mixins(PostData) {
   id: string = this.$route.params.id;
   postsService = new PostsService();
   thumbLoaded = false;
-
-  @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
 
   async created () {
     await this.fetchPostData();
@@ -210,32 +196,6 @@ export default class PostPage extends Mixins(PostData) {
 .post-title {
   font-size: 5em;
   font-weight: 900 !important;
-}
-
-.post-content {
-  font-size: 19px !important;
-  line-height: 38px;
-
-  padding: 20px;
-
-  h1, h2, h3 {
-    margin: 16px 0 !important;
-  }
-
-  pre {
-    background: #0D0D0D;
-    color: #FFF;
-    font-family: 'JetBrainsMono', monospace;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-
-    code {
-      color: inherit;
-      padding: 0;
-      background: none;
-      font-size: 0.8rem;
-    }
-  }
 }
 
 .post-thumb.v-skeleton-loader.v-skeleton-loader--is-loading {
