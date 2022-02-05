@@ -1,6 +1,6 @@
 <template>
   <v-tooltip top>
-    <template v-slot:activator="{ on, attrs }">
+    <template #activator="{ on, attrs, value }">
       <div
         v-bind="attrs"
         v-on="on"
@@ -11,7 +11,7 @@
           'align-center': true,
           'justify-center': true,
           'cursor-pointer': true,
-          'bordered': !file
+          'withFile': file
         }"
         @click="getFile"
       >
@@ -21,7 +21,7 @@
           color="space"
           size="40"
         >
-          mdi-image-plus
+          {{ value ? 'mdi-image-plus' : 'mdi-image' }}
         </v-icon>
 
         <input
@@ -32,7 +32,7 @@
         />
       </div>
     </template>
-    <span>Add an image</span>
+    <span>{{ file ? 'Change image' : 'Add an image' }}</span>
   </v-tooltip>
 </template>
 
@@ -96,13 +96,19 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 .drop-photo-zone {
   width: 100%;
   height: 100%;
-  min-height: 100px;
+  min-height: 50px;
 
   background-position: center;
   background-size: cover;
 
+  transition: all .3s ease;
+
   &.bordered {
     border: 1px solid #f0f0f0;
+  }
+
+  &.withFile {
+    height: 400px;
   }
 }
 </style>
