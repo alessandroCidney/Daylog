@@ -94,8 +94,9 @@ import Vue from 'vue';
 import { mapState } from 'vuex';
 import { StoreUser, FirestoreUser } from '@/types/users';
 
-import Authentication, { IAuthentication } from '@/services/authentication';
+import Authentication from '@/services/authentication';
 import Database, { IDatabase } from '@/services/database';
+import { IAuthentication } from '@/types/services/authentication';
 
 interface Data {
   userId: string;

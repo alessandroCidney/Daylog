@@ -30,8 +30,9 @@ import { mapGetters, mapMutations } from 'vuex';
 import BigImage from '@/components/layouts/login/BigImage.vue';
 import LoginForm from '@/components/pages/signIn/loginForm.vue';
 
-import Authentication, { IAuthentication } from '@/services/authentication/index';
+import Authentication from '@/services/authentication/index';
 import { TApplicationMessage } from '@/types/messages';
+import { IAuthentication } from '@/types/services/authentication';
 
 interface ILoginData {
   email: string;

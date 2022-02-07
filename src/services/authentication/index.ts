@@ -4,8 +4,6 @@ import {
   GoogleAuthProvider,
   signInWithRedirect,
   signOut,
-  getRedirectResult,
-  Auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   deleteUser
@@ -20,28 +18,9 @@ import * as CloudStorageConstants from '@/data/constants/storage';
 
 import { TPost } from '@/types/posts';
 import { TApplicationMessage } from '@/types/messages';
+import { IAuthentication } from '@/types/services/authentication';
 
 const googleAuthProvider = new GoogleAuthProvider();
-
-export interface IAuthentication {
-  database: IDatabase;
-  storage: ICloudStorage;
-  auth: Auth;
-  utils: IUtils;
-  signInWithGoogle: () => void;
-  signOut: () => Promise<boolean>;
-  signUpWithEmail: (
-    email: string,
-    password: string,
-    username: string,
-    profilePhoto: File | undefined,
-    profileBackground: File | undefined,
-    aceptedTerms: boolean,
-    aceptedPrivacy: boolean,
-  ) => Promise<boolean>;
-  signInWithEmail: (email: string, password: string) => Promise<TApplicationMessage>;
-  deleteAccount: (userId: string, userEmail: string) => Promise<void>;
-};
 
 class Authentication implements IAuthentication {
   database;

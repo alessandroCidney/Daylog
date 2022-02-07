@@ -177,7 +177,8 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Authentication, { IAuthentication } from '@/services/authentication';
+import Authentication from '@/services/authentication';
+import { IAuthentication } from '@/types/services/authentication';
 
 interface ISignUpData {
   username: string;
