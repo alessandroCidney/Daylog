@@ -19,9 +19,9 @@
         </v-card>
 
         <v-list class="mt-8 py-0 overflow-hidden sidebarList">
-          <SidebarListItem title="Home" to="/home" icon="mdi-home" />
-          <SidebarListItem title="Profile" :to="'/users/' + firestoreUser.id" icon="mdi-account" />
-          <SidebarListItem title="Settings" to="/settings" icon="mdi-cog" />
+          <SidebarListItem v-if="firestoreUser" title="Home" to="/home" icon="mdi-home" />
+          <SidebarListItem v-if="firestoreUser" title="Profile" :to="'/users/' + firestoreUser.id" icon="mdi-account" />
+          <SidebarListItem v-if="firestoreUser" title="Settings" to="/settings" icon="mdi-cog" />
         </v-list>
       </v-col>
       <v-col cols="6">

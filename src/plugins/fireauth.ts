@@ -1,44 +1,37 @@
+import { auth } from '@/plugins/firebase';
+import { User } from 'firebase/auth';
+
+import { AuthUser } from '@/types/users';
 import { Plugin } from '@nuxt/types';
-import { auth } from './firebase';
-import Authentication from '../services/authentication';
-import Database from '../services/database';
-import { FirestoreUser } from '@/types/users';
+
+import _ from 'lodash';
 
 const fireAuth: Plugin = (context) => {
   const { store } = context;
-  const database = new Database('users');
-  const authentication = new Authentication();
 
-  return new Promise((resolve, reject) => {
-    auth.onAuthStateChanged((user) => {
-      
-      if (!user) {
+  return new Promise(async (resolve) => {
+    await store.dispatch('checkGoogleAuthResults');
+
+    auth.onAuthStateChanged(async (user: User | null) => {
+      try {
+        if (!user) {
+          store.commit('setUser', null);
+          return;
+        };
+
+        const { displayName, email  } = user;
+  
+        store.commit('setUser', { authUser: ({ displayName, email }) as AuthUser });
+
+        await store.dispatch('getCurrentFirestoreUser');
+
+      } catch (error) {
+        console.log('Error on fireauth plugin', error);
         store.commit('setUser', null);
-        resolve();
-        return;
+      
+      } finally {
+        resolve()
       };
-
-      authentication.checkGoogleAuthResults().then(() => {
-        database.getWhere('email', user?.email)
-          .then((firestoreUser) => {
-            
-            const storeUser = {
-              authUser: user,
-              firestoreUser: {
-                ...(Object.values(firestoreUser)[0] as FirestoreUser)
-              }
-            };
-            
-            store.commit('setUser', storeUser);
-            resolve();
-          }).catch((err) => {
-            console.log('Error on fireauth plugin', err);
-
-            store.commit('setUser', null);
-            resolve();
-            return;
-          });
-      });
     });
   });
 };

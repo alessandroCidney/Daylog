@@ -9,7 +9,7 @@ type TGetters = {
 const definedUsername: Middleware = ({ store, redirect }) => {
   const { isAuthenticated, firestoreUser } = store.getters as TGetters;
 
-  if (isAuthenticated && !firestoreUser.username) {
+  if (isAuthenticated && !!firestoreUser && !firestoreUser.username) {
     return redirect('/set/username');
   };
 };

@@ -1,4 +1,7 @@
-import { User } from 'firebase/auth';
+export type AuthUser = {
+  displayName: string | null;
+  email: string | null;
+};
 
 export type FirestoreUser = {
   id: string;
@@ -14,6 +17,6 @@ export type FirestoreUser = {
 };
 
 export type StoreUser = {
-  authUser: User;
+  authUser: AuthUser;
   firestoreUser: FirestoreUser;
 };

@@ -165,31 +165,6 @@ class Authentication implements IAuthentication {
     };
   };
 
-  async checkGoogleAuthResults () {
-    const results = await getRedirectResult(auth);
-
-    if (!results) {
-      return;
-    }
-
-    const alreadyExists = await this.database.getWhere('email', results?.user.email);
-
-    if (!!results && !alreadyExists) {
-      const userKey = await this.database.push({
-        name: results.user.displayName,
-        email: results.user.email,
-        profile_photo: results.user.photoURL,
-        profile_background: null,
-      });
-
-      if (userKey) {
-        await this.database.update({
-          id: userKey
-        }, userKey);
-      }
-    };
-  };
-
   async signOut () {
     try {
       await signOut(auth);

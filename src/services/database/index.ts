@@ -62,15 +62,13 @@ class Database implements IDatabase {
 
   async getWhere (key: string, value: any) {
     try {
-      let snapshot;
-
       const query = DatabaseQuery(
         this.reference,
         orderByChild(key),
         equalTo(value)
       );
 
-      snapshot = await DatabaseGet(query);
+      const snapshot = await DatabaseGet(query);
 
       if (snapshot.exists()) {
         return snapshot.val();
