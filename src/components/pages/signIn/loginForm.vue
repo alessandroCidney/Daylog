@@ -57,51 +57,26 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 import GoogleAuthButton from '../../layouts/login/GoogleAuthButton.vue';
 
-interface ILoginData {
+type ILoginData = {
   email: string;
   password: string;
 };
 
-interface Data {
-  loginData: ILoginData;
+@Component({
+  components: { GoogleAuthButton }
+})
+export default class LoginFormComponent extends Vue {
+  @Prop(Boolean) readonly emailAuthLoading!: boolean;
+
+  loginData: ILoginData = { email: '', password: '' };
+
+  emailAuthSubmit () {
+    this.$emit('emailAuthSubmit', this.loginData);
+  };
 };
-
-interface Methods {
-  emailAuthSubmit: () => void;
-};
-
-interface Computed {};
-
-interface Props {
-  emailAuthLoading: boolean;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-
-  components: {
-    GoogleAuthButton
-  },
-
-  data: () => ({
-    loginData: {
-      email: '',
-      password: ''
-    }
-  }),
-
-  props: {
-    emailAuthLoading: Boolean,
-  },
-
-  methods: {
-    emailAuthSubmit () {
-      this.$emit('emailAuthSubmit', this.loginData);
-    },
-  }
-});
 </script>
 
 <style lang="scss" scoped>

@@ -61,7 +61,7 @@ import SidebarListItem from '@/components/pages/home/SidebarListItem.vue';
 @Component({
   components: { SpeedDial, CreatePostButton, PostsList, SidebarListItem }
 })
-export default class Home extends Mixins(OnFirestoreUserData) {
+export default class HomePage extends Mixins(OnFirestoreUserData) {
   postsService: IPostService = new PostsService();
   usersService: IUsers | null = null;
   posts: TPost[] | TValidatedPost[] = [];
@@ -96,8 +96,6 @@ export default class Home extends Mixins(OnFirestoreUserData) {
     function alreadySaved (post: TPost, user: FirestoreUser) {
       return user.savedPosts && user.savedPosts.indexOf(post.id) !== -1;
     };
-
-    console.log('Fetch')
 
     this.posts = posts.map(post => ({
       ...post,

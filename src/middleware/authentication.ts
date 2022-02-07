@@ -5,9 +5,6 @@ const authentication: Middleware = async ({ store, redirect, route }) => {
   const loginOrSignUp = route.name === 'signIn' || route.name === 'signUp'
 
   if (loginOrSignUp && authenticated) {
-
-    console.log('a')
-
     return redirect('/home');
   };
 

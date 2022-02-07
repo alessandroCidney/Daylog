@@ -76,6 +76,12 @@ export default Vue.extend({
   width: 30vw !important;
 }
 
+@media (max-width: 959px) {
+  .signUpForm {
+    width: 70vw !important;
+  }
+}
+
 .pageTitle {
   font-size: 24px;
 }
