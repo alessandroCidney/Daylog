@@ -9,7 +9,7 @@ export type FirestoreUser = {
   email: string;
   profile_photo: string | null;
   profile_background: string | null;
-  username: string | null;
+  username: string;
   acepted_terms: string;
   acepted_privacy: string;
   theme: 'dark' | 'light' | null;

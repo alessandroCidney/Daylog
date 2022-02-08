@@ -265,7 +265,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     avatar () {
-      if (this.pageUser) {
+      if (this.pageUser && this.pageUser.profile_photo) {
         return this.pageUser.profile_photo;
       };
 
@@ -273,7 +273,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
 
     backgroundPhoto () {
-      if (this.pageUser) {
+      if (this.pageUser && this.pageUser.profile_background) {
         return this.pageUser.profile_background;
       };
 
