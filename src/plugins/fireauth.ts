@@ -1,13 +1,12 @@
 import { auth } from '@/plugins/firebase';
 import { User } from 'firebase/auth';
 
-import { AuthUser } from '@/types/users';
+import { AuthUser, StoreUser } from '@/types/users';
 import { Plugin } from '@nuxt/types';
 
 import _ from 'lodash';
 
-const fireAuth: Plugin = (context) => {
-  const { store } = context;
+const fireAuth: Plugin = ({ store }) => {
 
   return new Promise(async (resolve) => {
     await store.dispatch('checkGoogleAuthResults');
@@ -20,9 +19,10 @@ const fireAuth: Plugin = (context) => {
         };
 
         const { displayName, email  } = user;
-  
-        store.commit('setUser', { authUser: ({ displayName, email }) as AuthUser });
 
+        const authUser: AuthUser = { displayName, email };
+
+        store.commit('setUser', { ...store.state.user, authUser } as StoreUser);
         await store.dispatch('getCurrentFirestoreUser');
 
       } catch (error) {

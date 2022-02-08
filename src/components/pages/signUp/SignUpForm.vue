@@ -17,6 +17,7 @@
     </div>
 
     <v-text-field
+      v-model="username"
       label="Username"
       placeholder="Type a username"
       outlined
@@ -26,6 +27,7 @@
     />
 
     <v-text-field
+      v-model="email"
       label="Email"
       placeholder="user@example.com"
       outlined
@@ -35,6 +37,7 @@
     />
 
     <v-text-field
+      v-model="password"
       label="Password"
       placeholder="At least 8 characters"
       outlined
@@ -43,10 +46,12 @@
     />
 
     <v-checkbox
+      v-model="acceptedUseTermsPrivacyPolicyAndCookiesUsePolicy"
+      color="space"
       label="I agree with the use terms, privacy policy and cookies use policy"
     />
 
-    <v-btn color="space" block class="white--text mt-2">
+    <v-btn color="space" block class="white--text mt-2" :loading="loading" @click="signUpWithEmail">
       <v-icon left>
         mdi-email
       </v-icon>
@@ -61,14 +66,58 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import GoogleAuthButton from '../../layouts/login/GoogleAuthButton.vue';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Mutation, State } from 'vuex-class';
 
-export default Vue.extend({
-  components: {
-    GoogleAuthButton
-  },
-});
+import Authentication from '@/services/authentication';
+
+import GoogleAuthButton from '@/components/layouts/login/GoogleAuthButton.vue';
+
+import { TApplicationMessage, TSnackbarMessage } from '@/types/messages';
+import { StoreUser } from '@/types/users';
+
+@Component({
+  components: { GoogleAuthButton }
+})
+export default class SignUpFormComponent extends Vue {
+  username = '';
+  email = '';
+  password = '';
+  acceptedUseTermsPrivacyPolicyAndCookiesUsePolicy = false;
+  authenticationService = new Authentication();
+  loading = false;
+
+  @State user!: StoreUser | null;
+  @Mutation showAppMessage!: (payload: TApplicationMessage | TSnackbarMessage) => void;
+
+  @Watch('user', { deep: true })
+  redirectUser (user: StoreUser | null) {
+    if (user && user.firestoreUser) {
+      this.$router.push('/home');
+    };
+  };
+
+  async signUpWithEmail () {
+    this.loading = true;
+
+    try {
+      const data = await this.authenticationService.signUpWithEmail(this.email, this.password, this.username, this.acceptedUseTermsPrivacyPolicyAndCookiesUsePolicy);
+
+      if (data.status === 'error') {
+        this.loading = false;
+        this.showAppMessage(data);
+        return;
+      };
+
+      await this.authenticationService.signOut();
+      await this.authenticationService.signInWithEmail(this.email, this.password);
+
+    } catch (error) {
+      console.log('Error during signUpWithEmail execution', error);
+      this.loading = false;
+    };
+  };
+};
 </script>
 
 <style lang="scss" scoped>

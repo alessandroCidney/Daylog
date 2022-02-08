@@ -5,18 +5,18 @@ export type AuthUser = {
 
 export type FirestoreUser = {
   id: string;
-  name: string;
+  name: string | null;
   email: string;
-  profile_photo: string;
-  profile_background: string;
-  username: string;
+  profile_photo: string | null;
+  profile_background: string | null;
+  username: string | null;
   acepted_terms: string;
   acepted_privacy: string;
-  theme: 'dark' | 'light' | undefined;
-  savedPosts: string[] | undefined;
+  theme: 'dark' | 'light' | null;
+  savedPosts: string[] | null;
 };
 
 export type StoreUser = {
-  authUser: AuthUser;
-  firestoreUser: FirestoreUser;
+  authUser: AuthUser | null;
+  firestoreUser: FirestoreUser | null;
 };

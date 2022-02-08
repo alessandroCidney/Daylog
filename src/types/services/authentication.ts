@@ -14,14 +14,11 @@ export interface IAuthentication {
   signInWithGoogle: () => void;
   signOut: () => Promise<boolean>;
   signUpWithEmail: (
-    email: string,
-    password: string,
+    signUpEmail: string,
+    signUpPassword: string,
     username: string,
-    profilePhoto: File | undefined,
-    profileBackground: File | undefined,
-    aceptedTerms: boolean,
-    aceptedPrivacy: boolean,
-  ) => Promise<boolean>;
+    acceptedAll: boolean
+  ) => Promise<TApplicationMessage>;
   signInWithEmail: (email: string, password: string) => Promise<TApplicationMessage>;
   deleteAccount: (userId: string, userEmail: string) => Promise<void>;
 };

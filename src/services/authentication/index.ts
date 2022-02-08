@@ -40,76 +40,38 @@ class Authentication implements IAuthentication {
   };
 
   async signUpWithEmail (
-    email: string,
-    password: string,
+    signUpEmail: string,
+    signUpPassword: string,
     username: string,
-    profilePhoto: File | undefined,
-    profileBackground: File | undefined,
-    aceptedTerms: boolean,
-    aceptedPrivacy: boolean,
-  ) {
+    acceptedAll: boolean
+  ): Promise<TApplicationMessage> {
     try {
-      if (!aceptedTerms || !aceptedPrivacy) {
-        return false;
+      if (!acceptedAll) return ({ status: 'error', message: 'Accept the use terms, the privacy policy and the cookies use policy to sign up.'});
+
+      const userCredentials = await createUserWithEmailAndPassword(this.auth, signUpEmail, signUpPassword);
+
+      if (!userCredentials) return ({ status: 'error', message: 'An error ocurred during authentication.'});
+
+      const { user: { displayName: name, email  } } = userCredentials;
+      const userKey = await this.database.push({ name, email, username, acepted_terms: acceptedAll, acepted_privacy: acceptedAll});
+
+      if (!userKey) return ({ status: 'error', message: 'An error ocurred during user registration' });
+
+      const updated = await this.database.update({ id: userKey }, userKey);
+
+      if (!updated) return ({ status: 'error', message: 'An error ocurred during user registration' });
+
+      return ({ status: 'success', message: 'User registered successfully' });
+
+    } catch (error: any) {
+      console.log('Error on authentication service', error);
+
+      if (!!error && !!error.code) {
+        const authError = error as AuthError;
+        return ({ status: 'error', message: this.utils.analiseFirebaseCode(authError.code) });
       };
 
-      const userCredentials = await createUserWithEmailAndPassword(
-        this.auth,
-        email,
-        password
-      );
-
-      if (!!userCredentials) {
-        const userKey = await this.database.push({
-          name: userCredentials.user.displayName,
-          email: userCredentials.user.email,
-          username,
-          acepted_terms: aceptedTerms,
-          acepted_privacy: aceptedPrivacy
-        });
-
-        if (!userKey) {
-          return false;
-        }
-
-        await this.database.update({
-          id: userKey
-        }, userKey);
-
-        if (profilePhoto && profileBackground) {
-          const renamedProfilePhoto = this.utils.renameFile(
-            profilePhoto,
-            CloudStorageConstants.USER_PROFILE_PHOTO_FILENAME
-          );
-
-          const renamedProfileBackgroundPhoto = this.utils.renameFile(
-            profileBackground,
-            CloudStorageConstants.USER_PROFILE_BACKGROUND_PHOTO_FILENAME
-          );
-
-          const profilePhotoURL = await this.storage.uploadFile(
-            renamedProfilePhoto,
-            userKey
-          );
-
-          const profileBackgroundURL = await this.storage.uploadFile(
-            renamedProfileBackgroundPhoto,
-            userKey
-          );
-
-          await this.database.update({
-            profile_photo: profilePhotoURL,
-            profile_background: profileBackgroundURL
-          }, userKey);
-        };
-
-        return true;
-      };
-
-      return false;
-    } catch (err) {
-      console.log('Error on authentication service', err);
-      return false;
+      return ({ status: 'error', message: 'Unidentified error' });
     };
   };
 

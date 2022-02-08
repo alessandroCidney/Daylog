@@ -28,7 +28,7 @@ import Vue from 'vue';
 import { mapGetters, mapMutations } from 'vuex';
 
 import BigImage from '@/components/layouts/login/BigImage.vue';
-import LoginForm from '@/components/pages/signIn/loginForm.vue';
+import LoginForm from '@/components/pages/signIn/LoginForm.vue';
 
 import Authentication from '@/services/authentication/index';
 import { TApplicationMessage } from '@/types/messages';

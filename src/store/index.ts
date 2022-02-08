@@ -30,7 +30,7 @@ export default class IndexModule extends VuexModule {
   };
 
   get usernameIsSet () {
-    return !!this.user?.firestoreUser.username;
+    return !!this.user?.firestoreUser?.username;
   };
 
   @Mutation
@@ -52,17 +52,17 @@ export default class IndexModule extends VuexModule {
 
   @Action({ commit: 'setUser', rawError: true })
   async getCurrentFirestoreUser () {
-    if (!this.user) return;
+    if (!this.user || !this.user.authUser) return null;
 
     const results = await usersDatabase.getWhere('email', this.user.authUser.email) as TFetchUserPayload;
-    
-    if (!results) return;
 
-    const user = Object.values(results)[0];
+    if (!results) return { ...this.user };
+
+    const firestoreUser = Object.values(results)[0];
 
     return {
-      ...this.user,
-      firestoreUser: user
+      authUser: this.user.authUser,
+      firestoreUser
     };
   };
 

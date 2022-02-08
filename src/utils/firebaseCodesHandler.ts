@@ -8,8 +8,10 @@ function firebaseCodesHandler (code: string) {
     case 'auth/wrong-password':
       return 'The data entered is invalid.';
       break;
+    case 'auth/email-already-in-use':
+      return 'The email or password you entered is invalid.'
     default:
-      return '';
+      return 'Unidentified error.';
   }
 };
 
