@@ -1,10 +1,10 @@
 import { Vue, Component } from 'vue-property-decorator';
 import { Getter } from 'vuex-class';
-import { FirestoreUser } from '~/types/users';
+import { FirestoreUser } from '@/types/users';
 
 @Component
 export default class FirestoreUserData extends Vue {
-  @Getter firestoreUser!: FirestoreUser | undefined;
+  @Getter firestoreUser!: FirestoreUser | null | undefined;
 
   get firestoreUserId () {
     return this.firestoreUser?.id || '';
@@ -28,5 +28,9 @@ export default class FirestoreUserData extends Vue {
 
   get firestoreUserUsername () {
     return this.firestoreUser?.username || '';
+  };
+
+  get firestoreUserSavedPosts () {
+    return this.firestoreUser?.savedPosts || [];
   };
 };

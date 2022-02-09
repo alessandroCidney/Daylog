@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="pa-0">
     <v-img
-      :src="backgroundPhoto || require('@/assets/images/b-background.jpg')"
+      :src="pageUserBackgroundPicture || require('@/assets/images/b-background.jpg')"
       alt="Profile background photo"
       class="profile-background-photo"
       :height="backgroundPhotoLoaded ? 250 : 0"
@@ -18,13 +18,13 @@
       <v-col md="3" sm="12" class="d-flex flex-column align-center justify-center" align-self="start">
         <v-avatar width="165px" height="165px" class="profile-avatar-photo translated">
           <v-img
-            :src="avatar || require('@/assets/images/profile/user.jpg')"
+            :src="pageUserProfilePhoto || require('@/assets/images/profile/user.jpg')"
             alt="Avatar photo"
           />
         </v-avatar>
 
         <p class="master-title master-font translated mt-3">
-          @{{ username || '' }}
+          @{{ pageUserUsername || '' }}
         </p>
       </v-col>
 
@@ -146,225 +146,137 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { mapGetters, mapActions } from 'vuex';
-import { TPost, TValidatedPost } from '@/types/posts';
-import { FirestoreUser } from '@/types/users';
-import Database, { IDatabase } from '@/services/database';
-import PostsService, { IPostService } from '@/services/posts';
-import Users, { IUsers } from '@/services/users';
+import { Mixins, Component, Inject } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+
+import Database from '@/services/database';
+import PostsService from '@/services/posts';
+import UsersService, { IUsers } from '@/services/users';
 
 import ArticleCard from '@/components/commons/ArticleCard.vue';
 import NoPostsAlert from '@/components/commons/NoPostsAlert.vue';
 
-interface Data {
-  id: string;
-  pageUser: FirestoreUser | null;
-  postsService: IPostService | null;
-  usersDatabase: IDatabase | null;
-  usersService: IUsers | null;
-  posts: TPost[] | TValidatedPost[];
-  savedPosts: TPost[] | TValidatedPost[];
-  backgroundPhotoLoaded: boolean;
-  loading: Boolean;
-};
+import OnPageUserData from '@/mixins/OnPageUserData';
 
-interface Methods {
-  fetchPosts: () => Promise<void>;
-  fetchSavedPosts: () => Promise<void>;
-  like: (postKey: string) => Promise<void>;
-  save: (postKey: string) => Promise<void>;
-  getCurrentFirestoreUser: () => Promise<void>;
-};
+import { TPost, TValidatedPost } from '@/types/posts';
+import { FirestoreUser } from '@/types/users';
 
-interface Props {};
+type TInjectedTheme = { isDark: boolean; };
 
-interface Computed {
-  username: string;
-  avatar: string;
-  backgroundPhoto: string;
-  firestoreUser: FirestoreUser | null;
-  pageUserIsLoggedUser: boolean;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  components: {
-    ArticleCard,
-    NoPostsAlert
-  },
-
-  inject: {
-    theme: {
-      default: { isDark: false },
-    },
-  },
-
-  data: () => ({
-    id: '',
-    pageUser: null,
-    postsService: null,
-    usersDatabase: null,
-    usersService: null,
-    posts: [],
-    savedPosts: [],
-    parallaxLoaded: false,
-    backgroundPhotoLoaded: false,
-    loading: true,
-  }),
-
-  head () {
+@Component({
+  components: { ArticleCard, NoPostsAlert },
+  
+  head (this: UserPage): object {
     return {
-      title: this.firestoreUser?.username.replace(/^\w/, (c) => c.toUpperCase()),
+      title: this.pageUser?.username.replace(/^\w/, (c) => c.toUpperCase()),
       titleTemplate: '%s on Daylog'
-    };
-  },
-
-  async mounted () {
-    this.id = this.$route.params.id;
-    
-    if (!this.id) {
-      return;
-    };
-
-    this.usersDatabase = new Database('users');
-    this.postsService = new PostsService();
-
-    this.pageUser = await this.usersDatabase.get(this.id) as FirestoreUser | null;
-    
-    if (this.firestoreUser) {
-      this.usersService = new Users(this.firestoreUser.id);
-    };
-
-    await this.fetchPosts();
-    await this.fetchSavedPosts();
-
-    this.loading = false;
-  },
-
-  computed: {
-    ...mapGetters(['firestoreUser']),
-
-    pageUserIsLoggedUser () {
-      if (!this.firestoreUser) {
-        return false;
-      };
-      
-      if (this.firestoreUser?.id === this.pageUser?.id) {
-        return true;
-      };
-
-      return false;
-    },
-
-    username () {
-      if (this.pageUser) {
-        return this.pageUser.username;
-      };
-
-      return '';
-    },
-
-    avatar () {
-      if (this.pageUser && this.pageUser.profile_photo) {
-        return this.pageUser.profile_photo;
-      };
-
-      return '';
-    },
-
-    backgroundPhoto () {
-      if (this.pageUser && this.pageUser.profile_background) {
-        return this.pageUser.profile_background;
-      };
-
-      return '';
-    },
-  },
-
-  methods: {
-    ...mapActions(['getCurrentFirestoreUser']),
-
-    async fetchPosts () {
-      if (!this.pageUser || !this.postsService) {
-        return;
-      };
-
-      const postsObject = await this.postsService.fetchPostsWhere(
-        'author_email',
-        this.pageUser.email
-      );
-
-      if (!postsObject) {
-        return;
-      };
-
-      this.posts = Object.values(postsObject)
-        .map(post => ({
-          ...post,
-          alreadyLiked: post.likes &&
-            post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
-          alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
-            this.firestoreUser.savedPosts.indexOf(post.id) !== -1
-        }))
-        .sort((a, b) => b.created_at - a.created_at);
-    },
-
-    async fetchSavedPosts () {
-      if (!this.pageUserIsLoggedUser) {
-        return;
-      };
-
-      const savedPosts = this.firestoreUser?.savedPosts;
-
-      if (!savedPosts) {
-        return;
-      };
-
-      let results = await Promise.all(
-        savedPosts.map(postKey => this.postsService?.fetchPost(postKey))
-      );
-
-      let posts = results.filter(post => !!post) as TPost[];
-
-      this.savedPosts = posts
-        .map(post => ({
-          ...post,
-          alreadyLiked: post.likes &&
-            post.likes.findIndex(like => this.firestoreUser && like.author_id === this.firestoreUser.id) !== -1,
-          alreadySaved: this.firestoreUser && this.firestoreUser.savedPosts &&
-            this.firestoreUser.savedPosts.indexOf(post.id) !== -1
-        }))
-        .sort((a, b) => b.created_at - a.created_at);
-    },
-
-    async like (postKey: string) {
-      if (!this.postsService || !this.firestoreUser) {
-        return;
-      };
-
-      const success = await this.postsService.toggleLike(postKey, this.firestoreUser.id);
-      
-      if (success) {
-        this.fetchPosts();
-        this.fetchSavedPosts()
-      };
-    },
-
-    async save (postKey: string) {
-      if (!this.usersService || !this.firestoreUser) {
-        return;
-      };
-
-      const success = await this.usersService.toggleSavedPost(postKey);
-
-      if (success) {
-        await this.getCurrentFirestoreUser();
-        this.fetchPosts();
-        this.fetchSavedPosts();
-      };
     }
   }
-});
+})
+export default class UserPage extends Mixins(OnPageUserData) {
+  id = this.$route.params.id;
+
+  usersDatabase = new Database('users');
+  postsService = new PostsService();
+  loggedUserService: IUsers | null = null;
+  
+  posts: TValidatedPost[] = [];
+  savedPosts: TValidatedPost[] = [];
+
+  loading = true;
+  backgroundPhotoLoaded = false;
+
+  @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
+  
+  @Action getCurrentFirestoreUser!: () => Promise<void>;
+
+  async mounted () {
+    try {
+      if (!this.id) this.$router.push('/home');
+
+      this.pageUser = await this.usersDatabase.get(this.id) as FirestoreUser | null;
+
+      console.log(this.pageUser)
+
+      if (!this.firestoreUserId) {
+        this.loggedUserService = new UsersService(this.firestoreUserId);
+      };
+
+      await this.fetchPosts();
+      await this.fetchSavedPosts();
+    
+    } catch (error) {
+      console.log('Error during mounted execution', error);
+    } finally {
+      this.loading = false;
+    };
+  };
+
+  validatePost (post: TPost): TValidatedPost {
+    const checkIfIsAlreadyLiked = (post: TPost) => 
+      !!post.likes &&
+      post.likes.findIndex(like => !!this.firestoreUserId && this.firestoreUserId === like.author_id) !== -1
+
+    const checkIfIsAlreadySaved = (post: TPost) => this.firestoreUserSavedPosts.indexOf(post.id) !== -1
+
+    return {
+      ...post,
+      alreadyLiked: checkIfIsAlreadyLiked(post),
+      alreadySaved: checkIfIsAlreadySaved(post)
+    };
+  };
+
+  async fetchPosts () {
+    if (!this.pageUser) return;
+
+    const postsObject = await this.postsService.fetchPostsWhere('author_email', this.pageUserEmail);
+
+    if (!postsObject) return;
+
+    const posts = Object.values(postsObject);
+
+    this.posts = posts
+      .map(post => this.validatePost(post))
+      .sort((a, b) => b.created_at - a.created_at);
+  };
+
+  async fetchSavedPosts() {
+    if (!this.pageUserIsLoggedUser) return;
+
+    const savedPosts = await Promise.all(
+      this.firestoreUserSavedPosts.map(savedPostKey => this.postsService.fetchPost(savedPostKey))
+    );
+
+    const existingSavedPosts = savedPosts.filter(savedPost => !!savedPost) as TPost[];
+
+    this.savedPosts = existingSavedPosts
+      .map(savedPost => this.validatePost(savedPost))
+      .sort((a, b) => b.created_at - a.created_at);
+  };
+
+  async like (postKey: string) {
+    if (!this.firestoreUser) return;
+
+    const success = await this.postsService.toggleLike(postKey, this.firestoreUserId);
+
+    if (success) {
+      this.fetchPosts();
+      this.fetchSavedPosts()
+    };
+  };
+
+  async save (postKey: string) {
+    if (!this.firestoreUser || !this.loggedUserService) return;
+
+    const success = await this.loggedUserService.toggleSavedPost(postKey);
+
+    if (success) {
+      await this.getCurrentFirestoreUser();
+      this.fetchPosts();
+      this.fetchSavedPosts();
+    };
+  };
+};
 </script>
 
 <style lang="scss" scoped>

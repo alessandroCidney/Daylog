@@ -144,7 +144,7 @@ export default class ArticleInteractionsAreaComponent extends Mixins(OnFirestore
       return ({
         ...comment,
         authorUsername: authorData.username,
-        authorPhotoURL: authorData.profile_photo
+        authorPhotoURL: authorData.profile_photo || ''
       });
     };
 
