@@ -17,7 +17,7 @@
     </div>
 
     <v-text-field
-      v-model="loginData.email"
+      v-model="email"
       label="Email"
       placeholder="user@example.com"
       outlined
@@ -27,7 +27,7 @@
     />
 
     <v-text-field
-      v-model="loginData.password"
+      v-model="password"
       label="Password"
       placeholder="At least 8 characters"
       outlined
@@ -37,11 +37,11 @@
     />
 
     <v-btn
-      color="space"
       block
+      color="space"
       class="white--text mt-6"
-      :loading="emailAuthLoading"
-      @click="emailAuthSubmit"
+      :loading="loading"
+      @click="signInWithEmail"
     >
       <v-icon left>
         mdi-email
@@ -57,24 +57,51 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
-import GoogleAuthButton from '../../layouts/login/GoogleAuthButton.vue';
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Mutation, State } from 'vuex-class';
 
-type ILoginData = {
-  email: string;
-  password: string;
-};
+import Authentication from '@/services/authentication';
+
+import GoogleAuthButton from '@/components/layouts/login/GoogleAuthButton.vue';
+
+import { TApplicationMessage, TSnackbarMessage } from '@/types/messages';
+import { StoreUser } from '@/types/users';
 
 @Component({
   components: { GoogleAuthButton }
 })
 export default class LoginFormComponent extends Vue {
-  @Prop(Boolean) readonly emailAuthLoading!: boolean;
+  email = '';
+  password = '';
+  loading = false;
+  authenticationService = new Authentication();
 
-  loginData: ILoginData = { email: '', password: '' };
+  @State user!: StoreUser | null;
+  @Mutation showAppMessage!: (payload: TApplicationMessage | TSnackbarMessage) => void;
 
-  emailAuthSubmit () {
-    this.$emit('emailAuthSubmit', this.loginData);
+  @Watch('user', { deep: true })
+  redirectUser (user: StoreUser | null) {
+    if (user && user.firestoreUser) {
+      this.$router.push('/home');
+    };
+  };
+
+  async signInWithEmail () {
+    this.loading = true;
+
+    try {
+      const data = await this.authenticationService.signInWithEmail(this.email, this.password);
+
+      if (data.status === 'error') {
+        this.loading = false;
+        this.showAppMessage(data);
+        return;
+      };
+
+    } catch (error) {
+      console.log('Error during signInWithEmail execution', error);
+      this.loading = false;
+    };
   };
 };
 </script>

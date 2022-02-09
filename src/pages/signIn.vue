@@ -89,14 +89,6 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     },
   },
 
-  watch: {
-    isAuthenticated (v) {
-      if (!!v) {
-        this.$router.push('/home');
-      };
-    }
-  },
-
   methods: {
     ...mapMutations(['showAppMessage']),
 
