@@ -14,104 +14,27 @@
         />
       </v-col>
       <v-col cols="10" sm="10" md="6" class="d-flex align-center justify-center formCol">
-        <LoginForm
-          :emailAuthLoading="emailAuthLoading"
-          @emailAuthSubmit="handleSignInWithEmail"
-        />
+        <LoginForm />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component } from 'vue-property-decorator';
 import { mapGetters, mapMutations } from 'vuex';
 
 import BigImage from '@/components/layouts/login/BigImage.vue';
 import LoginForm from '@/components/pages/signIn/LoginForm.vue';
 
-import Authentication from '@/services/authentication/index';
-import { TApplicationMessage } from '@/types/messages';
-import { IAuthentication } from '@/types/services/authentication';
-
-interface ILoginData {
-  email: string;
-  password: string;
-};
-
-interface Data {
-  emailAuthLoading: boolean;
-  showPassword: boolean;
-  authenticationService: IAuthentication | null;
-};
-
-interface Methods {
-  handleSignInWithEmail: (loginData: ILoginData) => Promise<void>;
-  showAppMessage: (message: TApplicationMessage) => void;
-};
-
-interface Props {};
-
-interface Computed {
-  lightTheme: boolean;
-  isAuthenticated: boolean;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
+@Component({
   layout: 'clear',
-
-  components: {
-    BigImage,
-    LoginForm
-  },
-
-  head () {
-    return {
-      title: 'Sign in'
-    };
-  },
-
-  data: () => ({
-    emailAuthLoading: false,
-    showPassword: false,
-    authenticationService: null,
-  }),
-
-  created () {
-    this.authenticationService = new Authentication();
-  },
-
-  computed: {
-    ...mapGetters(['isAuthenticated']),
-
-    lightTheme () {
-      return !this.$vuetify.theme.dark;
-    },
-  },
-
-  methods: {
-    ...mapMutations(['showAppMessage']),
-
-    async handleSignInWithEmail (loginData: ILoginData) {
-      this.emailAuthLoading = true;
-
-      if (!this.authenticationService) {
-        return;
-      };
-
-      const results = await this.authenticationService.signInWithEmail(
-        loginData.email,
-        loginData.password
-      );
-
-      if (results.status === 'error') {
-        this.showAppMessage(results);
-      };
-
-      this.emailAuthLoading = false;
-    }
+  components: { BigImage, LoginForm },
+  head: {
+    title: 'Sign in'
   }
 })
+export default class SignInPage extends Vue {};
 </script>
 
 <style lang="scss" scoped>
