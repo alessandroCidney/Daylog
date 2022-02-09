@@ -10,7 +10,7 @@
       <v-divider class="mb-6" />
 
       <span class="px-2 mb-6 d-flex align-center justify-center grey--text">
-        <small>Or sign up with Email and Password</small>
+        <small>Or sign up with email and password</small>
       </span>
 
       <v-divider class="mb-6" />

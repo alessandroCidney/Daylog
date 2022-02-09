@@ -21,24 +21,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component } from 'vue-property-decorator';
+
 import BigImage from '@/components/layouts/login/BigImage.vue';
 import SignUpForm from '@/components/pages/signUp/SignUpForm.vue';
 
-export default Vue.extend({
+@Component({
   layout: 'clear',
-
-  components: {
-    BigImage,
-    SignUpForm
-  },
-
-  head () {
-    return {
-      title: 'Sign up'
-    };
+  components: { BigImage, SignUpForm },
+  head: {
+    title: 'Sign up'
   }
-});
+})
+export default class SignUpPage extends Vue {};
 </script>
 
 <style lang="scss" scoped>
