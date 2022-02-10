@@ -128,7 +128,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
         this.title &&
         this.content &&
         this.thumb &&
-        this.user?.firestoreUser.username &&
+        this.user?.firestoreUser?.username &&
         this.user?.firestoreUser.email
       ) {
         const postKey = await this.postsService?.savePost(

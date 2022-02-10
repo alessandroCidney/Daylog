@@ -133,7 +133,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
 
     const user = await this.usersDatabase.getWhere(
       'email',
-      this.user?.firestoreUser.email
+      this.user?.firestoreUser?.email
     );
 
     if (!user) {
@@ -148,11 +148,11 @@ export default Vue.extend<Data, Methods, Computed, Props>({
     ...mapState(['user']),
 
     username () {
-      return this.user?.firestoreUser.username || '';
+      return this.user?.firestoreUser?.username || '';
     },
 
     profilePhoto () {
-      return this.user?.firestoreUser.profile_photo || '';
+      return this.user?.firestoreUser?.profile_photo || '';
     }
   },
 

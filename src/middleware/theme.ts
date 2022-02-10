@@ -6,7 +6,7 @@ type TGetters = {
 };
 
 const theme: Middleware = ({ store, app }) => {
-  function setTheme (option: 'light' | 'dark' | undefined) {
+  function setTheme (option: 'light' | 'dark' | null) {
     if (!app.vuetify) {
       return;
     };
