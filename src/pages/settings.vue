@@ -137,8 +137,6 @@ import { Component, Mixins, Watch } from 'vue-property-decorator';
 import Authentication from '@/services/authentication';
 import OnSetUserData from '@/mixins/OnSetUserData';
 
-import Users, { IUsers } from '@/services/users';
-
 @Component
 export default class SettingsPage extends Mixins(OnSetUserData) {
   authenticationService = new Authentication();
