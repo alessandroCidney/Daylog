@@ -10,6 +10,7 @@
           </v-avatar>
           <v-col cols="10" class="pl-0 pt-0">
             <v-textarea
+              v-model="content"
               label="What's new?"
               color="space"
               solo
@@ -26,8 +27,8 @@
           <v-btn
             color="space"
             class="white--text rounded-xl"
-            to="/create"
             depressed
+            @click="handleNewPost"
           >
             <v-icon left>
               mdi-plus
@@ -41,11 +42,19 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Prop } from 'vue-property-decorator';
+import { WritterService } from '@/services/writter';
 
-export default Vue.extend({
-  props: {
-    profilePhoto: { type: String, required: true },
-  }
-});
+@Component
+export default class CreatePostButtonComponent extends Vue {
+  content = '';
+  writterService = new WritterService();
+
+  @Prop(String) readonly profilePhoto!: string;
+
+  handleNewPost () {
+    this.writterService.saveContent(this.content);
+    this.$router.push('/create');
+  };
+};
 </script>
