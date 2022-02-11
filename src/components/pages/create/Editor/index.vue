@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
 
 import { Editor, EditorContent } from '@tiptap/vue-2';
 import StarterKit from '@tiptap/starter-kit';
@@ -37,7 +37,11 @@ import BubbleMenu from './components/BubbleMenu.vue';
 export default class EditorComponent extends Vue {
   editor: Editor | null = null;
 
+  @Prop(String) readonly value!: string;
+
   mounted () {
+    const { value } = this;
+
     this.editor = new Editor({
       extensions: [
         StarterKit,
@@ -45,7 +49,7 @@ export default class EditorComponent extends Vue {
           placeholder: 'Write the post content here :)'
         })
       ],
-      content: ''
+      content: value
     });
   };
 

@@ -66,91 +66,57 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { mapState } from 'vuex';
-import { StoreUser } from '@/types/users';
-import PostsService, { IPostService } from '@/services/posts';
-import Editor from '~/components/pages/create/Editor/index.vue';
+import { Mixins, Component } from 'vue-property-decorator';
+import { Getter } from 'vuex-class';
+
+import PostsService from '@/services/posts';
+import { WritterService } from '@/services/writter';
+
+import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
+
+import Editor from '@/components/pages/create/Editor/index.vue';
 import DropPhotoZone from '@/components/utils/DropPhotoZone.vue';
-import IconButtonTooltip from '~/components/commons/IconButtonTooltip.vue';
+import IconButtonTooltip from '@/components/commons/IconButtonTooltip.vue';
 
-interface Data {
-  title: string;
-  content: string;
-  thumb: File | undefined;
-  postsService: IPostService | null;
-  loading: boolean;
+import { FirestoreUser } from '@/types/users';
+
+@Component({
+  components: { Editor, DropPhotoZone, IconButtonTooltip }
+})
+export default class CreatePage extends Mixins(OnFirestoreUserData) {
+  postsService = new PostsService();
+  writterService = new WritterService();
+  title = '';
+  content = this.writterService.getContentAndClear();
+  thumb: File | null = null;
+
+  @Getter firestoreUser!: FirestoreUser | null;
+
+  async save () {
+    this.$nuxt.$loading.start();
+
+    if (
+      this.title &&
+      this.content &&
+      this.thumb &&
+      this.firestoreUserUsername &&
+      this.firestoreUserEmail
+    ) {
+      const postKey = await this.postsService.savePost(
+        this.title,
+        this.content,
+        this.firestoreUserUsername,
+        this.firestoreUserEmail,
+        this.firestoreUserProfilePhoto,
+        this.thumb || null
+      );
+
+      if (!!postKey) this.$router.push(`/posts/${postKey}`);
+    };
+
+    this.$nuxt.$loading.finish();
+  };
 };
-
-interface Methods {
-  save: () => Promise<void>;
-};
-
-interface Props {};
-
-interface Computed {
-  user: StoreUser | null;
-  darkerTheme: boolean;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  components: {
-    Editor,
-    DropPhotoZone,
-    IconButtonTooltip
-  },
-
-  data: () => ({
-    title: '',
-    content: '',
-    thumb: undefined,
-    postsService: null,
-    loading: false,
-  }),
-
-  created () {
-    this.postsService = new PostsService();
-  },
-
-  computed: {
-    ...mapState(['user']),
-
-    darkerTheme () {
-      return this.$vuetify.theme.dark;
-    },
-  },
-
-  methods: {
-    async save () {
-      this.$nuxt.$loading.start();
-
-      if (
-        this.title &&
-        this.content &&
-        this.thumb &&
-        this.user?.firestoreUser?.username &&
-        this.user?.firestoreUser.email
-      ) {
-        const postKey = await this.postsService?.savePost(
-          this.title,
-          this.content,
-          this.user?.firestoreUser.username,
-          this.user?.firestoreUser.email,
-          this.user.firestoreUser.profile_photo ? this.user.firestoreUser.profile_photo : '',
-          this.thumb || null
-        );
-
-        this.loading = false;
-
-        if (!!postKey) {
-          this.$router.push(`/posts/${postKey}`);
-        };
-      };
-
-      this.$nuxt.$loading.finish();
-    },
-  },
-});
 </script>
 
 <style lang="scss">

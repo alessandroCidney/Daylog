@@ -8,4 +8,10 @@ export class WritterService {
   getContent () {
     return localStorage.getItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY) || '';
   };
+
+  getContentAndClear () {
+    const content = this.getContent();
+    localStorage.removeItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY);
+    return content;
+  };
 };
