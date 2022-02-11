@@ -93,7 +93,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
   text-align: justify;
   
   code {
-    background-color: rgb(33, 33, 33) !important;
+    background-color: #0D0D0D !important;
     color: #fff !important;
   }
 
@@ -112,7 +112,7 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       }
 
       pre {
-        background: #0D0D0D;
+        background: #0D0D0D !important;
         color: #FFF;
         font-family: 'JetBrainsMono', monospace;
         padding: 0.75rem 1rem;
