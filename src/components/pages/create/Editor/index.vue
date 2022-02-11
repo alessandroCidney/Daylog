@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Watch } from 'vue-property-decorator';
 
 import { Editor, EditorContent } from '@tiptap/vue-2';
 import StarterKit from '@tiptap/starter-kit';
@@ -31,43 +31,11 @@ import Placeholder from '@tiptap/extension-placeholder'
 import ControlsMenu from './components/ControlsMenu.vue';
 import BubbleMenu from './components/BubbleMenu.vue';
 
-interface Data {
-  editor: Editor | null;
-};
-
-interface Props {};
-interface Methods {};
-
-interface Computed {
-  editorHTML: string;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  components: {
-    EditorContent,
-    BubbleMenu,
-    ControlsMenu
-  },
-
-  data: () => ({
-    editor: null as Editor | null,
-  }),
-
-  computed: {
-    editorHTML () {
-      if (this.editor) {
-        return this.editor.getHTML();
-      } else {
-        return '';
-      }
-    }
-  },
-
-  watch: {
-    editorHTML (str: string) {
-      this.$emit('input', str);
-    }
-  },
+@Component({
+  components: { EditorContent, BubbleMenu, ControlsMenu }
+})
+export default class EditorComponent extends Vue {
+  editor: Editor | null = null;
 
   mounted () {
     this.editor = new Editor({
@@ -79,12 +47,25 @@ export default Vue.extend<Data, Methods, Computed, Props>({
       ],
       content: ''
     });
-  },
+  };
 
   beforeDestroy () {
     this.editor?.destroy();
-  },
-});
+  };
+
+  get editorHTML () {
+    if (this.editor) {
+      return this.editor.getHTML();
+    };
+
+    return '';
+  };
+
+  @Watch('editorHTML')
+  onEditorHTMLChanged (str: string) {
+    this.$emit('input', str);
+  };
+};
 </script>
 
 <style lang="scss">
