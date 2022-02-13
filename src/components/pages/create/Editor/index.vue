@@ -40,34 +40,31 @@ export default class EditorComponent extends Vue {
   @Prop(String) readonly value!: string;
 
   mounted () {
-    const { value } = this;
-
     this.editor = new Editor({
+      content: this.value,
       extensions: [
         StarterKit,
         Placeholder.configure({
           placeholder: 'Write the post content here :)'
         })
       ],
-      content: value
+      onUpdate: () => {
+        this.$emit('input', this.editor?.getHTML());
+      }
     });
+  };
+
+  @Watch('value')
+  onContentChanged (content: string) {
+    const isSame = this.editor?.getHTML() === content;
+
+    if (isSame) return;
+
+    this.editor?.commands.setContent(content, false);
   };
 
   beforeDestroy () {
     this.editor?.destroy();
-  };
-
-  get editorHTML () {
-    if (this.editor) {
-      return this.editor.getHTML();
-    };
-
-    return '';
-  };
-
-  @Watch('editorHTML')
-  onEditorHTMLChanged (str: string) {
-    this.$emit('input', str);
   };
 };
 </script>

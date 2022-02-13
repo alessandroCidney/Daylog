@@ -38,7 +38,7 @@
           <h1 class="post-title">{{ postTitle }}</h1>
 
         <div v-if="viewerIsTheAuthor">
-          <v-btn icon color="space">
+          <v-btn icon color="space" :to="'/posts/' + postId + '/edit'">
             <v-icon>mdi-pencil</v-icon>
           </v-btn>
 
