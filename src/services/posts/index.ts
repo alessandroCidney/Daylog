@@ -11,31 +11,10 @@ type IncompletePostComment = {
   likes: TPostLike[] | undefined | null;
 };
 
-export interface IPostService {
+class PostsService {
   storage: ICloudStorage;
   database: IDatabase;
   utils: IUtils;
-  fetchPosts: () => Promise<TPost[]>;
-  fetchPost: (id: string) => Promise<TPost | undefined>;
-  savePost: (
-    title: string,
-    content: string,
-    author: string,
-    authorEmail: string,
-    authorPhotoURL: string,
-    thumb: File | null
-  ) => Promise<string | null | undefined>;
-  fetchPostsWhere: (key: string, value: string) => Promise<Record<string, TPost>>;
-  deletePostsWhere: (key: string, value: string) => Promise<boolean | null>;
-  toggleLike: (postKey: string, userId: string) => Promise<boolean>;
-  searchPosts: (title: string) => Promise<TPost[]>;
-  sendComment: (postKey: string, comment: IncompletePostComment) => Promise<void>;
-};
-
-class PostsService {
-  storage;
-  database;
-  utils;
 
   constructor () {
     this.storage = new CloudStorage('posts');
@@ -92,38 +71,30 @@ class PostsService {
         likes: []
       });
   
-      if (!postKey) {
-        return;
-      };
-  
+      if (postKey === false || postKey === null) return;
+      
+      let thumbURL: string | null = null;
+
       if (thumb) {
-        const thumbURL = await this.storage.uploadFile(thumb, postKey);
-        
-        if (!thumbURL) {
-          return;
-        };
-  
-        await this.database.update({
-          thumbnail: thumbURL,
-          id: postKey,
-          author_photo_url: authorPhotoURL
-        }, postKey);
-
-      } else {
-
-        await this.database.update({
-          thumbnail: '',
-          id: postKey,
-          author_photo_url: authorPhotoURL
-        }, postKey);
-
+        thumbURL = await this.storage.uploadFile(thumb, postKey);
       };
-
+  
+      await this.database.update({
+        thumbnail: thumbURL || null,
+        id: postKey,
+        author_photo_url: authorPhotoURL
+      }, postKey);
+  
       return postKey;
+
     } catch (err) {
       console.log('Error on post service (SAVE POST)', err);
       return null
     };
+  };
+
+  async updatePost () {
+
   };
 
   async deletePostsWhere (key: string, value: string) {

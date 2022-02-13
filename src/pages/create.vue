@@ -98,7 +98,6 @@ export default class CreatePage extends Mixins(OnFirestoreUserData) {
     if (
       this.title &&
       this.content &&
-      this.thumb &&
       this.firestoreUserUsername &&
       this.firestoreUserEmail
     ) {

@@ -25,8 +25,9 @@ export interface IDatabase {
   get: (childPath?: string) => Promise<any>;
   getWhere: (key: string, value: any, childPath?: string) => Promise<any>;
   set: (content: any, childPath?: string) => Promise<boolean>;
-  push: (content: any, childPath?: string) => Promise<string | boolean | null>;
+  push: (content: any, childPath?: string) => Promise<string | false | null>;
   update: (content: any, childPath?: string) => Promise<boolean>;
+  remove: (childPath?: string | undefined) => Promise<void>;
   search: (orderedByKey: string, searchString: string, limit: number) => Promise<any>;
 };
 

@@ -60,6 +60,7 @@
         }"
       >
         <v-img
+          v-if="postThumbnail"
           :min-width="thumbLoaded ? '100%' : '0'"
           :height="thumbLoaded ? '400px' : '0'"
           :src="postThumbnail"
@@ -68,7 +69,7 @@
         />
 
         <v-skeleton-loader
-          v-if="!thumbLoaded"
+          v-if="loading || (postThumbnail && !thumbLoaded)"
           class="post-thumb"
           type="image"
         />
@@ -143,9 +144,12 @@ export default class PostPage extends Mixins(PostData) {
   id: string = this.$route.params.id;
   postsService = new PostsService();
   thumbLoaded = false;
+  loading = false;
 
   async created () {
+    this.loading = true;
     await this.fetchPostData();
+    this.loading = false;
   };
 
   get breakpoint () {

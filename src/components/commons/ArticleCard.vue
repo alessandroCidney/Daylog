@@ -19,6 +19,7 @@
     <v-card-text class="articleCardText">{{ post.content | formattedContent }}</v-card-text>
 
     <v-img
+      v-if="post.thumbnail"
       :src="post.thumbnail || ''"
       width="100%"
       :height="300"
