@@ -53,7 +53,7 @@ export default class CreatePostButtonComponent extends Vue {
   @Prop(String) readonly profilePhoto!: string;
 
   handleNewPost () {
-    this.writterService.saveContent(this.content);
+    this.writterService.savePost({ content: this.content });
     this.$router.push('/create');
   };
 };

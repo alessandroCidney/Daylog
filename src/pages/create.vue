@@ -87,7 +87,7 @@ export default class CreatePage extends Mixins(OnFirestoreUserData) {
   postsService = new PostsService();
   writterService = new WritterService();
   title = '';
-  content = this.writterService.getContentAndClear();
+  content = this.writterService.getPostAndClear()?.content || '';
   thumb: File | null = null;
 
   @Getter firestoreUser!: FirestoreUser | null;

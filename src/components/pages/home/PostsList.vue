@@ -4,8 +4,9 @@
       v-for="(post, index) in orderedPosts"
       :key="`home-post-${index}`"
       cols="12"
+      class="d-flex align-center justify-center"
     >
-      <ArticleCard
+      <!-- <ArticleCard
         :id="post.id"
         :title="post.title"
         :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
@@ -17,7 +18,8 @@
         :already-saved="post.alreadySaved"
         :like="() => like(post.id)"
         :save="() => save(post.id)"
-      />
+      /> -->
+      <ArticleCard :post="post" :like="() => like(post.id)" :save="() => save(post.id)" />
     </v-col>
   </v-row>
 

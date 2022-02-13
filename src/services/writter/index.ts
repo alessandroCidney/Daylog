@@ -1,16 +1,22 @@
 import { DAYLOG_LOCAL_STORAGE_EDITOR_KEY } from "@/data/constants/webStorage";
 
+export type TWritterServicePost = {
+  title?: string;
+  content?: string;
+};
+
 export class WritterService {
-  saveContent (contentHTML: string) {
-    localStorage.setItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY, contentHTML);
+  savePost (post: TWritterServicePost) {
+    localStorage.setItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY, JSON.stringify(post));
   };
 
-  getContent () {
-    return localStorage.getItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY) || '';
+  getPost (): TWritterServicePost | undefined {
+    const data = localStorage.getItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY);
+    return data ? JSON.parse(data) : undefined;
   };
 
-  getContentAndClear () {
-    const content = this.getContent();
+  getPostAndClear (): TWritterServicePost | undefined {
+    const content = this.getPost();
     localStorage.removeItem(DAYLOG_LOCAL_STORAGE_EDITOR_KEY);
     return content;
   };

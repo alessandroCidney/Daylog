@@ -1,25 +1,28 @@
 <template>
-  <v-card :width="width" :to="`/posts/${id}`" elevation="2">
+  <v-card flat class="articleCard" :width="650" :to="`/posts/${post.id}`">
+    <div class="d-flex mt-8 ml-4">
+      <v-avatar>
+        <v-img
+          :src="currentAuthorProfilePhoto || ''"
+          :width="35"
+        />
+      </v-avatar>
+
+      <div class="d-flex align-start justify-center flex-column ml-4">
+        <div :class="{ 'black--text': !theme.isDark }">@{{ post.author }}</div>
+        <div class="articleCardCreatedAt">{{ post.created_at | formattedPeriod }}</div>
+      </div>
+    </div>
+
+    <v-card-title class="articleCardTitle">{{ post.title }}</v-card-title>
+
+    <v-card-text class="articleCardText">{{ post.content | formattedContent }}</v-card-text>
+
     <v-img
-      :src="imageURL"
-      :alt="`Imagem do post ${title}`"
-      :max-height="imageLoaded ? '216px' : '0'"
-      @load="imageLoaded = true"
+      :src="post.thumbnail || ''"
+      width="100%"
+      :height="300"
     />
-
-    <v-skeleton-loader
-      v-if="!imageLoaded"
-      type="image"
-      max-height="216px"
-    />
-
-    <v-card-title>
-      {{ title }}
-    </v-card-title>
-
-    <v-card-text>
-      {{ description }}
-    </v-card-text>
 
     <v-card-actions>
       <v-btn
@@ -28,7 +31,7 @@
         @click.prevent="like"
       >
         <v-icon>
-          {{ alreadyLiked ? 'mdi-heart' : 'mdi-heart-outline' }}
+          {{ post.alreadyLiked ? 'mdi-heart' : 'mdi-heart-outline' }}
         </v-icon>
       </v-btn>
 
@@ -48,77 +51,81 @@
         @click.prevent="save"
       >
         <v-icon>
-          {{ alreadySaved ? 'mdi-bookmark-multiple' : 'mdi-bookmark-multiple-outline' }}
+          {{ post.alreadySaved ? 'mdi-bookmark-multiple' : 'mdi-bookmark-multiple-outline' }}
         </v-icon>
       </v-btn>
-
-      <v-spacer />
-
-      <div class="d-flex flex-column align-end justify-start mr-2">
-        <strong class="my-0"><small>{{ author }}</small></strong>
-        <small>{{ createdAt | formattedPeriod }}</small>
-      </div>
-
-      <v-avatar>
-        <v-img
-          width="20px"
-          :src="authorPhotoURL"
-        />
-      </v-avatar>
     </v-card-actions>
   </v-card>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Prop, Inject } from 'vue-property-decorator';
+
+import Database from '@/services/database';
+
+import { TValidatedPost } from '@/types/posts';
+import { FirestoreUser } from '@/types/users';
+
 import moment from 'moment';
 
-interface Data {
-  imageLoaded: boolean;
-};
+type TInjectedTheme = { isDark: boolean; };
 
-interface Methods {};
-interface Computed {};
-
-interface Props {
-  width: number | string;
-  title: string;
-  description: string;
-  imageURL: string | undefined;
-  author: string | undefined;
-  authorPhotoURL: string | undefined;
-  id: string | undefined;
-  alreadyLiked: boolean;
-  alreadySaved: boolean;
-  like: any;
-  save: any;
-  createdAt: number | undefined;
-};
-
-export default Vue.extend<Data, Methods, Computed, Props>({
+@Component({
   filters: {
     formattedPeriod (time: number) {
       return moment(new Date(time)).fromNow();
+    },
+    formattedContent (content: string) {
+      return content.slice(0, 400).replace(/<.+?>/g, ' ')
     }
-  },
-  
-  props: {
-    width: { type: [Number, String], default: "100%", required: false },
-    title: { type: String, required: true },
-    description: { type: String, required: false, default: "" },
-    imageURL: { type: String, required: false, default: undefined },
-    author: { type: String, required: false, default: 'Unknown' },
-    authorPhotoURL: { type: String, required: false, default: undefined },
-    id: { type: String, required: false, default: undefined },
-    alreadyLiked: { type: Boolean, required: false, default: false },
-    like: { type: Function, required: false, default: () => {} },
-    save: { type: Function, required: false, default: () => {} },
-    alreadySaved: { type: Boolean, required: false, default: false },
-    createdAt: { type: Number, required: false, default: undefined },
-  },
+  }
+})
+export default class ArticleCardComponent extends Vue {
+  usersDatabase = new Database('users');
+  currentAuthorProfilePhoto: string | null = null;
 
-  data: () => ({
-    imageLoaded: false
-  })
-});
+  @Prop(Object) readonly post!: TValidatedPost;
+  @Prop(Function) readonly like!: (postKey: string) => Promise<void>;
+  @Prop(Function) readonly save!: (postKey: string) => Promise<void>;
+
+  @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
+
+  async mounted () {
+    const response = await this.usersDatabase.getWhere('email', this.post.author_email) as Record<string, FirestoreUser> | null | undefined;
+    
+    if (!response) {
+      this.currentAuthorProfilePhoto = null;
+      return;
+    };
+
+    this.currentAuthorProfilePhoto = Object.values(response)[0].profile_photo || null;
+  };
+};
 </script>
+
+<style lang="scss" scoped>
+.articleCard {
+  border: 1px solid #F1F1F1 !important;
+}
+
+.articleCardTitle {
+  font-family: 'Montserrat Alternates';
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  font-size: 24px;
+  margin-top: 22px;
+}
+
+.articleCardCreatedAt {
+  font-size: 14px;
+  color: #C9C9C9;
+}
+
+.articleCardText {
+  color: #BDBDBD !important;
+  font-size: 16px !important;
+  letter-spacing: -0.6px !important;
+  word-break: normal !important;
+  overflow-wrap: anywhere !important;
+}
+</style>
