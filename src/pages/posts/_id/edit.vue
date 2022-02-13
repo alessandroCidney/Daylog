@@ -48,6 +48,7 @@
                     <v-col cols="12">
                       <DropPhotoZone
                         v-model="thumb"
+                        :defaultImage="postThumbnail"
                         :class="{
                           'create-page-drop-photo-zone': true,
                           'bigger-drop-photo-zone': !!thumb
@@ -134,6 +135,7 @@ export default class CreatePage extends Mixins(OnFirestoreUserData, PostData) {
 
     this.post = post;
     this.content = this.postContent || '';
+    this.title = this.postTitle || '';
   };
 };
 </script>

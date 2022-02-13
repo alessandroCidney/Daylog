@@ -11,13 +11,14 @@
           'align-center': true,
           'justify-center': true,
           'cursor-pointer': true,
-          'withFile': !!file
+          'withFile': !!file || !!defaultImage
         }"
+        :style="`background-image: url('${defaultImage}')`"
         @click="getFile"
       >
 
         <v-icon
-          v-if="!file"
+          v-if="!file && !defaultImage"
           color="space"
           size="40"
         >
@@ -32,16 +33,18 @@
         />
       </div>
     </template>
-    <span>{{ !!file ? 'Change image' : 'Add an image' }}</span>
+    <span>{{ !!file || !!defaultImage ? 'Change image' : 'Add an image' }}</span>
   </v-tooltip>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Vue, Component, Watch, Prop } from 'vue-property-decorator';
 
 @Component
 export default class DropPhotoZoneComponent extends Vue {
   file: File | null = null;
+  
+  @Prop(String) readonly defaultImage!: string | undefined;
 
   @Watch('file')
   onFileChanged (f: File | null) {
