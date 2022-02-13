@@ -19,8 +19,8 @@
                 <template v-slot:menuRightItems>
                   <IconButtonTooltip
                     icon="mdi-content-save-outline"
-                    text="Save post"
-                    :action="save"
+                    text="Update post"
+                    :action="update"
                   />
 
                   <IconButtonTooltip
@@ -68,7 +68,6 @@
 
 <script lang="ts">
 import { Mixins, Component } from 'vue-property-decorator';
-import { Getter } from 'vuex-class';
 
 import PostsService from '@/services/posts';
 import { WritterService } from '@/services/writter';
@@ -92,28 +91,28 @@ export default class CreatePage extends Mixins(OnFirestoreUserData, PostData) {
   thumb: File | null = null;
 
   async created () {
+    if (!this.id) this.$router.push('/home');
     await this.fetchPostData();
   };
 
-  async save () {
+  async update () {
     this.$nuxt.$loading.start();
 
     if (
+      this.postId &&
       this.title &&
       this.content &&
       this.firestoreUserUsername &&
       this.firestoreUserEmail
     ) {
-      const postKey = await this.postsService.savePost(
+      await this.postsService.updatePost(
+        this.postId,
         this.title,
         this.content,
-        this.firestoreUserUsername,
-        this.firestoreUserEmail,
-        this.firestoreUserProfilePhoto,
         this.thumb || null
       );
 
-      if (!!postKey) this.$router.push(`/posts/${postKey}`);
+      this.$router.push(`/posts/${this.postId}`);
     };
 
     this.$nuxt.$loading.finish();

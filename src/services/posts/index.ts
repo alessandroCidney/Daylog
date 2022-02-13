@@ -11,6 +11,14 @@ type IncompletePostComment = {
   likes: TPostLike[] | undefined | null;
 };
 
+type TUpdatePost = {
+  title: string;
+  content: string;
+  formatted_title: string;
+  updated_at: number;
+  thumbnail?: string;
+};
+
 class PostsService {
   storage: ICloudStorage;
   database: IDatabase;
@@ -93,8 +101,29 @@ class PostsService {
     };
   };
 
-  async updatePost () {
+  async updatePost (
+    postKey: string,
+    title: string,
+    content: string,
+    thumb: File | null,
+  ) {
+    const post: TUpdatePost = {
+      title,
+      formatted_title: this.utils.clearString(title),
+      content,
+      updated_at: (new Date()).getTime(),
+    };
 
+    let thumbURL: string | null = null;
+    
+    if (thumb) {
+      thumbURL = await this.storage.uploadFile(thumb, postKey);
+
+      if (thumbURL)
+        post.thumbnail = thumbURL;
+    };
+
+    await this.database.update(post, postKey);
   };
 
   async deletePostsWhere (key: string, value: string) {
