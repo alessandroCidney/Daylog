@@ -28,7 +28,8 @@
       "@nuxtjs/axios",
       "@types/node",
       "vuetify"
-    ]
+    ],
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",

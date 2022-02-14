@@ -6,19 +6,6 @@
       cols="12"
       class="d-flex align-center justify-center"
     >
-      <!-- <ArticleCard
-        :id="post.id"
-        :title="post.title"
-        :description="post.content.slice(0, 100).replace(/<.+?>/g, ' ')"
-        :imageURL="post.thumbnail"
-        :author="'@' + post.author"
-        :authorPhotoURL="post.author_photo_url"
-        :createdAt="post.created_at"
-        :already-liked="post.alreadyLiked"
-        :already-saved="post.alreadySaved"
-        :like="() => like(post.id)"
-        :save="() => save(post.id)"
-      /> -->
       <ArticleCard :post="post" :like="() => like(post.id)" :save="() => save(post.id)" />
     </v-col>
   </v-row>

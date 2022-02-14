@@ -1,5 +1,5 @@
 <template>
-  <v-card flat class="articleCard" :width="650" :to="`/posts/${post.id}`">
+  <v-card flat class="articleCard" width="100%" :to="`/posts/${post.id}`">
     <div class="d-flex mt-8 ml-4">
       <v-avatar>
         <v-img

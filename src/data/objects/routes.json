@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Home",
+    "to": "/home",
+    "icon": "mdi-home-variant-outline",
+    "activeIcon": "mdi-home-variant"
+  },
+  {
+    "title": "Notifications",
+    "to": "/notifications",
+    "icon": "mdi-bell-outline",
+    "activeIcon": "mdi-bell-ring"
+  },
+  {
+    "title": "My Posts",
+    "to": "/posts/me",
+    "icon": "mdi-grid-large",
+    "activeIcon": "mdi-view-grid"
+  },
+  {
+    "title": "Profile",
+    "to": "/users/me",
+    "icon": "mdi-account-circle-outline",
+    "activeIcon": "mdi-account-circle"
+  },
+  {
+    "title": "Settings",
+    "to": "/settings",
+    "icon": "mdi-tune-variant",
+    "activeIcon": "mdi-tune-variant"
+  }
+]

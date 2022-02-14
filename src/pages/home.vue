@@ -1,30 +1,7 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="3">
-        <v-card flat class="mt-3 rounded-lg">
-          <v-row align="center" justify="center" class="py-2">
-            <v-col cols="3">
-              <v-avatar>
-                <v-img
-                  :src="firestoreUserProfilePhoto"
-                />
-              </v-avatar>
-            </v-col>
-            <v-col cols="8" class="pl-0">
-              <div><strong>@{{ firestoreUserUsername }}</strong></div>
-              <div><small>Beginner</small></div>
-            </v-col>
-          </v-row>
-        </v-card>
-
-        <v-list class="mt-8 py-0 overflow-hidden sidebarList">
-          <SidebarListItem v-if="firestoreUser" title="Home" to="/home" icon="mdi-home" />
-          <SidebarListItem v-if="firestoreUser" title="Profile" :to="'/users/' + firestoreUser.id" icon="mdi-account" />
-          <SidebarListItem v-if="firestoreUser" title="Settings" to="/settings" icon="mdi-cog" />
-        </v-list>
-      </v-col>
-      <v-col cols="6">
+      <v-col cols="7">
         <CreatePostButton :profilePhoto="firestoreUserProfilePhoto" />
 
         <PostsList
@@ -36,7 +13,6 @@
 
         <SpeedDial />
       </v-col>
-      <v-col cols="3"></v-col>
     </v-row>
   </v-container>
 </template>

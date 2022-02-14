@@ -1,8 +1,9 @@
 <template>
   <v-app-bar
     app
-    :color="headerColor"
     class="pr-5 mainAppBar"
+    :elevation="0"
+    :color="headerColor"
     clipped-left
   >
     <v-row>
@@ -65,6 +66,5 @@ export default class AppBar extends Vue {
 <style lang="scss">
 .mainAppBar {
   z-index: 10;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, .05) !important;
 }
 </style>
