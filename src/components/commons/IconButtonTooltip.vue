@@ -2,10 +2,11 @@
   <v-tooltip bottom>
     <template v-slot:activator="{ on, attrs }">
       <v-btn
-        :color="color"
-        icon
         v-bind="attrs"
         v-on="on"
+        icon
+        :color="color"
+        :disabled="disabled"
         @click="action"
       >
         <v-icon :size="size">
@@ -18,27 +19,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import { Vue, Component, Prop } from 'vue-property-decorator';
 
-interface Data {};
-interface Methods {};
-interface Computed {};
-
-interface Props {
-  color: string;
-  action: () => void;
-  icon: string;
-  text: string;
-  size: string | number;
+@Component
+export default class IconButtonTooltipComponent extends Vue {
+  @Prop({ type: String, default: 'space' }) color!: string;
+  @Prop(Function) action!: () => void;
+  @Prop(String) icon!: string;
+  @Prop(String) text!: string;
+  @Prop({ type: [Number, String], default: 24 }) size!: string | number;
+  @Prop({ type: Boolean, default: false }) disabled!: boolean;
 };
-
-export default Vue.extend<Data, Methods, Computed, Props>({
-  props: {
-    color: { type: String, required: false, default: 'space' },
-    action: { type: Function, required: false, default: () => {} },
-    icon: { type: String, required: true },
-    text: { type: String, required: true },
-    size: { type: [Number, String], required: false, default: 24 }
-  }
-});
 </script>

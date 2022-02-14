@@ -21,6 +21,7 @@
                     icon="mdi-content-save-outline"
                     text="Update post"
                     :action="update"
+                    :disabled="!allowSave"
                   />
 
                   <IconButtonTooltip
@@ -67,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Mixins, Component } from 'vue-property-decorator';
+import { Mixins, Component, Watch } from 'vue-property-decorator';
 
 import PostsService from '@/services/posts';
 import { WritterService } from '@/services/writter';
@@ -92,7 +93,13 @@ export default class CreatePage extends Mixins(OnFirestoreUserData, PostData) {
 
   async created () {
     if (!this.id) this.$router.push('/home');
+    
     await this.fetchPostData();
+    await this.checkPermissions();
+  };
+
+  get allowSave () {
+    return this.postAuthorId && this.postAuthorId === this.firestoreUserId;
   };
 
   async update () {
@@ -134,6 +141,23 @@ export default class CreatePage extends Mixins(OnFirestoreUserData, PostData) {
     this.post = post;
     this.content = this.postContent || '';
     this.title = this.postTitle || '';
+  };
+
+  checkPermissions () {
+    return new Promise<void>((resolve) => {
+      const unsubscribeKey = setInterval(() => {
+        if (this.postAuthorId) {
+          clearInterval(unsubscribeKey);
+          
+          if (this.postAuthorId !== this.firestoreUserId) {
+            this.$router.push('/home');
+            resolve();
+          };
+
+          resolve();
+        };
+      }, 200);
+    });
   };
 };
 </script>
