@@ -110,9 +110,9 @@ export default class ArticleCardComponent extends Vue {
 }
 
 .articleCardTitle {
-  font-family: 'Montserrat Alternates';
+  font-family: 'Encode Sans Semi Expanded';
   font-weight: 900;
-  letter-spacing: -0.6px;
+  letter-spacing: -1px;
   font-size: 24px;
   margin-top: 22px;
 }
