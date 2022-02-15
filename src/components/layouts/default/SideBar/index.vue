@@ -1,6 +1,6 @@
 <template>
   <v-col cols="3">
-    <v-list rounded class="mt-16">
+    <v-list rounded class="mt-16 base">
       <SideBarItem
         v-for="(route, index) in routes"
         :key="'SideBarItem' + index"

@@ -114,7 +114,7 @@
             </v-btn>
           </v-col>
           
-          <v-col>
+          <v-col cols="12">
             <v-btn
               color="error"
               class="white--text"
@@ -125,9 +125,23 @@
               Delete my account
             </v-btn>
           </v-col>
+
+          <v-col cols="12">
+            <v-btn
+              plain
+              width="100%"
+              @click="handleDownloadAccountData"
+            >
+              Download account data
+            </v-btn>
+          </v-col>
         </v-row>
       </v-col>  
     </v-row>
+
+    <a class="dont-show" ref="downloadFileAnchor" :href="fileDataURL" download="daylog.zip">
+      Download
+    </a>
   </v-container>
 </template>
 
@@ -145,6 +159,7 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   backgroundPhotoLoaded = false;
   profilePhotoLoaded = false;
   deleteAccountLoading = false;
+  fileDataURL = '';
 
   created () {
     this.changes.username = this.firestoreUserUsername;
@@ -169,6 +184,11 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
 
     this.deleteAccountLoading = false;
     this.$router.push('/');
+  };
+
+  async handleDownloadAccountData () {
+    this.fileDataURL = await this.usersService?.getAccountData() || '';
+    (this.$refs.downloadFileAnchor as HTMLAnchorElement).click();
   };
 };
 </script>

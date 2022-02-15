@@ -24,7 +24,7 @@ class Utils implements IUtils {
 
   analiseFirebaseCode (code: string) {
     return firebaseCodesHandler(code);
-  } 
+  };
 };
 
 export default Utils;

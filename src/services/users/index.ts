@@ -1,8 +1,13 @@
 import Utils, { IUtils } from '@/utils';
+
 import Database, { IDatabase } from '../database';
 import CloudStorage, { ICloudStorage } from '../storage';
+
 import * as CloudStorageConstants from '@/data/constants/storage';
+
 import { FirestoreUser } from '@/types/users';
+
+import JSZip from 'jszip';
 
 export interface IUsers {
   userId: string;
@@ -14,6 +19,7 @@ export interface IUsers {
   changeUsername: (username: string) => Promise<boolean>;
   changeTheme: (dark: boolean) => Promise<boolean>;
   toggleSavedPost: (postId: string) => Promise<boolean>;
+  getAccountData: () => Promise<string>;
 };
 
 class Users implements IUsers {
@@ -147,6 +153,28 @@ class Users implements IUsers {
       console.log('Error on users service (SAVE POST)', error);
       return false;
     };
+  };
+
+  async getAccountData () {
+    const zip = new JSZip();
+
+    const userProfileData = await this.database.get(this.userId) as FirestoreUser;
+    
+    const userProfileDataStr = `
+      Informações sobre o usuário salvas pela plataforma Daylog\n
+
+      Nome: ${userProfileData.name || 'não informado'}\n
+      Email: ${userProfileData.email}\n
+      Nome de usuário (username): ${userProfileData.username}\n
+      Aceitou os termos de uso: ${userProfileData.acepted_terms ? 'SIM' : 'NÃO'}\n
+      Aceitou a política de privacidade: ${userProfileData.acepted_privacy ? 'SIM' : 'NÃO'}\n
+    `;
+
+    zip.file('user-info.txt', userProfileDataStr);
+
+    const blob = await zip.generateAsync({ type: 'blob' });
+
+    return URL.createObjectURL(blob);
   };
 };
 
