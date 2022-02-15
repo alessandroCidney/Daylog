@@ -1,7 +1,9 @@
 <template>
   <v-container fluid>
     <v-row>
-      <v-col cols="7">
+      <SideBar />
+      
+      <v-col cols="6">
         <CreatePostButton :profilePhoto="firestoreUserProfilePhoto" />
 
         <PostsList
@@ -32,10 +34,10 @@ import OnFirestoreUserData from '~/mixins/OnFirestoreUserData';
 import SpeedDial from '@/components/pages/home/SpeedDial.vue';
 import CreatePostButton from '@/components/pages/home/CreatePostButton.vue';
 import PostsList from '@/components/pages/home/PostsList.vue';
-import SidebarListItem from '@/components/pages/home/SidebarListItem.vue';
+import SideBar from '@/components/layouts/default/SideBar/index.vue';
 
 @Component({
-  components: { SpeedDial, CreatePostButton, PostsList, SidebarListItem }
+  components: { SpeedDial, CreatePostButton, PostsList, SideBar }
 })
 export default class HomePage extends Mixins(OnFirestoreUserData) {
   postsService = new PostsService();

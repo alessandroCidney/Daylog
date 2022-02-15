@@ -1,6 +1,6 @@
 <template>
-  <v-navigation-drawer v-model="sidebar" app clipped floating width="29vw">
-    <v-list rounded class="mt-16" width="70%">
+  <v-col cols="3">
+    <v-list rounded class="mt-16">
       <SideBarItem
         v-for="(route, index) in routes"
         :key="'SideBarItem' + index"
@@ -8,7 +8,7 @@
         class="ml-6"
       />
     </v-list>
-  </v-navigation-drawer>
+  </v-col>
 </template>
 
 <script lang="ts">
@@ -41,3 +41,9 @@ export default class SideBarComponent extends Vue {
   };
 };
 </script>
+
+<style lang="scss">
+.sideBar {
+  transition: none !important;
+}
+</style>

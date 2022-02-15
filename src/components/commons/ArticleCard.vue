@@ -9,7 +9,7 @@
       </v-avatar>
 
       <div class="d-flex align-start justify-center flex-column ml-4">
-        <div :class="{ 'black--text': !theme.isDark }">@{{ post.author }}</div>
+        <div :class="{ 'black--text': !theme.isDark, 'master-font': true }">@{{ post.author }}</div>
         <div class="articleCardCreatedAt">{{ post.created_at | formattedPeriod }}</div>
       </div>
     </div>
