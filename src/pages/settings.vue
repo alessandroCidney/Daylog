@@ -138,10 +138,6 @@
         </v-row>
       </v-col>  
     </v-row>
-
-    <a class="dont-show" ref="downloadFileAnchor" :href="fileDataURL" download="daylog.zip">
-      Download
-    </a>
   </v-container>
 </template>
 
@@ -159,7 +155,6 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   backgroundPhotoLoaded = false;
   profilePhotoLoaded = false;
   deleteAccountLoading = false;
-  fileDataURL = '';
 
   created () {
     this.changes.username = this.firestoreUserUsername;
@@ -187,8 +182,17 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   };
 
   async handleDownloadAccountData () {
-    this.fileDataURL = await this.usersService?.getAccountData() || '';
-    (this.$refs.downloadFileAnchor as HTMLAnchorElement).click();
+    const fileDataURL = await this.usersService?.getAccountData() || '';
+    
+    const anchor = document.createElement('a');
+    anchor.classList.add('dont-show');
+    anchor.setAttribute('href', fileDataURL);
+    anchor.setAttribute('download', 'daylog.zip');
+
+    document.body.appendChild(anchor);
+    anchor.click();
+
+    document.body.removeChild(anchor);
   };
 };
 </script>
