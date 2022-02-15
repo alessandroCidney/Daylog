@@ -70,6 +70,10 @@ export default class PostData extends Vue {
     return this.post && this.post.created_at;
   };
 
+  get postUpdatedAt () {
+    return this.post && this.post.updated_at;
+  };
+
   get postLikes () {
     return this.post && this.post.likes;
   };

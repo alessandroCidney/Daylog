@@ -11,12 +11,13 @@
         cols="10"
         class="pb-0"
       >
-        {{ postCreatedAt | formattedCreatedAt }}
+        {{ postUpdatedAt ? 'Updated at' : '' }}
+        {{ (postUpdatedAt || postCreatedAt) | formattedCreatedAt }}
         <v-icon color="space">mdi-circle-small</v-icon>
         <nuxt-link
           v-if="postAuthorId"
           :to="`/users/${postAuthorId}`"
-          class="text-decoration-none font-weight-bold space--text"
+          class="text-decoration-none space--text master-font"
         >
           @{{ postAuthor }}
         </nuxt-link>
@@ -92,7 +93,7 @@
 
           <v-col md="3" sm="6" cols="6" class="d-flex align-start justify-center flex-column">
             <p class="text-left mb-0">
-              Created by <span class="font-weight-bold">@{{ postAuthor || '' }}</span>
+              Created by <span class="master-font">@{{ postAuthor || '' }}</span>
             </p>
             <p class="text-left mb-0">
               <small>on {{ postCreatedAt | formattedCreatedAt }}</small>
