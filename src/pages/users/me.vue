@@ -131,9 +131,8 @@
 
 <script lang="ts">
 import { Mixins, Component, Inject } from 'vue-property-decorator';
-import { Action } from 'vuex-class';
+import { Action, namespace } from 'vuex-class';
 
-import Database from '@/services/database';
 import PostsService from '@/services/posts';
 import UsersService, { IUsers } from '@/services/users';
 
@@ -158,9 +157,6 @@ type TInjectedTheme = { isDark: boolean; };
   }
 })
 export default class UserPage extends Mixins(OnPageUserData) {
-  id = this.$route.params.id;
-
-  usersDatabase = new Database('users');
   postsService = new PostsService();
   loggedUserService: IUsers | null = null;
   
@@ -176,9 +172,7 @@ export default class UserPage extends Mixins(OnPageUserData) {
 
   async mounted () {
     try {
-      if (!this.id) this.$router.push('/home');
-
-      this.pageUser = await this.usersDatabase.get(this.id) as FirestoreUser | null;
+      this.pageUser = this.firestoreUser as FirestoreUser | null;
 
       if (!this.firestoreUserId) {
         this.loggedUserService = new UsersService(this.firestoreUserId);
