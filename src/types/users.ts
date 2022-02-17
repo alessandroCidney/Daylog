@@ -1,6 +1,7 @@
 export type AuthUser = {
   displayName: string | null;
   email: string | null;
+  authProviders: string[];
 };
 
 export type FirestoreUser = {
@@ -14,6 +15,7 @@ export type FirestoreUser = {
   acepted_privacy: string;
   theme: 'dark' | 'light' | null;
   savedPosts: string[] | null;
+  created_at: number;
 };
 
 export type StoreUser = {

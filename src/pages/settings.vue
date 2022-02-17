@@ -1,6 +1,68 @@
 <template>
   <v-container>
-    <v-row align="center" justify="center" class="my-10">
+    <h1 class="mb-10">Settings</h1>
+
+    <v-tabs vertical color="space">
+      <v-tab>Profile</v-tab>
+      <v-tab>Appearance</v-tab>
+      <v-tab>Account</v-tab>
+      <v-tab>Notifications</v-tab>
+      <v-tab>Data</v-tab>
+
+      <v-tab-item>
+        <h2 class="mb-10">Profile</h2>
+
+        <h3 class="mb-5">Images</h3>
+      </v-tab-item>
+
+      <v-tab-item>
+        <h2 class="mb-10">Appearance</h2>
+      </v-tab-item>
+
+      <v-tab-item>
+        <h2 class="mb-10">Account</h2>
+
+        <h3 class="mb-5">User information</h3>
+
+        <v-text-field
+          label="Username"
+          :value="firestoreUserUsername"
+          prefix="@"
+          :color="lightTheme ? 'space' : 'white'"
+        />
+
+        <v-text-field
+          label="Email"
+          :value="firestoreUserEmail"
+          :color="lightTheme ? 'space' : 'white'"
+        />
+
+        <h3>Enabled auth methods</h3>
+
+        <v-list>
+          <v-list-item v-for="(provider, index) in userAuthProviders" :key="'authProvider' + index">
+            <v-list-item-avatar>
+              <v-icon :class="provider.icon.color" dark>{{ provider.icon.name }}</v-icon>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ provider.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{ provider.description }}</v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-tab-item>
+
+      <v-tab-item>
+        <h2 class="mb-10">Notifications</h2>
+      </v-tab-item>
+
+      <v-tab-item>
+        <h2 class="mb-10">Data</h2>
+      </v-tab-item>
+    </v-tabs>
+
+    <v-row align="center" justify="center" class="my-10" v-if="false">
       <v-col md="8" sm="10" cols="10" class="light rounded-xl pa-0">
         <v-row align="center" justify="center" class="photosArea">
           <v-col cols="12">
@@ -143,9 +205,23 @@
 
 <script lang="ts">
 import { Component, Mixins, Watch } from 'vue-property-decorator';
+import { State } from 'vuex-class';
 
 import Authentication from '@/services/authentication';
 import OnSetUserData from '@/mixins/OnSetUserData';
+
+import { StoreUser } from '@/types/users';
+
+import _ from 'lodash';
+
+type TProviderData = {
+  icon: {
+    color: string;
+    name: string;
+  };
+  name: string;
+  description: string;
+};
 
 @Component
 export default class SettingsPage extends Mixins(OnSetUserData) {
@@ -156,6 +232,8 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   profilePhotoLoaded = false;
   deleteAccountLoading = false;
 
+  @State user!: StoreUser | null;
+
   created () {
     this.changes.username = this.firestoreUserUsername;
   };
@@ -165,6 +243,43 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
     this.$vuetify.theme.dark = !activeLightTheme;
     await this.usersService?.changeTheme(!activeLightTheme);
     await this.getCurrentFirestoreUser();
+  };
+
+  get userAuthProviders () {
+    function getProviderData (providerId: string): TProviderData | undefined {
+      switch (providerId) {
+        case 'password':
+          return ({
+            icon: {
+              color: 'space',
+              name: 'mdi-email'
+            },
+            name: 'Email and password',
+            description: 'Allows authentication using email and password'
+          });
+          break;
+        case 'google.com':
+          return ({
+            icon: {
+              color: 'red lighten-1',
+              name: 'mdi-google'
+            },
+            name: 'Google',
+            description: 'Allows authentication using Google services'
+          });
+          break;
+      };
+    };
+
+    let providers: TProviderData[] = [];
+
+    if (!this.user || !this.user.authUser) return providers;
+
+    providers = this.user.authUser.authProviders
+      .map(id => getProviderData(id))
+      .filter(e => !!e) as TProviderData[];
+
+    return providers;
   };
 
   async handleDeleteAccount () {

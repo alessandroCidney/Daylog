@@ -18,9 +18,10 @@ const fireAuth: Plugin = ({ store }) => {
           return;
         };
 
-        const { displayName, email  } = user;
+        const { displayName, email, providerData  } = user;
+        const authProviders = providerData.map(({ providerId }) => providerId);
 
-        const authUser: AuthUser = { displayName, email };
+        const authUser: AuthUser = { displayName, email, authProviders };
 
         store.commit('setUser', { ...store.state.user, authUser } as StoreUser);
         await store.dispatch('getCurrentFirestoreUser');

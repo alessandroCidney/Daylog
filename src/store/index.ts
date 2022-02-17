@@ -78,7 +78,7 @@ export default class IndexModule extends VuexModule {
 
         const { user: { displayName: name, email, photoURL: profile_photo } } = redirectResult;
 
-        const userKey = await usersDatabase.push({ name, email, profile_photo });
+        const userKey = await usersDatabase.push({ name, email, profile_photo, created_at: new Date().getTime() });
 
         if (!userKey) return false;
 

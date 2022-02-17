@@ -53,7 +53,7 @@ class Authentication implements IAuthentication {
       if (!userCredentials) return ({ status: 'error', message: 'An error ocurred during authentication.'});
 
       const { user: { displayName: name, email  } } = userCredentials;
-      const userKey = await this.database.push({ name, email, username, acepted_terms: acceptedAll, acepted_privacy: acceptedAll});
+      const userKey = await this.database.push({ name, email, username, acepted_terms: acceptedAll, acepted_privacy: acceptedAll, created_at: new Date().getTime() });
 
       if (!userKey) return ({ status: 'error', message: 'An error ocurred during user registration' });
 
