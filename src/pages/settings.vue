@@ -9,13 +9,7 @@
       <v-tab>Notifications</v-tab>
       <v-tab>Data</v-tab>
 
-      <v-tab-item>
-        <h2 class="mb-10">Profile</h2>
-
-        <h3 class="mb-5">Profile photo</h3>
-
-        <v-img :src="firestoreUserProfileBackground" width="600px" />
-      </v-tab-item>
+      <v-tab-item><ProfileTab /></v-tab-item>
 
       <v-tab-item>
         <h2 class="mb-10">Appearance</h2>
@@ -177,6 +171,7 @@
 import { Component, Mixins, Watch } from 'vue-property-decorator';
 
 import AccountTab from '@/components/pages/settings/tabs/AccountTab.vue';
+import ProfileTab from '@/components/pages/settings/tabs/ProfileTab.vue';
 
 import Authentication from '@/services/authentication';
 import OnSetUserData from '@/mixins/OnSetUserData';
@@ -184,7 +179,7 @@ import OnSetUserData from '@/mixins/OnSetUserData';
 import _ from 'lodash';
 
 @Component({
-  components: { AccountTab }
+  components: { AccountTab, ProfileTab }
 })
 export default class SettingsPage extends Mixins(OnSetUserData) {
   authenticationService = new Authentication();
@@ -269,5 +264,9 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   height: 0 !important;
   min-width: 0 !important;
   border: 0 !important;
+}
+
+.translateY {
+  transform: translateY(-50%);
 }
 </style>
