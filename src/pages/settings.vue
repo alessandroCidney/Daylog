@@ -6,16 +6,11 @@
       <v-tab>Profile</v-tab>
       <v-tab>Appearance</v-tab>
       <v-tab>Account</v-tab>
-      <v-tab>Notifications</v-tab>
       <v-tab>Data</v-tab>
 
       <v-tab-item><ProfileTab /></v-tab-item>
       <v-tab-item><AppearanceTab /></v-tab-item>
       <v-tab-item><AccountTab /></v-tab-item>
-
-      <v-tab-item>
-        <h2 class="mb-10">Notifications</h2>
-      </v-tab-item>
 
       <v-tab-item>
         <h2 class="mb-10">Data</h2>

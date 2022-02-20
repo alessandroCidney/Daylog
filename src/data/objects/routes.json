@@ -6,12 +6,6 @@
     "activeIcon": "mdi-home-variant"
   },
   {
-    "title": "Notifications",
-    "to": "/notifications",
-    "icon": "mdi-bell-outline",
-    "activeIcon": "mdi-bell-ring"
-  },
-  {
     "title": "My Posts",
     "to": "/posts/me",
     "icon": "mdi-grid-large",
