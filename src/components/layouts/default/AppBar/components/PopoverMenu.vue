@@ -37,8 +37,8 @@
           </v-list-item-avatar>
 
           <v-list-item-content>
-            <v-list-item-title class="overflow-200">@{{ firestoreUserUsername }}</v-list-item-title>
-            <v-list-item-subtitle class="overflow-200">Beginner</v-list-item-subtitle>
+            <v-list-item-title class="overflow-200 master-font">@{{ firestoreUserUsername }}</v-list-item-title>
+            <v-list-item-subtitle class="overflow-200">{{ firestoreUserEmail }}</v-list-item-subtitle>
           </v-list-item-content>
 
           <v-list-item-action>
