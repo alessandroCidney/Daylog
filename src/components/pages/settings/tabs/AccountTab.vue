@@ -5,13 +5,6 @@
     <h3 class="mb-5">User information</h3>
 
     <v-text-field
-      label="Username"
-      :value="firestoreUserUsername"
-      prefix="@"
-      :color="!theme.isDark ? 'space' : 'white'"
-    />
-
-    <v-text-field
       label="Email"
       readonly
       :value="firestoreUserEmail"
@@ -43,7 +36,7 @@
 import { Mixins, Component, Inject } from 'vue-property-decorator';
 import { State } from 'vuex-class';
 
-import { OnFirestoreUserData } from '@/mixins';
+import { OnSetUserData } from '@/mixins';
 
 import { StoreUser } from '@/types/users';
 
@@ -59,7 +52,7 @@ type TProviderData = {
 type TInjectedTheme = { isDark: boolean; };
 
 @Component
-export default class AccountTabComponent extends Mixins(OnFirestoreUserData) {
+export default class AccountTabComponent extends Mixins(OnSetUserData) {
 
   @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
   @State user!: StoreUser | null;

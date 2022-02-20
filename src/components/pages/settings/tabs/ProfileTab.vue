@@ -17,10 +17,10 @@
     <v-row align="start" justify="start">
       <v-col cols="5">
         <div class="d-flex align-center justify-center flex-column">
-          <v-img :src="firestoreUserProfileBackground" height="170px" width="600px" class="rounded-lg" />
+          <v-img :src="viewBackgroundPicture" height="170px" width="600px" class="rounded-lg" />
 
           <v-avatar width="150px" height="150px" class="translateY">
-            <v-img :src="firestoreUserProfilePhoto" />
+            <v-img :src="viewProfilePhoto" />
           </v-avatar>
         </div>
       </v-col>
@@ -52,14 +52,50 @@
 </template>
 
 <script lang="ts">
-import { Mixins, Component, Inject } from 'vue-property-decorator';
+import { Mixins, Component, Inject, Watch } from 'vue-property-decorator';
 
 import { OnSetUserData } from '@/mixins';
 
 type TInjectedTheme = { isDark: boolean; };
 
 @Component
-export default class AccountTabComponent extends Mixins(OnSetUserData) {
+export default class ProfileTabComponent extends Mixins(OnSetUserData) {
+  viewProfilePhoto = '';
+  viewBackgroundPicture = '';
+
   @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
+
+  mounted () {
+    this.viewProfilePhoto = this.firestoreUserProfilePhoto;
+    this.viewBackgroundPicture = this.firestoreUserProfileBackground;
+  };
+
+  @Watch('changes.profilePhoto')
+  handleUpdateViewProfilePhoto (file: File) {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      if (reader.result && typeof reader.result === 'string')
+        this.viewProfilePhoto = reader.result;
+    };
+  };
+
+  @Watch('changes.profileBackgroundPhoto')
+  handleUpdateViewBackgroundPicture (file: File) {
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      if (reader.result && typeof reader.result === 'string')
+        this.viewBackgroundPicture = reader.result;
+    };
+  };
 };
 </script>
