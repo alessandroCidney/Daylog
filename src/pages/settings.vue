@@ -11,10 +11,7 @@
       <v-tab-item><ProfileTab /></v-tab-item>
       <v-tab-item><AppearanceTab /></v-tab-item>
       <v-tab-item><AccountTab /></v-tab-item>
-
-      <v-tab-item>
-        <h2 class="mb-10">Data</h2>
-      </v-tab-item>
+      <v-tab-item><DataTab /></v-tab-item>
     </v-tabs>
 
     <v-row align="center" justify="center" class="my-10" v-if="false">
@@ -164,6 +161,7 @@ import { Component, Mixins, Watch } from 'vue-property-decorator';
 import AccountTab from '@/components/pages/settings/tabs/AccountTab.vue';
 import ProfileTab from '@/components/pages/settings/tabs/ProfileTab.vue';
 import AppearanceTab from '@/components/pages/settings/tabs/AppearanceTab.vue';
+import DataTab from '@/components/pages/settings/tabs/DataTab.vue';
 
 import Authentication from '@/services/authentication';
 import OnSetUserData from '@/mixins/OnSetUserData';
@@ -171,7 +169,7 @@ import OnSetUserData from '@/mixins/OnSetUserData';
 import _ from 'lodash';
 
 @Component({
-  components: { AccountTab, ProfileTab, AppearanceTab }
+  components: { AccountTab, ProfileTab, AppearanceTab, DataTab }
 })
 export default class SettingsPage extends Mixins(OnSetUserData) {
   authenticationService = new Authentication();
