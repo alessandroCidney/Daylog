@@ -2,16 +2,16 @@
   <v-container>
     <h1 class="mb-10">Settings</h1>
 
-    <v-tabs vertical color="space">
-      <v-tab>Profile</v-tab>
-      <v-tab>Appearance</v-tab>
-      <v-tab>Account</v-tab>
-      <v-tab>Data</v-tab>
+    <v-tabs vertical color="space" background-color="base">
+      <v-tab class="base">Profile</v-tab>
+      <v-tab class="base">Appearance</v-tab>
+      <v-tab class="base">Account</v-tab>
+      <v-tab class="base">Data</v-tab>
 
-      <v-tab-item><ProfileTab /></v-tab-item>
-      <v-tab-item><AppearanceTab /></v-tab-item>
-      <v-tab-item><AccountTab /></v-tab-item>
-      <v-tab-item><DataTab /></v-tab-item>
+      <v-tab-item class="base"><ProfileTab /></v-tab-item>
+      <v-tab-item class="base"><AppearanceTab /></v-tab-item>
+      <v-tab-item class="base"><AccountTab /></v-tab-item>
+      <v-tab-item class="base"><DataTab /></v-tab-item>
     </v-tabs>
 
     <v-row align="center" justify="center" class="my-10" v-if="false">
