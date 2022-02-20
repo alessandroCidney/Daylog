@@ -179,7 +179,6 @@ export default class SettingsPage extends Mixins(OnSetUserData) {
   profilePhotoLoaded = false;
   deleteAccountLoading = false;
 
-
   created () {
     this.changes.username = this.firestoreUserUsername;
   };

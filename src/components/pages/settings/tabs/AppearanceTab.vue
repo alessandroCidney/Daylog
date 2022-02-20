@@ -11,9 +11,36 @@
     </p>
 
     <v-switch
+      :input-value="!theme.isDark"
       color="yellow"
       prepend-icon="mdi-brightness-4"
       label="Switch theme"
+      @change="changeTheme"
     />
   </div>
 </template>
+
+<script lang="ts">
+import { Component, Inject, Mixins } from 'vue-property-decorator';
+import { Action } from 'vuex-class';
+
+import { OnSetUserData } from '@/mixins';
+
+type TInjectedTheme = {
+  isDark: boolean;
+};
+
+@Component
+export default class AppearanceTab extends Mixins(OnSetUserData) {
+  @Inject({ default: { isDark: false } }) theme!: TInjectedTheme;
+
+  @Action getCurrentFirestoreUser!: () => Promise<void>;
+
+  async changeTheme (lightTheme: boolean) {
+    console.log('CHANGE THEME', lightTheme)
+    this.$vuetify.theme.dark = !lightTheme;
+    await this.usersService?.changeTheme(!lightTheme);
+    await this.getCurrentFirestoreUser();
+  };
+};
+</script>
