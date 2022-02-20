@@ -14,7 +14,7 @@
 
     <p>You can remove your data by using the following options:</p>
 
-    <v-btn block color="error lighten-5" class="error--text mb-2" depressed>Delete my posts data</v-btn>
-    <v-btn block color="error lighten-5" class="error--text mb-2" depressed>Delete all my data</v-btn>
+    <v-btn block class="mb-2 error--text" depressed>Delete my posts data</v-btn>
+    <v-btn block class="mb-2 error--text" depressed>Delete all my data</v-btn>
   </div>
 </template>

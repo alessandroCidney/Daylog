@@ -34,7 +34,7 @@
 
     <h3 class="mb-5">Danger zone</h3>
 
-    <v-btn color="error lighten-5" class="error--text" block>Delete my account</v-btn>
+    <v-btn block class="mb-2 error--text" depressed>Delete my account</v-btn>
   </div>
 </template>
 
