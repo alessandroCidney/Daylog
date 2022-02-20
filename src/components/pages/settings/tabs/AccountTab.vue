@@ -13,6 +13,7 @@
 
     <v-text-field
       label="Email"
+      readonly
       :value="firestoreUserEmail"
       :color="!theme.isDark ? 'space' : 'white'"
     />
