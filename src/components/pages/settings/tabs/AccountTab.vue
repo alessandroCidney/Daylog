@@ -17,9 +17,9 @@
       :color="!theme.isDark ? 'space' : 'white'"
     />
 
-    <h3>Enabled auth methods</h3>
+    <h3 class="mb-5">Enabled auth methods</h3>
 
-    <v-list>
+    <v-list class="mb-10">
       <v-list-item v-for="(provider, index) in userAuthProviders" :key="'authProvider' + index">
         <v-list-item-avatar>
           <v-icon :class="provider.icon.color" dark>{{ provider.icon.name }}</v-icon>
@@ -31,6 +31,10 @@
         </v-list-item-content>
       </v-list-item>
     </v-list>
+
+    <h3 class="mb-5">Danger zone</h3>
+
+    <v-btn color="error lighten-5" class="error--text" block>Delete my account</v-btn>
   </div>
 </template>
 
