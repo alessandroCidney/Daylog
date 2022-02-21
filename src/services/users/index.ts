@@ -159,18 +159,18 @@ class Users implements IUsers {
     const zip = new JSZip();
 
     const userProfileData = await this.database.get(this.userId) as FirestoreUser;
-    
-    const userProfileDataStr = `
-      Informações sobre o usuário salvas pela plataforma Daylog\n
 
-      Nome: ${userProfileData.name || 'não informado'}\n
-      Email: ${userProfileData.email}\n
-      Nome de usuário (username): ${userProfileData.username}\n
-      Aceitou os termos de uso: ${userProfileData.acepted_terms ? 'SIM' : 'NÃO'}\n
-      Aceitou a política de privacidade: ${userProfileData.acepted_privacy ? 'SIM' : 'NÃO'}\n
-    `;
+    const userProfileDataJSON = {
+      User_Account_Data: {
+        Name: userProfileData.name || 'None',
+        Email: userProfileData.email,
+        User_Name: userProfileData.username,
+        User_Accepted_Use_Terms: userProfileData.acepted_terms ? 'YES' : 'NO',
+        User_Accpeted_Privacy_Policy: userProfileData.acepted_privacy ? 'YES' : 'NO'
+      }
+    };;
 
-    zip.file('user-info.txt', userProfileDataStr);
+    zip.file('user_info.json', JSON.stringify(userProfileDataJSON, null, 4));
 
     const blob = await zip.generateAsync({ type: 'blob' });
 
