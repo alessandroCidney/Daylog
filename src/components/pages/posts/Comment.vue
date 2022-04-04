@@ -24,8 +24,8 @@
           </v-list-item-action-text>
 
           <div>
-            <v-btn icon small>
-              <v-icon>mdi-heart-outline</v-icon>
+            <v-btn icon small @click="handleLike">
+              <v-icon>{{ liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
             </v-btn>
 
             <v-btn icon small>
@@ -41,9 +41,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Mixins, Component, Prop, Inject } from 'vue-property-decorator';
 
 import { ViewPostComment } from './ArticleInteractionsArea/index.vue';
+
+import { PostsCommentsService } from '@/services/posts/comments';
+
+import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
+
+import { TPost } from '@/types/posts';
 
 import moment from 'moment';
 
@@ -54,8 +60,22 @@ import moment from 'moment';
     }
   }
 })
-export default class CommentComponent extends Vue {
+export default class CommentComponent extends Mixins(OnFirestoreUserData) {
+  @Inject() readonly updatePost!: () => Promise<void>;
+
   @Prop(Object) readonly comment!: ViewPostComment;
   @Prop(Boolean) readonly darkerTheme !: boolean;
+  @Prop(Object) readonly post!: TPost;
+
+  service = new PostsCommentsService(this.post.id);
+
+  get liked () {
+    return !!this.comment.likes?.find(like => like.author_id === this.firestoreUserId);
+  };
+
+  async handleLike () {
+    await this.service.like(this.comment.id, this.firestoreUserId);
+    await this.updatePost();
+  };
 };
 </script>

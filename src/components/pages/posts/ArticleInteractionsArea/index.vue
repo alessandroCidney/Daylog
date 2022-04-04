@@ -56,6 +56,7 @@
             v-for="(comment, index) in viewComments"
             :key="`${postId}-comment-${index}`"
             :comment="comment"
+            :post="post"
             :darker-theme="theme.isDark"
           />
         </v-list>

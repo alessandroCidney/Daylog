@@ -113,7 +113,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator';
+import { Component, Mixins, Provide } from 'vue-property-decorator';
 
 import PostData from '@/mixins/OnPostData';
 
@@ -146,6 +146,8 @@ export default class PostPage extends Mixins(PostData) {
   postsService = new PostsService();
   thumbLoaded = false;
   loading = false;
+
+  @Provide('updatePost') updatePost = this.fetchPostData;
 
   async created () {
     this.loading = true;
