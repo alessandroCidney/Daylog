@@ -22,7 +22,6 @@
 
 <script lang="ts">
 import { Vue, Component } from 'vue-property-decorator';
-import { mapGetters, mapMutations } from 'vuex';
 
 import BigImage from '@/components/layouts/login/BigImage.vue';
 import LoginForm from '@/components/pages/signIn/LoginForm.vue';

@@ -24,11 +24,11 @@
           </v-list-item-action-text>
 
           <div>
-            <v-btn icon small @click="handleLike">
+            <v-btn icon small :loading="loading.like" @click="handleLike">
               <v-icon>{{ liked ? 'mdi-heart' : 'mdi-heart-outline' }}</v-icon>
             </v-btn>
 
-            <v-btn icon small>
+            <v-btn icon small :loading="loading.delete" @click="handleDelete">
               <v-icon>mdi-delete-outline</v-icon>
             </v-btn>
           </div>
@@ -42,6 +42,7 @@
 
 <script lang="ts">
 import { Mixins, Component, Prop, Inject } from 'vue-property-decorator';
+import { Mutation } from 'vuex-class';
 
 import { ViewPostComment } from './ArticleInteractionsArea/index.vue';
 
@@ -50,6 +51,7 @@ import { PostsCommentsService } from '@/services/posts/comments';
 import OnFirestoreUserData from '@/mixins/OnFirestoreUserData';
 
 import { TPost } from '@/types/posts';
+import { TApplicationMessage, TSnackbarMessage } from '@/types/messages';
 
 import moment from 'moment';
 
@@ -67,6 +69,13 @@ export default class CommentComponent extends Mixins(OnFirestoreUserData) {
   @Prop(Boolean) readonly darkerTheme !: boolean;
   @Prop(Object) readonly post!: TPost;
 
+  @Mutation showAppMessage!: (payload: TApplicationMessage | TSnackbarMessage) => void;
+
+  loading = {
+    like: false,
+    delete: false
+  };
+
   service = new PostsCommentsService(this.post.id);
 
   get liked () {
@@ -74,8 +83,27 @@ export default class CommentComponent extends Mixins(OnFirestoreUserData) {
   };
 
   async handleLike () {
-    await this.service.like(this.comment.id, this.firestoreUserId);
+    this.$set(this.loading, 'like', true);
+    const results = await this.service.like(this.comment.id, this.firestoreUserId);
     await this.updatePost();
+
+    if (results && results.status && results.status === 'error') {
+      this.showAppMessage({ ...results, active: true  })
+    };
+
+    this.$set(this.loading, 'like', false);
+  };
+
+  async handleDelete () {
+    this.$set(this.loading, 'delete', true);
+    const results = await this.service.delete(this.comment.id, this.firestoreUserId);
+    await this.updatePost();
+
+    if (results && results.status && results.status === 'error') {
+      this.showAppMessage({ ...results, active: true  })
+    };
+
+    this.$set(this.loading, 'delete', false);
   };
 };
 </script>
