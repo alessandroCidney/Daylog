@@ -30,7 +30,7 @@
 
       <v-col md="8" sm="10" cols="10" class="py-16">
         <v-row align="center" justify="center">
-          <v-tabs color="space">
+          <v-tabs color="space" background-color="base">
             <v-tab class="base">
               <v-icon left>mdi-view-grid</v-icon>
               Posts

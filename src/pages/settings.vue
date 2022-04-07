@@ -8,10 +8,10 @@
       <v-tab class="base">Account</v-tab>
       <v-tab class="base">Data</v-tab>
 
-      <v-tab-item class="base"><ProfileTab /></v-tab-item>
-      <v-tab-item class="base"><AppearanceTab /></v-tab-item>
-      <v-tab-item class="base"><AccountTab /></v-tab-item>
-      <v-tab-item class="base"><DataTab /></v-tab-item>
+      <v-tab-item class="base pa-2"><ProfileTab /></v-tab-item>
+      <v-tab-item class="base pa-2"><AppearanceTab /></v-tab-item>
+      <v-tab-item class="base pa-2"><AccountTab /></v-tab-item>
+      <v-tab-item class="base pa-2"><DataTab /></v-tab-item>
     </v-tabs>
   </v-container>
 </template>
