@@ -3,7 +3,7 @@
     <v-row>
       <SideBar />
       
-      <v-col cols="6">
+      <v-col cols="6" class="py-10">
         <CreatePostButton :profilePhoto="firestoreUserProfilePhoto" />
 
         <PostsList

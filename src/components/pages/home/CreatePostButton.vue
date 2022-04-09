@@ -11,7 +11,7 @@
           <v-col cols="10" class="pl-0 pt-0">
             <v-textarea
               v-model="content"
-              label="What's new?"
+              label="Create a new post!"
               color="space"
               solo
               flat

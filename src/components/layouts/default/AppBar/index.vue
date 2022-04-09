@@ -66,5 +66,8 @@ export default class AppBar extends Vue {
 <style lang="scss">
 .mainAppBar {
   z-index: 10;
+  background: rgba(255, 255, 255, 0.9) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #dddddd !important;
 }
 </style>
