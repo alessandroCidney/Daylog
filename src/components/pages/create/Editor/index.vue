@@ -52,6 +52,12 @@ export default class EditorComponent extends Vue {
         this.$emit('input', this.editor?.getHTML());
       }
     });
+
+    window.addEventListener('keydown', this.handleKeyDown)
+  };
+
+  destroyed () {
+    window.removeEventListener('keydown', this.handleKeyDown)
   };
 
   @Watch('value')
@@ -65,6 +71,13 @@ export default class EditorComponent extends Vue {
 
   beforeDestroy () {
     this.editor?.destroy();
+  };
+
+  handleKeyDown (event: KeyboardEvent) {
+    if (event.key === 'Tab' && this.editor?.isFocused) {
+      event.preventDefault();
+      this.editor?.commands.insertContent('     ');
+    };
   };
 };
 </script>
