@@ -123,7 +123,7 @@ export default class ArticleCardComponent extends Vue {
 }
 
 .articleCardText {
-  color: #BDBDBD !important;
+  color: #8e8e8e !important;
   font-size: 16px !important;
   letter-spacing: -0.6px !important;
   word-break: normal !important;

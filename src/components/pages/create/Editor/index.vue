@@ -95,16 +95,16 @@ export default class EditorComponent extends Vue {
 
       pre {
         background: #0D0D0D !important;
-        color: #FFF;
+        color: #00faff;
         font-family: 'JetBrainsMono', monospace;
         padding: 0.75rem 1rem;
         border-radius: 0.5rem;
 
         code {
-          color: inherit;
+          color: #00faff !important;
           padding: 0;
-          background: none;
-          font-size: 0.8rem;
+          background: #0D0D0D !important;
+          font-size: 1.2rem;
         }
       }
     }

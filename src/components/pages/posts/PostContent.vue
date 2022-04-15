@@ -36,16 +36,16 @@ export default class PostContentComponent extends Vue {
 
   pre {
     background: #0D0D0D;
-    color: #FFF;
+    color: #00faff;
     font-family: 'JetBrainsMono', monospace;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
 
     code {
+      background: #0D0D0D !important;
       color: inherit;
       padding: 0;
-      background: none;
-      font-size: 0.8rem;
+      font-size: 1.2rem;
     }
   }
 }

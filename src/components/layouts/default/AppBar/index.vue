@@ -1,7 +1,10 @@
 <template>
   <v-app-bar
     app
-    class="pr-5 mainAppBar"
+    :class="{
+      'pr-5 mainAppBar': true,
+      'mainAppBarDark': theme.isDark
+    }"
     :elevation="0"
     :color="headerColor"
     clipped-left
@@ -69,5 +72,10 @@ export default class AppBar extends Vue {
   background: rgba(255, 255, 255, 0.9) !important;
   backdrop-filter: blur(8px);
   border-bottom: 1px solid #dddddd !important;
+
+  &.mainAppBarDark {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 1px solid rgb(60, 60, 60) !important;
+  }
 }
 </style>
