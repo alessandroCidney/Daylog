@@ -108,7 +108,7 @@ export default class LoginFormComponent extends Vue {
 
 <style lang="scss" scoped>
 .signInForm {
-  width: 30vw !important;
+  width: 25vw !important;
 }
 
 @media (max-width: 959px) {

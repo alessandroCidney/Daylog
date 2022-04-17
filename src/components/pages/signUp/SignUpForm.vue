@@ -122,7 +122,7 @@ export default class SignUpFormComponent extends Vue {
 
 <style lang="scss" scoped>
 .signUpForm {
-  width: 30vw !important;
+  width: 25vw !important;
 }
 
 @media (max-width: 959px) {
