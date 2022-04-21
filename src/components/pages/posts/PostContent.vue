@@ -31,7 +31,7 @@ export default class PostContentComponent extends Vue {
   padding: 20px;
 
   h1, h2, h3 {
-    margin: 16px 0 !important;
+    margin: 50px 0 16px 0 !important;
   }
 
   pre {
