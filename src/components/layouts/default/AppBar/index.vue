@@ -26,11 +26,9 @@
         </nuxt-link>
       </v-col>
 
-      <v-col md="4" sm="6" class="d-flex align-center justify-end">
-        
-      </v-col>
+      <v-col md="4" sm="6" class="d-flex align-center justify-end" />
 
-      <v-col md="4" sm="6" class="d-flex align-center justify-end">
+      <v-col v-if="!onlyLogo" md="4" sm="6" class="d-flex align-center justify-end">
         <v-spacer />
 
         <SearchBar />
@@ -46,7 +44,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Inject } from 'vue-property-decorator';
+import { Vue, Component, Inject, Prop } from 'vue-property-decorator';
 import PopoverMenu from './components/PopoverMenu.vue';
 import SearchBar from './components/SearchBar.vue';
 
@@ -59,6 +57,8 @@ type TInjectedTheme = {
 })
 export default class AppBar extends Vue {
   @Inject({ default: { isDark: false } }) readonly theme!: TInjectedTheme;
+
+  @Prop(Boolean) onlyLogo!: boolean;
 
   get headerColor () {
     return this.theme.isDark ? '#1E1E1E' : '#FFF'; 

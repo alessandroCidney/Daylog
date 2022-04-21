@@ -48,8 +48,13 @@
     <v-checkbox
       v-model="acceptedUseTermsPrivacyPolicyAndCookiesUsePolicy"
       color="space"
-      label="I agree with the use terms, privacy policy and cookies use policy"
-    />
+    >
+      <span slot="label">
+        I agree with the use terms,
+        <nuxt-link to="/privacy">privacy policy</nuxt-link> and
+        cookies use policy
+      </span>
+    </v-checkbox>
 
     <v-btn color="space" block class="white--text mt-2" :loading="loading" @click="signUpWithEmail">
       <v-icon left>
