@@ -51,7 +51,7 @@ import { FirestoreUser } from '@/types/users';
   head (this: UserPage): object {
     return {
       title: this.pageUser?.username.replace(/^\w/, (c) => c.toUpperCase()),
-      titleTemplate: '%s on Daylog'
+      titleTemplate: '%s on Logbook'
     }
   }
 })

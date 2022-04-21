@@ -1,7 +1,7 @@
 <template>
   <v-form class="signUpForm">
     <h1 class="master-font mb-6 pageTitle">
-      Sign up to <span class="master-font font-weight-black">Daylog</span>
+      Sign up to <span class="master-font font-weight-black">Logbook</span>
     </h1>
 
     <GoogleAuthButton text="Sign up with Google" />

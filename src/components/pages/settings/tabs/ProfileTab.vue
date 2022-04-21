@@ -44,7 +44,14 @@
 
     <div class="d-flex">
       <v-spacer />
-      <v-btn color="space" class="light--text mb-10" block depressed @click="handleSaveChanges">
+      <v-btn
+        color="space"
+        class="light--text mb-10"
+        :loading="loading"
+        block
+        depressed
+        @click="handleSaveChanges"
+      >
         Save changes
       </v-btn>
     </div>

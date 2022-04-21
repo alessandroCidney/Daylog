@@ -17,7 +17,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - Daylog',
+    titleTemplate: '%s - Logbook',
     title: "What's being written",
     htmlAttrs: {
       lang: 'en'

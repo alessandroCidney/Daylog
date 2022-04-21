@@ -11,6 +11,7 @@ type TProfileChanges = {
 
 @Component
 export default class OnSetUserData extends Mixins(OnFirestoreUserData) {
+  loading = false;
   usersService: IUsers | null = null;
   saveChangesLoading = false;
   changes: TProfileChanges = {
@@ -26,6 +27,7 @@ export default class OnSetUserData extends Mixins(OnFirestoreUserData) {
   };
 
   async handleSaveChanges () {
+    this.loading = true;
     this.$nuxt.$loading.start();
     this.saveChangesLoading = true;
 
@@ -55,5 +57,6 @@ export default class OnSetUserData extends Mixins(OnFirestoreUserData) {
     this.saveChangesLoading = false;
 
     this.$router.push(`/users/${this.firestoreUserId}`);
+    this.loading = false;
   };
 };
