@@ -37,7 +37,7 @@ export default class PostContentComponent extends Vue {
   pre {
     background: #0D0D0D;
     color: #00faff;
-    font-family: 'JetBrainsMono', monospace;
+    font-family: 'Fira Code', monospace !important;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
 
@@ -45,7 +45,8 @@ export default class PostContentComponent extends Vue {
       background: #0D0D0D !important;
       color: inherit;
       padding: 0;
-      font-size: 1.2rem;
+      font-size: 1rem;
+      font-family: 'Fira Code', monospace !important;
     }
   }
 }

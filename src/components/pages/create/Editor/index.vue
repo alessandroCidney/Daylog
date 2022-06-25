@@ -109,7 +109,7 @@ export default class EditorComponent extends Vue {
       pre {
         background: #0D0D0D !important;
         color: #00faff;
-        font-family: 'JetBrainsMono', monospace;
+        font-family: 'Fira Code', monospace;
         padding: 0.75rem 1rem;
         border-radius: 0.5rem;
 
@@ -117,7 +117,8 @@ export default class EditorComponent extends Vue {
           color: #00faff !important;
           padding: 0;
           background: #0D0D0D !important;
-          font-size: 1.2rem;
+          font-size: 1rem;
+          font-family: 'Fira Code', monospace !important;
         }
       }
     }
